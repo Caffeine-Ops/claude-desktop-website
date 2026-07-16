@@ -15,7 +15,7 @@ import { Footer } from '@/components/sections/Footer'
   再用「底座 / 技术」留住技术用户，最后收在下载。
     Hero      一句话讲清它替你做什么
     ValueProps 为什么值得用（三条）
-    Outputs   ← 签名段落：能做什么，用真实技能名兑现
+    Outputs   ← 签名段落：产出清单，用真实技能名兑现
     Platform  撑起这些产出的四样东西（术语从这里才允许出现）
     Developers 给技术用户的深度
     Download  核心目标

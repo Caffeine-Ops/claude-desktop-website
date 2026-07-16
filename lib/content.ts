@@ -34,8 +34,20 @@ export const site = {
   agentSdkUrl: 'https://docs.claude.com/en/api/agent-sdk/overview',
 } as const
 
+/*
+  导航命名。两条规矩，改词前先读：
+
+  1. 「产出」和「功能」必须一眼分得开——它们指向两段完全不同的内容：
+     产出 = 它交给你什么成品（PPT / 表格 / 方案…），功能 = 支撑这些成品的底座
+     （画布 / 知识库 / Agent / 插件）。曾经叫「能做什么」和「功能」，两个词听起来
+     是同一件事，用户不知道该点哪个——导航项之间语义重叠，等于没有导航。
+
+  2. 一个东西从头到尾只能有一个叫法。这里叫「产出」，落地那段的抬头
+     （outputsSection.eyebrow）和 Hero 的次要按钮就都得叫「产出」。
+     点了 A 落在 B 上，用户会以为自己点错了。
+*/
 export const nav: { href: string; label: Copy }[] = [
-  { href: '#outputs', label: { zh: '能做什么', en: 'What it makes' } },
+  { href: '#outputs', label: { zh: '产出', en: 'Output' } },
   { href: '#platform', label: { zh: '功能', en: 'Features' } },
   { href: '#developers', label: { zh: '开发者', en: 'Developers' } },
   { href: '#download', label: { zh: '下载', en: 'Download' } },
@@ -54,7 +66,8 @@ export const hero = {
     zh: '桌面端的 Claude。内置 141+ 创作技能、一块可视化设计画布和你自己的知识库——聊天，然后收文件。',
     en: 'Claude on your desktop. 141+ built-in creation skills, a visual design canvas, and a knowledge base of your own. Chat, then collect the files.',
   },
-  secondaryCta: { zh: '看看能做什么', en: 'See what it makes' },
+  // 这个按钮也指向「产出」那一段，所以用同一个词（见 nav 的注释第 2 条）。
+  secondaryCta: { zh: '看看能产出什么', en: 'See the output' },
   otherPlatforms: { zh: '其它平台', en: 'Other platforms' },
   trust: {
     zh: '基于 Claude Agent SDK 构建 · 开源可审计',
@@ -114,7 +127,8 @@ export const outputs: { label: Copy; ext: string; skills: string[] }[] = [
 ]
 
 export const outputsSection = {
-  eyebrow: { zh: '能做什么', en: 'What it makes' },
+  // 和导航项同名（见 nav 的注释第 2 条）——用户点「产出」，落地就得看见「产出」。
+  eyebrow: { zh: '产出', en: 'Output' },
   title: { zh: '你要的是文件，不是建议。', en: 'You wanted a file, not advice.' },
   body: {
     zh: '下面每一行都对应应用里真实装好的技能——括号里的名字你能在仓库里找到。说一句话，它照着做，交回成品。',
