@@ -1,0 +1,28 @@
+/* Tailwind v4：一行 import 就把整套工具类引进来（v4 不再需要 tailwind.config.js）。 */
+@import 'tailwindcss';
+
+/*
+  自定义主题变量：深色科技风的底色 + Claude 品牌橙点缀。
+  这些 --color-* 变量会被 Tailwind v4 自动变成工具类（如 bg-ink、text-brand）。
+  方案定稿后颜色可再调，这里先立个能用的基调。
+*/
+@theme {
+  --color-ink: #0a0a0b; /* 页面最底色，近黑 */
+  --color-surface: #141416; /* 卡片/分区底色，比 ink 亮一档 */
+  --color-line: #26262a; /* 描边/分隔线 */
+  --color-brand: #d97757; /* Claude 品牌橙 */
+  --color-muted: #8a8a92; /* 次要文字 */
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--color-ink);
+  color: #ededf0;
+  font-family:
+    ui-sans-serif, system-ui, -apple-system, 'Segoe UI', 'PingFang SC',
+    'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
