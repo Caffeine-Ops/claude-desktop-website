@@ -1,28 +1,114 @@
-/* Tailwind v4：一行 import 就把整套工具类引进来（v4 不再需要 tailwind.config.js）。 */
+/* Tailwind v4：一行 import 引入整套工具类（v4 不再需要 tailwind.config.js）。 */
 @import 'tailwindcss';
 
 /*
-  自定义主题变量：深色科技风的底色 + Claude 品牌橙点缀。
-  这些 --color-* 变量会被 Tailwind v4 自动变成工具类（如 bg-ink、text-brand）。
-  方案定稿后颜色可再调，这里先立个能用的基调。
+  ─────────────────────────────────────────────────────────────
+  设计令牌（design token = 给颜色/字体起的名字，全站只认名字不认具体色值）
+  ─────────────────────────────────────────────────────────────
+  为什么浅色打底而不是深黑科技风：
+  1. 这个产品的产出是「文档」——PPT、表格、方案。文档天生是纸白的，浅色更诚实。
+  2. 「近黑底 + 亮绿点缀」是当下 AI 生成落地页的通病款，撞脸风险极高。
+  深色主题仍然保留（跟随系统 + 手动切换），但浅色是被设计的那一版。
+
+  @theme inline 里的 --color-* 会被 Tailwind v4 自动变成工具类（bg-paper / text-brand …）。
+  这些值故意写成 var(...) 的间接引用：切换深浅主题时只要换下面 :root / .dark
+  里那一层原始变量，所有工具类自动跟着变——不需要给每个类手写 dark: 变体。
 */
-@theme {
-  --color-ink: #0a0a0b; /* 页面最底色，近黑 */
-  --color-surface: #141416; /* 卡片/分区底色，比 ink 亮一档 */
-  --color-line: #26262a; /* 描边/分隔线 */
-  --color-brand: #d97757; /* Claude 品牌橙 */
-  --color-muted: #8a8a92; /* 次要文字 */
+@theme inline {
+  --color-paper: var(--paper); /* 页面主底色 */
+  --color-surface: var(--surface); /* 卡片/凹槽，比 paper 深一档 */
+  --color-ink: var(--ink); /* 正文与标题 */
+  --color-graphite: var(--graphite); /* 次要文字 */
+  --color-rule: var(--rule); /* 分隔线、描边 */
+  --color-brand: var(--brand); /* 唯一强调色：品牌绿 */
+  --color-brand-on: var(--brand-on); /* 压在品牌绿上的字色（深浅主题里是反的） */
+  --color-brand-soft: var(--brand-soft); /* 品牌绿的极淡底，用于高亮区 */
+  --color-mint: var(--mint); /* 图标里的薄荷青，只给 logo 记号用 */
+
+  --font-display: var(--font-archivo), system-ui, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  --font-body: var(--font-archivo), system-ui, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, 'SF Mono', Menlo, monospace;
+}
+
+/* 浅色（默认，被设计的那一版） */
+:root {
+  --paper: #fbfbf9; /* 微暖的灰白，刻意避开 AI 常见的奶油色 #F4F1EA */
+  --surface: #f2f2ee;
+  --ink: #14171a; /* 近黑但偏冷，和「奶油 + 赤陶」那一挂拉开距离 */
+  --graphite: #5b6470;
+  --rule: #e3e5e1;
+  /*
+    品牌绿。产品里的 --brand 浅色档是 142 76% 36%（≈ #16a34a），这里刻意压深了一档。
+    为什么：#16a34a 配白字只有 3.3:1 的对比度，配浅底做小字也只有 3.16:1，
+    都够不到 WCAG AA 要求的 4.5:1——按钮上的字会糊，眼神不好的人直接读不出来。
+    #15803d 是同一个色相族往下压一档，白字上到 5.0:1，小字也到 5.0:1，全过。
+    强调色是拿来被读的，不是拿来被欣赏的：读不清的强调色等于没有。
+  */
+  --brand: #15803d;
+  --brand-on: #ffffff; /* 浅色主题：深绿底 + 白字 */
+  --brand-soft: #eaf7ef;
+  --mint: #4ade80; /* = 产品 --brand 深色档 145 60% 52%，也是 app 图标里的青绿 */
+  color-scheme: light;
+}
+
+/* 深色（备选，跟随系统或手动切换） */
+.dark {
+  --paper: #0f1113; /* 不用纯黑：纯黑会让内容边界在 OLED 上糊掉 */
+  --surface: #17191c;
+  --ink: #eceef0;
+  --graphite: #939ba6;
+  --rule: #262a2e;
+  /* 深绿在深底上读不出来，换成产品 --brand 深色档的薄荷绿（145 60% 52%）。
+     深色主题下这个绿是「亮的那一方」，所以压在它上面的字必须反过来用深色——
+     深色模式沿用白字是最常见的对比度事故（白字压亮绿只有 1.8:1，基本没法读）。 */
+  --brand: #4ade80;
+  --brand-on: #0f1113; /* 深色主题：亮绿底 + 深字 */
+  --brand-soft: #14251b;
+  --mint: #4ade80;
+  color-scheme: dark;
 }
 
 html {
   scroll-behavior: smooth;
+  /* 顶栏是 sticky 的，锚点跳转要留出它的高度，否则标题被压在栏底下 */
+  scroll-padding-top: 5rem;
 }
 
 body {
-  background-color: var(--color-ink);
-  color: #ededf0;
-  font-family:
-    ui-sans-serif, system-ui, -apple-system, 'Segoe UI', 'PingFang SC',
-    'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+  background-color: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/*
+  Archivo 是可变字体，带一根「宽度轴」(wdth)。同一个家族，
+  宽度拉到 112 + 字重 800 就是气势很足的标题脸；回到 100 + 400 就是老实的正文脸。
+  一个家族演两个角色，比硬凑两款没关系的字体更成体系。
+*/
+.display-face {
+  font-variation-settings: 'wdth' 112;
+  letter-spacing: -0.035em;
+}
+
+/* 键盘可达性的地板：焦点必须看得见，否则只能用键盘的人被挡在门外 */
+:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* 尊重系统的「减少动态效果」——前庭功能敏感的人会被大幅位移动画弄到不适 */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
