@@ -107,6 +107,30 @@ body {
   }
 }
 
+/* 核心光晕的呼吸（HeroWall）。慢，6 秒一轮——快了就成了闪，会抢眼。 */
+@keyframes breathe {
+  0%,
+  100% {
+    opacity: 0.55;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.1);
+  }
+}
+.pulse-core {
+  animation: breathe 6s ease-in-out infinite;
+}
+
+/* 减少动效偏好：墙静止但仍可见——不是把它藏起来，是让它别动。 */
+@media (prefers-reduced-motion: reduce) {
+  .wall-row,
+  .pulse-core {
+    animation: none;
+  }
+}
+
 /* 终端光标闪烁 + 徽章圆点呼吸 + 滚动提示线 */
 .caret-blink {
   animation: blink 1s steps(1) infinite;
