@@ -78,13 +78,18 @@ export function HeroWall() {
                 }}
               >
                 {/* 内容渲染两遍：位移到 -50% 时首尾无缝衔接 */}
+                {/*
+                  脚手架：Task 3 只改数据结构（WallCard: id/title/tag/brand/ask），
+                  这里临时按新字段渲染，只为让本 Task 独立跑通 build。
+                  Task 4 会整个重写这段渲染（结构化卡片，非单行 chip）——别在这基础上精修。
+                */}
                 {[...row, ...row].map((card, ci) => (
                   <span
                     key={ci}
                     className="flex items-center gap-3 rounded-2xl border border-edge bg-panel/70 px-7 py-5 font-mono text-[15px] whitespace-nowrap text-dim"
                   >
-                    <span className={card.accent ? 'text-brand' : 'opacity-70'}>{card.icon}</span>
-                    <span className={card.accent ? 'text-ink' : undefined}>{t(card.text)}</span>
+                    <span className={card.brand ? 'text-brand' : 'opacity-70'}>{t(card.tag)}</span>
+                    <span className={card.ask ? 'text-ink' : undefined}>{t(card.title)}</span>
                   </span>
                 ))}
               </div>
