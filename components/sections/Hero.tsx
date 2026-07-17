@@ -14,6 +14,7 @@ import { useRelease } from '@/lib/useRelease'
 import { getPlatformCards, guessPlatform, FALLBACK_HREF } from '@/lib/github'
 import { Magnetic } from '../fx/Magnetic'
 import { useIntroDelay } from '../fx/Intro'
+import { HeroWall } from '../HeroWall'
 import { Orbit } from '../Orbit'
 import { Terminal } from '../Terminal'
 
@@ -54,18 +55,13 @@ export function Hero() {
 
   return (
     <section id="top" className="relative z-[1] mx-auto grid min-h-screen max-w-[1180px] content-center px-8 pt-[120px] pb-10">
-      {/* 背景光束：四根细绿线，纵深感的最低成本写法 */}
-      <div aria-hidden="true" className="pointer-events-none absolute inset-0">
-        {['16%', '38%', '63%', '85%'].map((left) => (
-          <span
-            key={left}
-            className="absolute top-[-10%] h-[120%] w-px"
-            style={{ left, background: 'linear-gradient(180deg,transparent,var(--edge-brand),transparent)' }}
-          />
-        ))}
+      {/* 背景内容墙（Linear intake 式的 3D 倾斜卡片墙）。
+          原来的四根光束退役了——和墙叠在一起是两种纵深语言打架。 */}
+      <div className="pointer-events-none absolute inset-0">
+        <HeroWall />
       </div>
 
-      <div className="grid items-center gap-12 lg:grid-cols-[1.08fr_1fr]">
+      <div className="relative grid items-center gap-12 lg:grid-cols-[1.08fr_1fr]">
         <div>
           <motion.span
             {...rise(0)}

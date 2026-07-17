@@ -164,6 +164,26 @@ body {
   }
 }
 
+/*
+  Hero 内容墙（Linear intake 式）：一面 rotateX 向后倾倒的 3D 平面，
+  几行产品痕迹卡以不同速度漂移。行内容渲染两遍，位移到 -50% 时首尾无缝。
+  速度/方向由内联 style 指定（不同行不同 duration，奇数行 reverse）。
+*/
+.wall-row {
+  animation: wallDrift linear infinite;
+}
+@keyframes wallDrift {
+  to {
+    transform: translateX(-50%);
+  }
+}
+:root {
+  --wall-opacity: 0.5; /* 深色：墙隐约可见 */
+}
+.light {
+  --wall-opacity: 0.42; /* 浅色：白底噪声容忍度更低，再压一档 */
+}
+
 /* 终端光标闪烁 + 徽章圆点呼吸 + 滚动提示线 */
 .caret-blink {
   animation: blink 1s steps(1) infinite;
@@ -251,7 +271,8 @@ body {
   .cue-line,
   .btn-glow::after,
   .intro-draw,
-  .intro-word {
+  .intro-word,
+  .wall-row {
     animation: none !important;
   }
   .intro-overlay {

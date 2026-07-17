@@ -75,6 +75,52 @@ export const hero = {
   },
 }
 
+/*
+  Hero 背景「内容墙」（Linear intake 式的 3D 倾斜卡片墙）。
+  墙上铺的是产品干活时的真实痕迹——指令、技能调用、产出文件、权限确认、
+  知识库检索——全部对应产品真实功能与仓库里真实存在的技能名，不虚构。
+  纯装饰层（aria-hidden），但英文版界面不能漏中文，所以照样双语。
+*/
+export type WallCard = { icon: string; text: Copy; accent?: boolean }
+
+export const heroWall: WallCard[][] = [
+  [
+    { icon: '›', text: { zh: '帮我做一份 Q3 复盘 PPT', en: 'Make me a Q3 review deck' }, accent: true },
+    { icon: '✓', text: { zh: 'ppt-master · 生成 24 页', en: 'ppt-master · 24 slides' } },
+    { icon: '📊', text: { zh: 'Q3-复盘.pptx · 4.2 MB', en: 'Q3-review.pptx · 4.2 MB' } },
+    { icon: '🎨', text: { zh: '画布已更新 · 3 处修改', en: 'Canvas updated · 3 edits' } },
+    { icon: '✓', text: { zh: 'd3-visualization · 图表已嵌入', en: 'd3-visualization · charts embedded' } },
+  ],
+  [
+    { icon: '🔍', text: { zh: '检索知识库 · 12 条命中', en: 'Knowledge base · 12 hits' } },
+    { icon: '›', text: { zh: '把这份表格算个季度汇总', en: 'Summarize this sheet by quarter' }, accent: true },
+    { icon: '✓', text: { zh: 'spreadsheets · 公式已写入', en: 'spreadsheets · formulas written' } },
+    { icon: '📈', text: { zh: '年度预算表.xlsx · 890 KB', en: 'annual-budget.xlsx · 890 KB' } },
+    { icon: '⚠', text: { zh: '请求运行命令 · 等待确认', en: 'Command request · awaiting approval' } },
+  ],
+  [
+    { icon: '✓', text: { zh: 'imagegen · 出图 4 张', en: 'imagegen · 4 images' } },
+    { icon: '🖼', text: { zh: '发布海报.png · 1.1 MB', en: 'launch-poster.png · 1.1 MB' } },
+    { icon: '›', text: { zh: '写一版融资方案的框架', en: 'Draft a fundraising proposal outline' }, accent: true },
+    { icon: '✓', text: { zh: 'proposal-writer · 框架已搭好', en: 'proposal-writer · outline ready' } },
+    { icon: '📄', text: { zh: '投标方案.docx · 36 KB', en: 'proposal.docx · 36 KB' } },
+  ],
+  [
+    { icon: '●', text: { zh: '会话 #14 · 3 个任务进行中', en: 'Session #14 · 3 tasks running' } },
+    { icon: '✓', text: { zh: 'sora · 成片渲染完成', en: 'sora · render complete' } },
+    { icon: '🎬', text: { zh: '产品演示.mp4 · 48 MB', en: 'product-demo.mp4 · 48 MB' } },
+    { icon: '›', text: { zh: '把这些数据做成可交互看板', en: 'Turn this data into a live dashboard' }, accent: true },
+    { icon: '📉', text: { zh: '数据看板.html · 交互式', en: 'dashboard.html · interactive' } },
+  ],
+  [
+    { icon: '✓', text: { zh: 'resume-modern · 排版完成', en: 'resume-modern · layout done' } },
+    { icon: '🧾', text: { zh: '简历-2026.pdf · 220 KB', en: 'resume-2026.pdf · 220 KB' } },
+    { icon: '🔌', text: { zh: '连接器已接入 · 2 个外部系统', en: 'Connectors linked · 2 systems' } },
+    { icon: '›', text: { zh: '给发布会写三条社交卡片', en: 'Write three social cards for launch' }, accent: true },
+    { icon: '✓', text: { zh: 'card-twitter · 卡片已生成', en: 'card-twitter · cards generated' } },
+  ],
+]
+
 /** 终端演示（Hero 下方的循环动画）。所有可见字都双语。 */
 export const terminal = {
   windowTitle: { zh: 'claude-desktop — 会话', en: 'claude-desktop — session' },
