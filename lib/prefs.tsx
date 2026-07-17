@@ -2,23 +2,23 @@
 
 /*
   ─────────────────────────────────────────────────────────────
-  访客偏好：语言（中/EN）与主题（浅/深）。
+  访客偏好：语言（中/EN）与主题（深/浅）。
   ─────────────────────────────────────────────────────────────
   ('use client' = 这个文件里的代码要在访客浏览器里跑，不是在服务器上。
    凡是要读 localStorage、监听点击、用 useState 的地方都得标它。)
 
-  这里用 React Context 把偏好放在一处：顶栏改语言，整页的字跟着变，
-  中间不用一层层往下传 props。
+  主题机制（2026-07-17 改版）：**默认深色**。CSS 里 :root 就是深色值，
+  不挂任何类就是深色；浅色靠往 <html> 挂 .light 类。方向和常见的
+  「.dark 类」相反，是刻意的——默认必须在 JS 加载前就成立，把默认
+  写进 :root 是唯一不闪帧的做法。
 
-  两个偏好的默认值策略不一样，是故意的：
-  - 主题：跟随系统 (prefers-color-scheme)。访客在系统里已经表过态了，别跟他对着干。
-  - 语言：先看浏览器语言，猜不出默认中文（设计文档 §9：主要受众是中文用户）。
+  语言默认策略不变：先看存档，再猜浏览器语言，兜底中文（主要受众）。
 */
 
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react'
 import type { Copy, Lang } from './content'
 
-type Theme = 'light' | 'dark'
+type Theme = 'dark' | 'light'
 
 type Prefs = {
   lang: Lang
@@ -36,39 +36,35 @@ const THEME_KEY = 'cd-theme'
 
 export function PrefsProvider({ children }: { children: ReactNode }) {
   /*
-    初值必须和服务器渲染出来的 HTML 一致，否则 React 会报 hydration 不匹配
-    （hydration = 服务器先吐一份静态 HTML，浏览器再把它「激活」成可交互的页面；
-     两边第一帧长得不一样就会出警告）。所以这里一律先用默认值，
-     真实偏好等挂载后在 useEffect 里读——那时已经在浏览器里了。
+    初值必须和服务器渲染出来的 HTML 一致，否则 React 报 hydration 不匹配
+    （两边第一帧长得不一样）。所以先用默认值（dark / zh），真实偏好等
+    挂载后在 useEffect 里读——那时已经在浏览器里了。
   */
   const [lang, setLangState] = useState<Lang>('zh')
-  const [theme, setTheme] = useState<Theme>('light')
+  const [theme, setTheme] = useState<Theme>('dark')
 
   useEffect(() => {
     const savedLang = localStorage.getItem(LANG_KEY) as Lang | null
     if (savedLang === 'zh' || savedLang === 'en') {
       setLangState(savedLang)
     } else {
-      // 没存过就猜：浏览器语言以 zh 开头才给中文，其余一律英文。
-      // 猜不出（navigator.language 为空）时落回中文——主要受众。
       const nav = navigator.language ?? ''
       setLangState(nav && !nav.toLowerCase().startsWith('zh') ? 'en' : 'zh')
     }
 
+    // 主题：存过浅色才是浅色，其余一律深色。
+    // 刻意不看系统的 prefers-color-scheme——产品拍板「默认黑夜」，
+    // 默认就得对所有人一致，系统偏好由用户用切换按钮自己表达。
     const savedTheme = localStorage.getItem(THEME_KEY) as Theme | null
-    if (savedTheme === 'light' || savedTheme === 'dark') {
-      setTheme(savedTheme)
-    } else {
-      setTheme(window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
-    }
+    setTheme(savedTheme === 'light' ? 'light' : 'dark')
   }, [])
 
-  // 主题落到 <html class="dark"> 上——CSS 里的 .dark 那一组变量靠这个类生效。
+  // 主题落到 <html class="light"> 上——深色是无类的默认态。
   useEffect(() => {
-    document.documentElement.classList.toggle('dark', theme === 'dark')
+    document.documentElement.classList.toggle('light', theme === 'light')
   }, [theme])
 
-  // lang 属性要跟着改：屏幕阅读器靠它决定用中文还是英文发音。
+  // lang 属性跟着改：屏幕阅读器靠它决定用中文还是英文发音。
   useEffect(() => {
     document.documentElement.lang = lang === 'zh' ? 'zh-CN' : 'en'
   }, [lang])
@@ -78,7 +74,7 @@ export function PrefsProvider({ children }: { children: ReactNode }) {
     try {
       localStorage.setItem(LANG_KEY, l)
     } catch {
-      // 隐私模式下存不了。语言在本次会话内照样能切，只是刷新后不记得——可以接受。
+      // 隐私模式下存不了。本次会话内照样能切，刷新后不记得——可以接受。
     }
   }
 
@@ -103,20 +99,19 @@ export function PrefsProvider({ children }: { children: ReactNode }) {
 
 export function usePrefs(): Prefs {
   const ctx = useContext(PrefsContext)
-  // 忘了套 Provider 是写代码时的错，不是运行时的意外——直接报清楚，别静默返回默认值。
+  // 忘了套 Provider 是写代码时的错，不是运行时的意外——直接报清楚。
   if (!ctx) throw new Error('usePrefs 必须在 <PrefsProvider> 内部使用')
   return ctx
 }
 
 /**
- * 在页面画第一帧之前就把主题类挂上，避免「先闪一下白再变黑」。
- * 这段字符串会被塞进 <script>，在 React 接管之前同步执行。
+ * 在页面画第一帧之前挂主题类，避免闪帧。
+ * 深色是默认（:root 即深色），所以这段只需要处理「用户选过浅色」这一种情况——
+ * 比旧版（默认浅色时要探测系统偏好）更简单，也更不容易错。
  * try/catch 兜住隐私模式——这段脚本挂了不能连累整页。
  */
 export const themeInitScript = `
 (function(){try{
-  var s=localStorage.getItem('${THEME_KEY}');
-  var d=s==='dark'||(!s&&matchMedia('(prefers-color-scheme: dark)').matches);
-  if(d)document.documentElement.classList.add('dark');
+  if(localStorage.getItem('${THEME_KEY}')==='light')document.documentElement.classList.add('light');
 }catch(e){}})();
 `

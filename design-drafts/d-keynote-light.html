@@ -1,0 +1,593 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>设计稿 D · 发布会（白天版）</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/*
+  方向 D「发布会」白天版——结构与动效和深色版一字不差，只做配色翻译。
+  翻译不是反色，有三条原则：
+  1. 亮绿/亮青在白底上读不出来（荧光笔效果），强调渐变换成
+     深绿 #15803d → 深青 #0e7490（对比度在正式站验证过）。
+  2. 终端刻意保持深色——白纸上放一个深色物件，演示区反而更抓眼，
+     而且终端本来就该是黑的，这是真实感不是偷懒。
+  3. 白底上的发光要收着用：黑底的 glow 是光，白底的 glow 是渍。
+     光晕、投影全线换成低透明度的带绿调软阴影。
+*/
+:root{
+  --bg:#fafaf7; --panel:#ffffff; --ink:#14171a; --dim:#5b6470;
+  --edge:rgba(20,23,26,.09); --edge-g:rgba(21,128,61,.24);
+  --green:#15803d; --cyan:#0e7490; --mint:#4ade80;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:auto}
+body{background:var(--bg);color:var(--ink);overflow-x:hidden;
+  font-family:'Archivo',system-ui,'PingFang SC','Microsoft YaHei',sans-serif;
+  -webkit-font-smoothing:antialiased}
+.mono{font-family:'IBM Plex Mono',ui-monospace,monospace}
+::selection{background:rgba(21,128,61,.18)}
+
+/* ── 开场序列：光标 logo 自己画出来，然后幕布上掀 ── */
+#intro{position:fixed;inset:0;z-index:100;background:var(--bg);
+  display:grid;place-items:center;
+  /* 纯 CSS 兜底：就算 JS 全挂，2.6s 后幕布也会自己掀走，内容不会被永远盖住 */
+  animation:introOut .7s 2.6s cubic-bezier(.83,0,.17,1) forwards}
+#intro svg{width:72px;height:72px}
+#intro .draw{stroke-dasharray:60;stroke-dashoffset:60;
+  animation:draw 1s .15s cubic-bezier(.65,0,.35,1) forwards}
+#intro .word{margin-top:18px;font-size:13px;letter-spacing:.35em;color:var(--dim);
+  opacity:0;animation:fadeIn .5s 1s forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+@keyframes fadeIn{to{opacity:1}}
+@keyframes introOut{to{transform:translateY(-100%)}}
+
+/* ── 滚动进度条 ── */
+#progress{position:fixed;top:0;left:0;right:0;height:2px;z-index:99;
+  background:linear-gradient(90deg,var(--green),var(--cyan));
+  transform-origin:0 50%;transform:scaleX(0);will-change:transform}
+
+/* ── 鼠标光斑（rAF 慢速跟随）：白底上是极淡的绿晕，不是光 ── */
+#glow{position:fixed;width:560px;height:560px;border-radius:50%;pointer-events:none;z-index:0;
+  background:radial-gradient(circle,rgba(21,128,61,.07),transparent 62%);
+  transform:translate(-50%,-50%);will-change:transform}
+#dust{position:fixed;inset:0;z-index:0;pointer-events:none}
+
+/* ── 顶栏：白玻璃 ── */
+nav{position:fixed;top:14px;left:50%;transform:translateX(-50%);z-index:50;
+  display:flex;align-items:center;gap:26px;padding:11px 12px 11px 20px;
+  background:rgba(255,255,255,.66);border:1px solid var(--edge);border-radius:16px;
+  backdrop-filter:blur(18px);width:min(1080px,calc(100% - 40px));opacity:0;
+  box-shadow:0 8px 32px -18px rgba(20,40,30,.25)}
+.logo{display:flex;align-items:center;gap:9px;font-weight:700;font-size:14.5px}
+nav a{color:var(--dim);text-decoration:none;font-size:13px;transition:color .2s}
+nav a:hover{color:var(--ink)}
+.nav-cta{margin-left:auto;background:linear-gradient(135deg,var(--green),var(--cyan));
+  color:#fff!important;font-weight:650;padding:9px 18px;border-radius:11px}
+
+/* ── Hero ── */
+.hero{position:relative;z-index:1;min-height:100vh;display:grid;align-content:center;
+  max-width:1180px;margin:0 auto;padding:120px 32px 40px}
+.hero-bg{position:absolute;inset:0;pointer-events:none;overflow:visible}
+.beam{position:absolute;top:-10%;width:1px;height:120%;
+  background:linear-gradient(180deg,transparent,rgba(21,128,61,.16),transparent);
+  will-change:transform}
+.hero .badge{display:inline-flex;width:fit-content;align-items:center;gap:9px;font-size:12px;
+  color:var(--green);border:1px solid var(--edge-g);border-radius:999px;padding:7px 15px;
+  margin-bottom:30px;background:rgba(21,128,61,.06)}
+.badge .dot{width:6px;height:6px;border-radius:50%;background:var(--green);
+  box-shadow:0 0 8px rgba(21,128,61,.5);animation:pulse 2s infinite}
+@keyframes pulse{50%{opacity:.35}}
+h1{font-size:clamp(2.7rem,5.6vw,4.9rem);line-height:1.1;font-weight:800;
+  letter-spacing:-.035em;font-variation-settings:'wdth' 112}
+.h-line{display:block;overflow:hidden;padding-bottom:.08em}
+.char{display:inline-block;will-change:transform,filter}
+.h-grad .char{background:linear-gradient(120deg,var(--green),var(--cyan));
+  -webkit-background-clip:text;background-clip:text;color:transparent}
+.hero .sub{margin-top:26px;color:var(--dim);font-size:16.5px;line-height:1.7;max-width:46ch}
+.ctas{display:flex;gap:16px;margin-top:38px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:10px;padding:15px 30px;border-radius:14px;
+  font-size:15px;font-weight:650;text-decoration:none;will-change:transform;position:relative}
+.btn-primary{background:linear-gradient(135deg,var(--green),var(--cyan));color:#fff}
+.btn-primary::after{content:"";position:absolute;inset:-3px;border-radius:17px;z-index:-1;
+  background:linear-gradient(135deg,var(--green),var(--cyan));filter:blur(18px);opacity:.18;
+  animation:glowPulse 3.2s ease-in-out infinite}
+@keyframes glowPulse{50%{opacity:.38}}
+.btn-ghost{border:1px solid var(--edge);color:var(--ink);background:var(--panel)}
+.btn-ghost:hover{border-color:var(--edge-g)}
+.hero .meta{margin-top:22px;font-size:12px;color:var(--dim)}
+.hero .meta b{color:var(--green);font-weight:500}
+/* ── 产出轨道：右侧永动装置（写法同深色版，见彼处注释）── */
+.hero-grid{display:grid;grid-template-columns:1.08fr 1fr;gap:48px;align-items:center}
+.orbit-zone{position:relative;height:580px;display:grid;place-items:center}
+.orbit-par{position:relative;width:560px;height:560px;will-change:transform}
+.orbit-rings{position:absolute;inset:0;animation:ringspin 110s linear infinite}
+@keyframes ringspin{to{transform:rotate(360deg)}}
+.orbit-rings circle{fill:none;stroke:rgba(21,128,61,.16);stroke-width:1}
+.orbit-rings .dash{stroke:rgba(21,128,61,.28);stroke-dasharray:3 11}
+.core{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  width:112px;height:112px;border-radius:50%;display:grid;place-items:center;
+  background:radial-gradient(circle at 35% 28%,#ffffff,#eef4ef);
+  border:1px solid var(--edge-g);
+  box-shadow:0 18px 50px -14px rgba(21,128,61,.28),inset 0 0 22px rgba(21,128,61,.05)}
+.pulse{position:absolute;top:50%;left:50%;width:112px;height:112px;border-radius:50%;
+  border:1px solid rgba(21,128,61,.38);transform:translate(-50%,-50%) scale(1);
+  animation:pulseRing 3.4s ease-out infinite;pointer-events:none}
+.pulse.p2{animation-delay:1.7s}
+@keyframes pulseRing{
+  from{transform:translate(-50%,-50%) scale(1);opacity:.6}
+  to{transform:translate(-50%,-50%) scale(2.7);opacity:0}}
+.o-ring{position:absolute;inset:0}
+.sat{position:absolute;top:50%;left:50%;will-change:transform}
+.o-outer .sat{animation:orbitOuter 44s linear infinite}
+.o-inner .sat{animation:orbitInner 30s linear infinite reverse}
+@keyframes orbitOuter{
+  from{transform:rotate(0deg) translateX(258px) rotate(0deg)}
+  to{transform:rotate(360deg) translateX(258px) rotate(-360deg)}}
+@keyframes orbitInner{
+  from{transform:rotate(0deg) translateX(156px) rotate(0deg)}
+  to{transform:rotate(360deg) translateX(156px) rotate(-360deg)}}
+.schip{display:flex;transform:translate(-50%,-50%);align-items:center;gap:7px;
+  background:rgba(255,255,255,.92);border:1px solid var(--edge);border-radius:11px;
+  padding:8px 13px;font-size:12px;color:var(--dim);white-space:nowrap;
+  box-shadow:0 10px 28px -14px rgba(20,60,35,.28)}
+.schip b{color:var(--green);font-weight:500}
+.o-inner .schip{padding:6px 11px;font-size:11px;border-radius:9px}
+@media (max-width:1020px){.hero-grid{grid-template-columns:1fr}.orbit-zone{display:none}}
+
+.scroll-cue{position:absolute;bottom:26px;left:50%;transform:translateX(-50%);
+  color:var(--dim);font-size:11px;letter-spacing:.3em;display:flex;flex-direction:column;
+  align-items:center;gap:8px}
+.scroll-cue i{display:block;width:1px;height:34px;background:linear-gradient(180deg,var(--green),transparent);
+  animation:cue 1.6s ease-in-out infinite}
+@keyframes cue{50%{transform:scaleY(.4);opacity:.4}}
+
+/* ── 终端（3D 鼠标跟随）：刻意保持深色，白纸上的一块黑玻璃 ──
+   终端内部沿用深色版的亮绿——它是在深底上，那套颜色在这里依然成立。 */
+.term-zone{perspective:1200px;margin-top:64px}
+.term{background:linear-gradient(180deg,#101a14,#0d1410);
+  border:1px solid rgba(74,222,128,.2);border-radius:18px;overflow:hidden;
+  box-shadow:0 44px 90px -36px rgba(20,40,30,.5);
+  will-change:transform;transform-style:preserve-3d;
+  color:#e9f1ec}
+.term-bar{display:flex;align-items:center;gap:7px;padding:13px 16px;border-bottom:1px solid rgba(255,255,255,.08)}
+.term-bar i{width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,.13)}
+.term-bar span{margin-left:10px;font-size:11px;color:#7c8d83}
+.term-body{padding:24px;font-size:13.5px;line-height:2.1;min-height:250px}
+.line-in .p{color:#4ade80}
+.caret{display:inline-block;width:8px;height:17px;background:#4ade80;
+  vertical-align:-3px;margin-left:2px;animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.line-log{color:#7c8d83;opacity:0}
+.line-log .ok{color:#4ade80}
+.files{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+.file{display:flex;align-items:center;gap:9px;background:rgba(74,222,128,.06);
+  border:1px solid rgba(74,222,128,.16);border-radius:10px;padding:9px 14px;font-size:12px;
+  opacity:0;will-change:transform}
+.file .ext{color:#4ade80}
+
+/* ── 文件传送带（滚动驱动 + 速度倾斜）── */
+.conveyor{position:relative;z-index:1;padding:110px 0 30px;overflow:hidden;
+  background:linear-gradient(180deg,transparent,rgba(21,128,61,.03),transparent)}
+.conveyor h2{text-align:center;font-size:clamp(1.7rem,3.2vw,2.5rem);font-weight:800;
+  letter-spacing:-.02em;font-variation-settings:'wdth' 112;margin-bottom:10px}
+.conveyor .hint{text-align:center;color:var(--dim);font-size:14px;margin-bottom:44px}
+.belt-wrap{will-change:transform}
+.belt{display:flex;gap:14px;width:max-content;padding:8px 0;will-change:transform}
+.belt+.belt-wrap,.belt-wrap+.belt-wrap{margin-top:14px}
+.fchip{display:flex;align-items:center;gap:10px;background:var(--panel);
+  border:1px solid var(--edge);border-radius:12px;padding:13px 20px;font-size:13px;
+  color:var(--dim);white-space:nowrap;transition:border-color .25s;
+  box-shadow:0 6px 20px -14px rgba(20,60,35,.25)}
+.fchip:hover{border-color:var(--edge-g)}
+.fchip b{color:var(--green);font-weight:500}
+
+/* ── 产出卡片 ── */
+.outputs{position:relative;z-index:1;max-width:1180px;margin:0 auto;padding:90px 32px}
+.eyebrow{display:flex;gap:12px;align-items:center;font-size:12px;letter-spacing:.16em;
+  color:var(--green);margin-bottom:16px}
+.eyebrow::before{content:"";width:34px;height:1px;background:var(--green)}
+.outputs h2,.cta h2{font-size:clamp(1.9rem,3.6vw,2.8rem);font-weight:800;
+  letter-spacing:-.025em;font-variation-settings:'wdth' 112}
+.count-row{display:flex;align-items:baseline;gap:14px;margin-top:34px}
+.count{font-size:clamp(3.4rem,7vw,5.6rem);font-weight:800;line-height:1;
+  background:linear-gradient(120deg,var(--green),var(--cyan));
+  -webkit-background-clip:text;background-clip:text;color:transparent}
+.count-l{color:var(--dim);font-size:15px}
+.ogrid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:44px}
+.ocard{background:var(--panel);border:1px solid var(--edge);border-radius:16px;
+  padding:26px;will-change:transform;transition:border-color .25s,box-shadow .25s;
+  box-shadow:0 10px 30px -20px rgba(20,60,35,.2)}
+.ocard:hover{border-color:var(--edge-g);box-shadow:0 18px 44px -20px rgba(21,128,61,.25)}
+.ocard .ic{font-size:22px;margin-bottom:14px;display:block}
+.ocard h3{font-size:16.5px;font-weight:700;margin-bottom:7px}
+.ocard p{font-size:13px;color:var(--dim);line-height:1.65}
+.ocard .ext{margin-top:14px;font-size:11.5px;color:var(--green)}
+
+/* ── 功能四块 ── */
+.platform{position:relative;z-index:1;max-width:1180px;margin:0 auto;padding:50px 32px 90px}
+.pgrid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:44px}
+.pcard{background:var(--panel);
+  border:1px solid var(--edge);border-radius:18px;padding:30px;will-change:transform;
+  box-shadow:0 10px 30px -22px rgba(20,60,35,.2)}
+.pcard .num{font-size:12px;color:var(--green)}
+.pcard h3{font-size:19px;font-weight:700;margin:10px 0 10px}
+.pcard p{font-size:14px;color:var(--dim);line-height:1.7;max-width:44ch}
+
+/* ── 尾部 CTA ── */
+.cta{position:relative;z-index:1;text-align:center;padding:120px 32px 60px;overflow:hidden}
+.cta h2{font-size:clamp(2.6rem,6vw,5rem)}
+.cta .ctas{justify-content:center}
+footer{position:relative;z-index:1;display:flex;justify-content:space-between;gap:20px;
+  max-width:1180px;margin:0 auto;padding:40px 32px;color:var(--dim);font-size:12px;
+  border-top:1px solid var(--edge);flex-wrap:wrap}
+footer a{color:var(--dim);text-decoration:none}
+footer a:hover{color:var(--ink)}
+
+@media (max-width:900px){.ogrid{grid-template-columns:1fr}.pgrid{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:reduce){
+  *{animation:none!important}
+  #intro{display:none}
+  nav{opacity:1!important}
+}
+</style>
+</head>
+<body>
+
+<div id="intro" aria-hidden="true">
+  <div style="text-align:center">
+    <svg viewBox="0 0 24 24" fill="none">
+      <defs><linearGradient id="ig" x1="4" y1="3" x2="20" y2="21"><stop stop-color="#15803d"/><stop offset="1" stop-color="#0e7490"/></linearGradient></defs>
+      <path class="draw" d="M5.2 3.6 L19.8 10.6 L13.1 13.4 L10.3 20.4 Z" stroke="url(#ig)" stroke-width="1.6" stroke-linejoin="round"/>
+    </svg>
+    <div class="word mono">CLAUDE DESKTOP</div>
+  </div>
+</div>
+
+<div id="progress"></div>
+<div id="glow"></div>
+<canvas id="dust"></canvas>
+
+<nav id="nav">
+  <div class="logo">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><defs><linearGradient id="g" x1="4" y1="3" x2="20" y2="21"><stop stop-color="#15803d"/><stop offset="1" stop-color="#0e7490"/></linearGradient></defs><path d="M5.2 3.6 L19.8 10.6 L13.1 13.4 L10.3 20.4 Z" stroke="url(#g)" stroke-width="1.9" stroke-linejoin="round"/></svg>
+    Claude Desktop
+  </div>
+  <a href="#outputs">产出</a><a href="#platform">功能</a><a href="#">开发者</a>
+  <a class="nav-cta magnetic" href="#">下载</a>
+</nav>
+
+<section class="hero">
+  <div class="hero-bg" id="heroBg">
+    <span class="beam" style="left:16%"></span>
+    <span class="beam" style="left:38%"></span>
+    <span class="beam" style="left:63%"></span>
+    <span class="beam" style="left:85%"></span>
+  </div>
+
+  <div class="hero-grid">
+    <div>
+      <span class="badge mono" data-rise><i class="dot"></i>141+ 创作技能已就绪</span>
+      <h1 id="headline">
+        <span class="h-line" data-split>一句话，</span>
+        <span class="h-line" data-split>让 AI 帮你做完</span>
+        <span class="h-line h-grad" data-split>PPT、表格、方案。</span>
+      </h1>
+      <p class="sub" data-rise>桌面端的 Claude。内置 141+ 创作技能、可视化设计画布和你自己的知识库——聊天，然后收文件。</p>
+      <div class="ctas" data-rise>
+        <a class="btn btn-primary magnetic" href="#">⬇ 下载 macOS 版</a>
+        <a class="btn btn-ghost magnetic" href="#outputs">看看能产出什么</a>
+      </div>
+      <p class="meta mono" data-rise><b>v0.0.16</b> · 361 MB · 基于 Claude Agent SDK · 开源可审计</p>
+    </div>
+
+    <!-- 产出轨道：一个光标，所有产出绕着它转。纯装饰，读屏软件跳过。 -->
+    <div class="orbit-zone" data-rise aria-hidden="true">
+      <div class="orbit-par" id="orbitPar">
+        <svg class="orbit-rings" viewBox="0 0 560 560">
+          <circle class="dash" cx="280" cy="280" r="258"/>
+          <circle cx="280" cy="280" r="156"/>
+        </svg>
+        <span class="pulse"></span><span class="pulse p2"></span>
+        <div class="core">
+          <svg width="46" height="46" viewBox="0 0 24 24" fill="none"><defs><linearGradient id="og" x1="4" y1="3" x2="20" y2="21"><stop stop-color="#15803d"/><stop offset="1" stop-color="#0e7490"/></linearGradient></defs><path d="M5.2 3.6 L19.8 10.6 L13.1 13.4 L10.3 20.4 Z" stroke="url(#og)" stroke-width="1.7" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="o-ring o-outer mono">
+          <span class="sat" style="animation-delay:0s"><span class="schip">📊 <b>.pptx</b></span></span>
+          <span class="sat" style="animation-delay:-7.3s"><span class="schip">📈 <b>.xlsx</b></span></span>
+          <span class="sat" style="animation-delay:-14.7s"><span class="schip">📄 <b>.docx</b></span></span>
+          <span class="sat" style="animation-delay:-22s"><span class="schip">🖼 <b>.png</b></span></span>
+          <span class="sat" style="animation-delay:-29.3s"><span class="schip">🎬 <b>.mp4</b></span></span>
+          <span class="sat" style="animation-delay:-36.7s"><span class="schip">📉 <b>.html</b></span></span>
+        </div>
+        <div class="o-ring o-inner mono">
+          <span class="sat" style="animation-delay:0s"><span class="schip"><b>ppt-master</b></span></span>
+          <span class="sat" style="animation-delay:-7.5s"><span class="schip"><b>imagegen</b></span></span>
+          <span class="sat" style="animation-delay:-15s"><span class="schip"><b>sora</b></span></span>
+          <span class="sat" style="animation-delay:-22.5s"><span class="schip"><b>spreadsheets</b></span></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="term-zone">
+    <div class="term mono" id="term" data-rise>
+      <div class="term-bar"><i></i><i></i><i></i><span>claude-desktop — 会话</span></div>
+      <div class="term-body">
+        <div class="line-in"><span class="p">›</span> <span id="typed"></span><span class="caret"></span></div>
+        <div class="line-log" id="l1"><span class="ok">✓</span> 已调用技能 ppt-master</div>
+        <div class="line-log" id="l2"><span class="ok">✓</span> 生成 24 页 · 套用品牌模板 · 嵌入图表</div>
+        <div class="files">
+          <span class="file" id="f1">📊 Q3-复盘.pptx <span class="ext">4.2 MB</span></span>
+          <span class="file" id="f2">📈 数据附录.xlsx <span class="ext">890 KB</span></span>
+          <span class="file" id="f3">🖼 封面备选.png <span class="ext">1.1 MB</span></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="scroll-cue mono">SCROLL<i></i></div>
+</section>
+
+<section class="conveyor" id="conveyor">
+  <h2 data-reveal>说一句，收一堆。</h2>
+  <p class="hint" data-reveal>传送带跟着你的滚动走——滚多快，它走多快。</p>
+  <div class="belt-wrap" id="beltA-w"><div class="belt mono" id="beltA">
+    <span class="fchip">📊 <b>.pptx</b> Q3-复盘.pptx</span><span class="fchip">📈 <b>.xlsx</b> 年度预算表.xlsx</span><span class="fchip">📄 <b>.docx</b> 投标方案.docx</span><span class="fchip">🧾 <b>.pdf</b> 简历-2026.pdf</span><span class="fchip">🖼 <b>.png</b> 发布海报.png</span><span class="fchip">🎬 <b>.mp4</b> 产品演示.mp4</span><span class="fchip">📉 <b>.html</b> 数据看板.html</span>
+    <span class="fchip">📊 <b>.pptx</b> Q3-复盘.pptx</span><span class="fchip">📈 <b>.xlsx</b> 年度预算表.xlsx</span><span class="fchip">📄 <b>.docx</b> 投标方案.docx</span><span class="fchip">🧾 <b>.pdf</b> 简历-2026.pdf</span><span class="fchip">🖼 <b>.png</b> 发布海报.png</span><span class="fchip">🎬 <b>.mp4</b> 产品演示.mp4</span><span class="fchip">📉 <b>.html</b> 数据看板.html</span>
+  </div></div>
+  <div class="belt-wrap" id="beltB-w"><div class="belt mono" id="beltB">
+    <span class="fchip"><b>ppt-master</b></span><span class="fchip"><b>spreadsheets</b></span><span class="fchip"><b>proposal-writer</b></span><span class="fchip"><b>imagegen</b></span><span class="fchip"><b>sora</b></span><span class="fchip"><b>d3-visualization</b></span><span class="fchip"><b>resume-modern</b></span><span class="fchip"><b>poster-hero</b></span><span class="fchip"><b>remotion</b></span>
+    <span class="fchip"><b>ppt-master</b></span><span class="fchip"><b>spreadsheets</b></span><span class="fchip"><b>proposal-writer</b></span><span class="fchip"><b>imagegen</b></span><span class="fchip"><b>sora</b></span><span class="fchip"><b>d3-visualization</b></span><span class="fchip"><b>resume-modern</b></span><span class="fchip"><b>poster-hero</b></span><span class="fchip"><b>remotion</b></span>
+  </div></div>
+</section>
+
+<section class="outputs" id="outputs">
+  <div class="eyebrow mono" data-reveal>产出</div>
+  <h2 data-reveal>你要的是文件，不是建议。</h2>
+  <div class="count-row" data-reveal>
+    <span class="count"><span id="counter">0</span>+</span>
+    <span class="count-l">项内置创作技能，持续增长</span>
+  </div>
+  <div class="ogrid" id="ogrid">
+    <div class="ocard"><span class="ic">📊</span><h3>做 PPT / 演示</h3><p>一句话生成整套演示：套模板、配图表、写讲稿。</p><div class="ext mono">.pptx</div></div>
+    <div class="ocard"><span class="ic">📈</span><h3>做表格</h3><p>读表、算数、整理数据，直接交回一张能用的表。</p><div class="ext mono">.xlsx</div></div>
+    <div class="ocard"><span class="ic">📄</span><h3>写方案 / 文档</h3><p>结构化方案与提案，框架自动搭好，条理先于文笔。</p><div class="ext mono">.docx</div></div>
+    <div class="ocard"><span class="ic">🖼</span><h3>生成图片 / 海报</h3><p>从提示词到成图，海报、封面、社交卡片一步到位。</p><div class="ext mono">.png</div></div>
+    <div class="ocard"><span class="ic">🎬</span><h3>生成视频</h3><p>从想法到成片，模板化的视频创作流程。</p><div class="ext mono">.mp4</div></div>
+    <div class="ocard"><span class="ic">📉</span><h3>数据报告与图表</h3><p>数据进去，可交互的可视化报告出来。</p><div class="ext mono">.html</div></div>
+  </div>
+</section>
+
+<section class="platform" id="platform">
+  <div class="eyebrow mono" data-reveal>功能</div>
+  <h2 data-reveal>撑起这些产出的四样东西。</h2>
+  <div class="pgrid" id="pgrid">
+    <div class="pcard"><div class="num mono">01</div><h3>设计画布</h3><p>聊出来的东西直接落在画布上，接着改、排、组织，最后导出。</p></div>
+    <div class="pcard"><div class="num mono">02</div><h3>知识库</h3><p>把你的资料喂进去，它回答前先去里面查——答案有出处，不瞎编。</p></div>
+    <div class="pcard"><div class="num mono">03</div><h3>聊天与 Agent</h3><p>能连着调用工具走完多步骤的活，带会话与项目管理。</p></div>
+    <div class="pcard"><div class="num mono">04</div><h3>插件与连接器</h3><p>接上你在用的外部系统，能力可以持续往上加装。</p></div>
+  </div>
+</section>
+
+<section class="cta">
+  <h2 data-split-cta>装上，开聊。</h2>
+  <div class="ctas" style="margin-top:44px" data-reveal>
+    <a class="btn btn-primary magnetic" href="#">⬇ 下载 macOS 版</a>
+    <a class="btn btn-ghost magnetic" href="#">Windows 版</a>
+  </div>
+</section>
+
+<footer class="mono">
+  <span>Claude Desktop · 基于 Claude Agent SDK</span>
+  <span><a href="#">GitHub</a> · <a href="#">README</a> · <a href="#">Releases</a></span>
+</footer>
+
+<script type="module">
+/*
+  动效引擎：与深色版逐行一致（Motion vanilla 版，CDN ESM）。
+  唯一差异在最底部：数据尘埃的粒子颜色换成深绿并调低透明度——
+  白底上的亮绿粒子会看不见。
+*/
+const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches
+let M = null
+try { M = await import('https://cdn.jsdelivr.net/npm/motion@12/+esm') } catch (e) { /* CDN 不通就静态展示 */ }
+
+const $  = s => document.querySelector(s)
+const $$ = s => [...document.querySelectorAll(s)]
+
+if (!M || reduced) {
+  // 拿不到动画库（断网）或用户要求减少动效：一切直接就位，内容永远可读。
+  $('#nav').style.opacity = '1'
+} else {
+  const { animate, stagger, scroll } = M
+  const EASE = [0.22, 1, 0.36, 1]
+
+  /* ── 1. 标题逐字拆分（中文按字拆，天然合适）── */
+  for (const line of $$('[data-split]')) {
+    const chars = [...line.textContent]
+    line.textContent = ''
+    for (const ch of chars) {
+      const s = document.createElement('span')
+      s.className = 'char'
+      // 空格必须换成不断行空格：inline-block 里的普通空格会被塌成零宽。
+      s.textContent = ch === ' ' ? '\u00A0' : ch
+      line.appendChild(s)
+    }
+  }
+
+  /* ── 2. 开场编排：幕布掀走后，标题逐字「从模糊里升起来」── */
+  const INTRO = 1.75 // 和 #intro 的 CSS 时间轴对齐
+  animate('#headline .char',
+    { opacity: [0, 1], transform: ['translateY(0.7em)', 'translateY(0)'], filter: ['blur(10px)', 'blur(0px)'] },
+    { delay: stagger(0.028, { startDelay: INTRO }), duration: 0.7, ease: EASE })
+  animate('[data-rise]',
+    { opacity: [0, 1], transform: ['translateY(26px)', 'translateY(0px)'] },
+    { delay: stagger(0.09, { startDelay: INTRO + 0.35 }), duration: 0.65, ease: EASE })
+  animate('#nav', { opacity: [0, 1], transform: ['translate(-50%,-16px)', 'translate(-50%,0)'] },
+    { delay: INTRO + 0.2, duration: 0.6, ease: EASE })
+
+  /* ── 3. 滚动进度条（滚动驱动，非时间驱动）── */
+  scroll(animate('#progress', { scaleX: [0, 1] }, { ease: 'linear' }))
+
+  /* ── 4. 传送带：位置由滚动进度驱动，滚多快走多快 ── */
+  const conveyor = $('#conveyor')
+  scroll(animate('#beltA', { transform: ['translateX(3%)', 'translateX(-18%)'] }, { ease: 'linear' }),
+    { target: conveyor, offset: ['start end', 'end start'] })
+  scroll(animate('#beltB', { transform: ['translateX(-18%)', 'translateX(3%)'] }, { ease: 'linear' }),
+    { target: conveyor, offset: ['start end', 'end start'] })
+
+  /* ── 5. 滚动速度 → 传送带倾斜（跟手的「重量感」）── */
+  const beltWraps = [$('#beltA-w'), $('#beltB-w')]
+  let lastY = scrollY, skew = 0
+  /* ── 6. 鼠标：光斑慢速跟随 + 终端 3D + 磁性按钮（共用一个 rAF，循环里零分配）── */
+  const glow = $('#glow'), term = $('#term'), orbit = $('#orbitPar')
+  let mx = innerWidth / 2, my = innerHeight / 2, gx = mx, gy = my, rx = 0, ry = 0
+  let opx = 0, opy = 0 // 轨道装置的视差偏移（慢速跟随，制造纵深）
+  // 入场队列必须declare在 tick 启动之前——tick 第一帧就会读它（第 8 段才往里塞东西）
+  const pending = []
+  const SHOW_LINE = 0.88 // 元素顶边过了视口高度的 88% 就算「到了」
+  addEventListener('pointermove', e => { mx = e.clientX; my = e.clientY }, { passive: true })
+  const mags = $$('.magnetic').map(el => ({ el, x: 0, y: 0 }))
+  const lerp = (a, b, t) => a + (b - a) * t
+
+  function tick () {
+    // 光斑
+    gx = lerp(gx, mx, 0.07); gy = lerp(gy, my, 0.07)
+    glow.style.transform = `translate(${gx - 280}px,${gy - 280}px)`
+    // 终端 3D：视线偏到哪，窗口朝哪转（±5°）
+    const tr = term.getBoundingClientRect()
+    if (tr.bottom > 0 && tr.top < innerHeight) {
+      const tx = ((my - tr.top - tr.height / 2) / tr.height) * -5
+      const ty = ((mx - tr.left - tr.width / 2) / tr.width) * 5
+      rx = lerp(rx, tx, 0.08); ry = lerp(ry, ty, 0.08)
+      term.style.transform = `rotateX(${rx}deg) rotateY(${ry}deg)`
+    }
+    // 磁性按钮：进入 130px 引力圈就被轻轻吸过去，出圈弹回
+    for (let i = 0; i < mags.length; i++) {
+      const m = mags[i], r = m.el.getBoundingClientRect()
+      const cx = r.left + r.width / 2, cy = r.top + r.height / 2
+      const dx = mx - cx, dy = my - cy
+      const inRange = dx * dx + dy * dy < 130 * 130
+      m.x = lerp(m.x, inRange ? dx * 0.28 : 0, 0.12)
+      m.y = lerp(m.y, inRange ? dy * 0.28 : 0, 0.12)
+      m.el.style.transform = `translate(${m.x}px,${m.y}px)`
+    }
+    // 轨道装置视差：整个星系跟着视线轻微漂移。
+    opx = lerp(opx, (mx - innerWidth / 2) * 0.02, 0.06)
+    opy = lerp(opy, (my - innerHeight / 2) * 0.02, 0.06)
+    orbit.style.transform = `translate(${opx}px,${opy}px)`
+    // 滚动速度 → 倾斜
+    const v = scrollY - lastY; lastY = scrollY
+    skew = lerp(skew, Math.max(-7, Math.min(7, v * 0.35)), 0.1)
+    beltWraps[0].style.transform = `skewX(${skew}deg)`
+    beltWraps[1].style.transform = `skewX(${-skew}deg)`
+    // 入场检查：待显形的元素每帧查一次位置，到线就放行（倒着遍历方便边删边走）
+    for (let i = pending.length - 1; i >= 0; i--) {
+      if (pending[i].el.getBoundingClientRect().top < innerHeight * SHOW_LINE) {
+        pending.splice(i, 1)[0].show()
+      }
+    }
+    requestAnimationFrame(tick)
+  }
+  tick()
+
+  /* ── 7. 光束视差：随滚动以不同速度上移 ── */
+  $$('.beam').forEach((b, i) => {
+    scroll(animate(b, { transform: ['translateY(0%)', `translateY(${-14 - i * 8}%)`] }, { ease: 'linear' }),
+      { offset: ['start start', 'end start'] })
+  })
+
+  /* ── 8. 滚动到位的入场（每帧位置检查，不用 IntersectionObserver——它会漏信号）── */
+  function onEnter (el, hide, show) {
+    if (el.getBoundingClientRect().top < innerHeight * SHOW_LINE) { show(); return }
+    hide()
+    pending.push({ el, show })
+  }
+
+  const rise = (els) => animate(els,
+    { opacity: [0, 1], transform: ['translateY(34px)', 'translateY(0px)'] },
+    { duration: 0.7, ease: EASE })
+  for (const el of $$('[data-reveal]')) {
+    onEnter(el, () => { el.style.opacity = '0' }, () => rise(el))
+  }
+  for (const grid of ['#ogrid', '#pgrid']) {
+    const cards = $$(grid + ' > *')
+    onEnter($(grid),
+      () => cards.forEach(c => { c.style.opacity = '0' }),
+      () => animate(cards,
+        { opacity: [0, 1], transform: ['translateY(44px) scale(0.96)', 'translateY(0px) scale(1)'] },
+        { delay: stagger(0.08), type: 'spring', stiffness: 120, damping: 18 }))
+  }
+
+  /* ── 9. 计数器：0 → 141 滚上去 ── */
+  const counter = $('#counter')
+  onEnter($('.count-row'),
+    () => {},
+    () => animate(0, 141, { duration: 1.6, ease: EASE, onUpdate: v => { counter.textContent = Math.round(v) } }))
+
+  /* ── 10. 尾部大字：逐字弹起（spring）── */
+  const ctaH = $('[data-split-cta]')
+  const chs = [...ctaH.textContent]; ctaH.textContent = ''
+  chs.forEach(ch => { const s = document.createElement('span'); s.className = 'char'; s.textContent = ch === ' ' ? '\u00A0' : ch; ctaH.appendChild(s) })
+  const ctaChars = ctaH.querySelectorAll('.char')
+  onEnter(ctaH,
+    () => ctaChars.forEach(c => { c.style.opacity = '0' }),
+    () => animate(ctaChars,
+      { opacity: [0, 1], transform: ['translateY(60px) rotate(6deg)', 'translateY(0px) rotate(0deg)'] },
+      { delay: stagger(0.05), type: 'spring', stiffness: 160, damping: 14 }))
+
+  /* ── 11. 终端打字循环（进入视口才开始）── */
+  const text = '帮我做一份 Q3 复盘 PPT'
+  const typed = $('#typed')
+  const logs = ['l1', 'l2'], files = ['f1', 'f2', 'f3']
+  function playTerm () {
+    typed.textContent = ''
+    ;[...logs, ...files].forEach(id => { $('#' + id).style.opacity = '0' })
+    let i = 0
+    const t = setInterval(() => {
+      typed.textContent = text.slice(0, ++i)
+      if (i >= text.length) {
+        clearInterval(t)
+        logs.forEach((id, k) => setTimeout(() =>
+          animate('#' + id, { opacity: [0, 1] }, { duration: 0.35 }), 480 + k * 550))
+        files.forEach((id, k) => setTimeout(() =>
+          animate('#' + id, { opacity: [0, 1], transform: ['translateY(14px) scale(0.92)', 'translateY(0px) scale(1)'] },
+            { type: 'spring', stiffness: 260, damping: 20 }), 1650 + k * 300))
+        setTimeout(playTerm, 6200)
+      }
+    }, 90)
+  }
+  setTimeout(playTerm, (INTRO + 0.8) * 1000)
+}
+
+/* ── 背景「数据尘埃」：白天版换成深绿粒子 + 更低透明度 ── */
+if (!reduced) {
+  const cv = $('#dust'), ctx = cv.getContext('2d')
+  let W, H
+  const N = 70, ps = []
+  function size () { W = cv.width = innerWidth; H = cv.height = innerHeight }
+  size(); addEventListener('resize', size)
+  for (let i = 0; i < N; i++) ps.push({
+    x: Math.random() * 2000 % 1, y: Math.random(), s: 0.6 + Math.random() * 1.6,
+    v: 0.0002 + Math.random() * 0.0006, a: 0.08 + Math.random() * 0.22, ph: Math.random() * 6.28
+  })
+  let t = 0
+  ;(function dust () {
+    t += 0.016
+    ctx.clearRect(0, 0, W, H)
+    ctx.fillStyle = '#15803d'
+    for (let i = 0; i < N; i++) {
+      const p = ps[i]
+      p.y -= p.v; if (p.y < -0.02) p.y = 1.02
+      ctx.globalAlpha = p.a * (0.55 + 0.45 * Math.sin(t + p.ph))
+      ctx.fillRect(p.x * W, p.y * H, p.s, p.s)
+    }
+    requestAnimationFrame(dust)
+  })()
+}
+</script>
+</body>
+</html>

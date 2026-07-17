@@ -54,13 +54,13 @@ export const nav: { href: string; label: Copy }[] = [
 ]
 
 export const hero = {
-  /* 标题拆成行，是为了让入场动画能一行一行地起——顺带也锁死了断行位置，
-     不会在某个宽度下断出「PPT、表 / 格」这种难看的行尾。 */
+  badge: { zh: '141+ 创作技能已就绪', en: '141+ creation skills, ready' },
+  /* 标题拆成行：入场动画一行一行起，顺带锁死断行位置（设计稿 D 定稿的分行）。 */
   headline: {
-    zh: ['一句话，', '让 AI 帮你', '做完 PPT、表格、方案。'],
+    zh: ['一句话，', '让 AI 帮你做完', 'PPT、表格、方案。'],
     en: ['One prompt away', 'from finished slides,', 'sheets, and proposals.'],
   },
-  /** 标题里要染成品牌绿的那一行（索引）。强调落在「产出」上，不是落在「AI」上。 */
+  /** 标题里要染成品牌渐变的那一行（索引）。强调落在「产出」上，不是落在「AI」上。 */
   accentLine: 2,
   subline: {
     zh: '桌面端的 Claude。内置 141+ 创作技能、一块可视化设计画布和你自己的知识库——聊天，然后收文件。',
@@ -70,78 +70,100 @@ export const hero = {
   secondaryCta: { zh: '看看能产出什么', en: 'See the output' },
   otherPlatforms: { zh: '其它平台', en: 'Other platforms' },
   trust: {
-    zh: '基于 Claude Agent SDK 构建 · 开源可审计',
+    zh: '基于 Claude Agent SDK · 开源可审计',
     en: 'Built on the Claude Agent SDK · Open source, auditable',
-  },
-  /* Hero 截图占位。等 §7 素材到位，把真实截图放进 public/ 再把这里指过去。 */
-  shotCaption: {
-    zh: '产品主界面：左边聊天，右边设计画布',
-    en: 'The app: chat on the left, design canvas on the right',
-  },
-  /** 示意图里那条聊天气泡。它也是给人看的字，同样得有两份。 */
-  shotPrompt: {
-    zh: '帮我做一份 Q3 复盘 PPT',
-    en: 'Make me a Q3 review deck',
   },
 }
 
-export const values: { title: Copy; body: Copy }[] = [
-  {
-    title: { zh: '会创作', en: 'It makes things' },
-    body: {
-      zh: '141+ 项创作技能内置在应用里。你说要什么，它交回一个能直接用的文件——不是一段让你自己去做的说明。',
-      en: '141+ creation skills ship inside the app. Ask for something and it hands back a file you can use — not instructions for making one yourself.',
-    },
+/** 终端演示（Hero 下方的循环动画）。所有可见字都双语。 */
+export const terminal = {
+  windowTitle: { zh: 'claude-desktop — 会话', en: 'claude-desktop — session' },
+  prompt: { zh: '帮我做一份 Q3 复盘 PPT', en: 'Make me a Q3 review deck' },
+  logs: [
+    { zh: '已调用技能 ppt-master', en: 'Invoked skill ppt-master' },
+    { zh: '生成 24 页 · 套用品牌模板 · 嵌入图表', en: '24 slides · brand template · charts embedded' },
+  ],
+  files: [
+    { icon: '📊', name: { zh: 'Q3-复盘.pptx', en: 'Q3-review.pptx' }, size: '4.2 MB' },
+    { icon: '📈', name: { zh: '数据附录.xlsx', en: 'data-appendix.xlsx' }, size: '890 KB' },
+    { icon: '🖼', name: { zh: '封面备选.png', en: 'cover-options.png' }, size: '1.1 MB' },
+  ],
+}
+
+/** 文件传送带（滚动驱动）。A 带是产出文件，B 带是真实技能名（不翻译）。 */
+export const conveyor = {
+  title: { zh: '说一句，收一堆。', en: 'Say one thing. Collect a pile.' },
+  hint: {
+    zh: '传送带跟着你的滚动走——滚多快，它走多快。',
+    en: 'The belts follow your scroll — as fast as you go.',
   },
-  {
-    title: { zh: '会查资料', en: 'It looks things up' },
-    body: {
-      zh: '它能一步步调用工具、翻你自己的知识库来回答，而不是凭印象编。资料是你喂的，答案就有出处。',
-      en: 'It calls tools step by step and reads your own knowledge base before answering, instead of going from memory. You supply the material; the answer has a source.',
-    },
-  },
-  {
-    title: { zh: '动手前先问你', en: 'It asks before it acts' },
-    body: {
-      zh: '删文件、跑命令这类会改动你电脑的操作，一律先弹出来问过你才做。你随时能看清它要动什么。',
-      en: 'Anything that changes your machine — deleting a file, running a command — stops and asks you first. You always see what it is about to touch.',
-    },
-  },
-]
+  filesBelt: [
+    { icon: '📊', ext: '.pptx', name: { zh: 'Q3-复盘.pptx', en: 'Q3-review.pptx' } },
+    { icon: '📈', ext: '.xlsx', name: { zh: '年度预算表.xlsx', en: 'annual-budget.xlsx' } },
+    { icon: '📄', ext: '.docx', name: { zh: '投标方案.docx', en: 'proposal.docx' } },
+    { icon: '🧾', ext: '.pdf', name: { zh: '简历-2026.pdf', en: 'resume-2026.pdf' } },
+    { icon: '🖼', ext: '.png', name: { zh: '发布海报.png', en: 'launch-poster.png' } },
+    { icon: '🎬', ext: '.mp4', name: { zh: '产品演示.mp4', en: 'product-demo.mp4' } },
+    { icon: '📉', ext: '.html', name: { zh: '数据看板.html', en: 'dashboard.html' } },
+  ],
+  skillsBelt: ['ppt-master', 'spreadsheets', 'proposal-writer', 'imagegen', 'sora', 'd3-visualization', 'resume-modern', 'poster-hero', 'remotion'],
+}
 
 /*
-  产出清单（页面的签名段落）。
-  为什么做成「清单」而不是图标卡片墙：这个产品的产出就是文件，文件的语言就是
-  后缀名和目录列表。用产品自己的语汇讲它自己的事，比一堆圆角卡片更贴题也更难撞脸。
-  skills 里全是仓库 skills/ 目录中真实存在的技能名——这一列就是「不虚构」的证据。
+  产出区（设计稿 D）：一个 0→141 的滚动计数器 + 六张产出卡。
+  诚实原则不变：每张卡的产出类型都对应仓库 skills/ 里真实存在的技能
+  （ppt-master / spreadsheets / proposal-writer / imagegen / sora / d3-visualization…），
+  不为了好看编能力。
 */
-export const outputs: { label: Copy; ext: string; skills: string[] }[] = [
-  { label: { zh: '做 PPT / 演示', en: 'Slides & decks' }, ext: '.pptx', skills: ['ppt-master', 'ppt-keynote', 'pptx-generator'] },
-  { label: { zh: '做表格', en: 'Spreadsheets' }, ext: '.xlsx', skills: ['spreadsheets'] },
-  { label: { zh: '写方案', en: 'Proposals' }, ext: '.docx', skills: ['proposal-writer'] },
-  { label: { zh: '写文档 / 简历', en: 'Docs & résumés' }, ext: '.pdf', skills: ['doc', 'docx', 'resume-modern', 'pdf'] },
-  { label: { zh: '数据报告与图表', en: 'Data reports & charts' }, ext: '.html', skills: ['data-report', 'd3-visualization'] },
-  { label: { zh: '生成图片 / 海报', en: 'Images & posters' }, ext: '.png', skills: ['imagegen', 'gpt-image-2', 'poster-hero'] },
-  { label: { zh: '生成视频', en: 'Video' }, ext: '.mp4', skills: ['sora', 'remotion', 'video-hyperframes'] },
-  { label: { zh: '社交卡片', en: 'Social cards' }, ext: '.png', skills: ['card-xiaohongshu', 'card-twitter', 'social-spotify-card'] },
-]
-
 export const outputsSection = {
   // 和导航项同名（见 nav 的注释第 2 条）——用户点「产出」，落地就得看见「产出」。
   eyebrow: { zh: '产出', en: 'Output' },
   title: { zh: '你要的是文件，不是建议。', en: 'You wanted a file, not advice.' },
-  body: {
-    zh: '下面每一行都对应应用里真实装好的技能——括号里的名字你能在仓库里找到。说一句话，它照着做，交回成品。',
-    en: 'Every row below maps to skills that really ship in the app — you can find each name in the repo. Say what you need; it does the work and hands back the result.',
-  },
-  colOutput: { zh: '产出', en: 'Output' },
-  colFormat: { zh: '格式', en: 'Format' },
-  colSkills: { zh: '背后的技能', en: 'Skills behind it' },
-  footnote: { zh: '141+ 项技能，持续增长', en: '141+ skills, and growing' },
+  counterLabel: { zh: '项内置创作技能，持续增长', en: 'built-in creation skills, and growing' },
 }
 
+export const outputCards: { icon: string; title: Copy; body: Copy; ext: string }[] = [
+  {
+    icon: '📊',
+    title: { zh: '做 PPT / 演示', en: 'Slides & decks' },
+    body: { zh: '一句话生成整套演示：套模板、配图表、写讲稿。', en: 'One prompt, a whole deck: template, charts, speaker notes.' },
+    ext: '.pptx',
+  },
+  {
+    icon: '📈',
+    title: { zh: '做表格', en: 'Spreadsheets' },
+    body: { zh: '读表、算数、整理数据，直接交回一张能用的表。', en: 'Reads, computes, and organizes — hands back a usable sheet.' },
+    ext: '.xlsx',
+  },
+  {
+    icon: '📄',
+    title: { zh: '写方案 / 文档', en: 'Proposals & docs' },
+    body: { zh: '结构化方案与提案，框架自动搭好，条理先于文笔。', en: 'Structured proposals with the outline built first, prose second.' },
+    ext: '.docx',
+  },
+  {
+    icon: '🖼',
+    title: { zh: '生成图片 / 海报', en: 'Images & posters' },
+    body: { zh: '从提示词到成图，海报、封面、社交卡片一步到位。', en: 'Prompt to picture: posters, covers, and social cards in one step.' },
+    ext: '.png',
+  },
+  {
+    icon: '🎬',
+    title: { zh: '生成视频', en: 'Video' },
+    body: { zh: '从想法到成片，模板化的视频创作流程。', en: 'From idea to final cut with a templated video pipeline.' },
+    ext: '.mp4',
+  },
+  {
+    icon: '📉',
+    title: { zh: '数据报告与图表', en: 'Data reports & charts' },
+    body: { zh: '数据进去，可交互的可视化报告出来。', en: 'Data in, an interactive visual report out.' },
+    ext: '.html',
+  },
+]
+
 export const platform = {
-  eyebrow: { zh: '底座', en: 'The platform' },
+  // 和导航项「功能」同名（一物一名，见 nav 注释第 2 条）。
+  eyebrow: { zh: '功能', en: 'Features' },
   title: { zh: '撑起这些产出的四样东西。', en: 'The four things holding it all up.' },
   blocks: [
     {

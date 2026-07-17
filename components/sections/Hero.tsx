@@ -1,14 +1,9 @@
 'use client'
 
 /*
-  第一屏。
-
-  论点：这个产品把「一句话」变成「一个做完的文件」。所以标题讲产出，
-  主视觉是产品自己的样子，按钮直接给你的系统。术语一个都不出现——
-  普通用户在这一屏不需要知道 Agent 是什么。
-
-  标题一行一行地起（stagger 错峰入场），是为了让人按顺序读完这三行；
-  除此之外首屏没有别的动效——第一屏该被读，不该被表演。
+  第一屏（设计稿 D「发布会」）。
+  左：逐字从模糊里升起的标题 + 真实下载按钮（磁性）；右：产出轨道永动装置；
+  下：终端演示。主按钮的数据链路沿用旧版三态（loading / 直链 / 降级到 Releases）。
 */
 
 import { useEffect, useState } from 'react'
@@ -17,26 +12,26 @@ import { download, hero, ui } from '@/lib/content'
 import { usePrefs } from '@/lib/prefs'
 import { useRelease } from '@/lib/useRelease'
 import { getPlatformCards, guessPlatform, FALLBACK_HREF } from '@/lib/github'
-import { AppFrame } from '../AppFrame'
+import { Magnetic } from '../fx/Magnetic'
+import { useIntroDelay } from '../fx/Intro'
+import { Orbit } from '../Orbit'
+import { Terminal } from '../Terminal'
+
+const EASE = [0.22, 1, 0.36, 1] as const
 
 export function Hero() {
   const { t, lang } = usePrefs()
   const reduced = useReducedMotion()
+  const introDelay = useIntroDelay()
   const state = useRelease()
   const [platform, setPlatform] = useState<ReturnType<typeof guessPlatform>>(null)
 
-  // 猜系统必须等到浏览器里才做：服务器上没有 navigator，猜了也是错的。
+  // 猜系统必须等到浏览器里才做：服务器上没有 navigator。
   useEffect(() => setPlatform(guessPlatform()), [])
 
   const lines = hero.headline[lang]
 
-  /*
-    主按钮的三条路径：
-    - loading  ：还在等 GitHub。显示「正在获取…」，不给空白也不让按钮跳动。
-    - 有直链   ：访客系统正好有安装包 → 按钮直接是那个 .dmg / .exe 的地址。
-    - 其余一切 ：接口挂了、被限流了、或访客是 Linux（现在没这个包）→ 退回
-                 Releases 页面。用户仍然下得到，只是少看一行版本号。
-  */
+  /* 主按钮三态（同旧版）：loading→占位；有直链→.dmg/.exe；其余→Releases 页。 */
   const cards = getPlatformCards(state.release)
   const match = platform ? cards.find((c) => c.key === platform) : undefined
   const primaryHref = match?.href ?? FALLBACK_HREF
@@ -44,98 +39,122 @@ export function Hero() {
     ? `${t(ui.downloadFor)} ${t(download.platforms[match.key].name)}`
     : t({ zh: '下载最新版', en: 'Download the latest' })
 
-  // 错峰入场：第 i 个元素晚 90ms 起。reduced 时返回空对象 = 直接就位，不动。
-  const rise = (i: number) =>
+  /* 非标题元素的错峰入场（标题的逐字动画单独编排） */
+  const rise = (order: number) =>
     reduced
       ? {}
       : {
-          initial: { opacity: 0, y: 22 },
+          initial: { opacity: 0, y: 26 },
           animate: { opacity: 1, y: 0 },
-          transition: { duration: 0.6, delay: i * 0.09, ease: [0.22, 1, 0.36, 1] as const },
+          transition: { duration: 0.65, delay: introDelay + 0.35 + order * 0.09, ease: EASE },
         }
 
+  /* 标题逐字：字符在两行间连续编号，跨行错峰不断流 */
+  let charIndex = 0
+
   return (
-    <section id="top" className="relative overflow-hidden px-5 pt-14 pb-20 sm:px-8 sm:pt-20 sm:pb-28">
-      {/* 极淡的品牌绿光晕，只为了让首屏不是一块死白。pointer-events-none：别挡住底下的按钮。 */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute -top-40 left-1/2 h-[420px] w-[820px] -translate-x-1/2 rounded-full bg-brand/[0.07] blur-3xl"
-      />
+    <section id="top" className="relative z-[1] mx-auto grid min-h-screen max-w-[1180px] content-center px-8 pt-[120px] pb-10">
+      {/* 背景光束：四根细绿线，纵深感的最低成本写法 */}
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0">
+        {['16%', '38%', '63%', '85%'].map((left) => (
+          <span
+            key={left}
+            className="absolute top-[-10%] h-[120%] w-px"
+            style={{ left, background: 'linear-gradient(180deg,transparent,var(--edge-brand),transparent)' }}
+          />
+        ))}
+      </div>
 
-      <div className="relative mx-auto max-w-6xl">
-        {/* clamp(最小, 跟着屏宽变, 最大)：字号自己随屏幕伸缩，不用写一堆断点。
-            上限给到 5.4rem 是量着调的——再小标题就撑不满，首屏右半边会空得像没做完。 */}
-        <h1 className="display-face max-w-[19ch] text-[clamp(2.3rem,7vw,5.4rem)] leading-[1.06] font-extrabold">
-          {lines.map((line, i) => (
-            <motion.span key={line} {...rise(i)} className="block">
-              {/* 强调色落在「产出」那一行，不落在「AI」上——这页卖的是结果，不是技术。 */}
-              <span className={i === hero.accentLine ? 'text-brand' : undefined}>{line}</span>
-            </motion.span>
-          ))}
-        </h1>
-
-        <motion.p
-          {...rise(lines.length)}
-          className="mt-7 max-w-[52ch] text-[17px] leading-[1.65] text-graphite"
-        >
-          {t(hero.subline)}
-        </motion.p>
-
-        <motion.div
-          {...rise(lines.length + 1)}
-          className="mt-9 flex flex-wrap items-center gap-x-5 gap-y-3"
-        >
-          <a
-            href={state.status === 'loading' ? undefined : primaryHref}
-            aria-disabled={state.status === 'loading'}
-            className={`inline-flex items-center gap-2.5 rounded-xl bg-brand px-6 py-3.5 text-[15px] font-semibold text-brand-on transition-opacity ${
-              state.status === 'loading' ? 'pointer-events-none opacity-60' : 'hover:opacity-90'
-            }`}
+      <div className="grid items-center gap-12 lg:grid-cols-[1.08fr_1fr]">
+        <div>
+          <motion.span
+            {...rise(0)}
+            className="mb-[30px] inline-flex w-fit items-center gap-2 rounded-full border border-edge-brand bg-brand/5 px-[15px] py-[7px] font-mono text-[12px] text-brand"
           >
-            <DownloadIcon />
-            {state.status === 'loading' ? t({ zh: '正在获取最新版本…', en: 'Fetching latest…' }) : primaryLabel}
-          </a>
+            <i className="dot-pulse size-1.5 rounded-full bg-brand shadow-[0_0_10px_var(--brand)]" />
+            {t(hero.badge)}
+          </motion.span>
 
-          <a href="#download" className="text-[14px] text-graphite underline-offset-4 hover:text-ink hover:underline">
-            {t(hero.otherPlatforms)} ↓
-          </a>
-          <a href="#outputs" className="text-[14px] text-graphite underline-offset-4 hover:text-ink hover:underline">
-            {t(hero.secondaryCta)}
-          </a>
-        </motion.div>
+          <h1 className="display-face text-[clamp(2.7rem,5.6vw,4.9rem)] leading-[1.1] font-extrabold">
+            {lines.map((line, li) => (
+              <span key={line} className="block overflow-hidden pb-[0.08em]">
+                {[...line].map((ch, ci) => {
+                  const delay = introDelay + charIndex++ * 0.028
+                  const cls =
+                    li === hero.accentLine
+                      ? 'inline-block bg-gradient-to-br from-brand to-teal bg-clip-text text-transparent'
+                      : 'inline-block'
+                  return reduced ? (
+                    <span key={ci} className={cls}>
+                      {ch === ' ' ? '\u00A0' : ch}
+                    </span>
+                  ) : (
+                    <motion.span
+                      key={ci}
+                      className={`${cls} will-change-transform`}
+                      initial={{ opacity: 0, y: '0.7em', filter: 'blur(10px)' }}
+                      animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+                      transition={{ duration: 0.7, delay, ease: EASE }}
+                    >
+                      {/* 空格必须是   转义：inline-block 里的普通空格塌成零宽（踩过两次） */}
+                      {ch === ' ' ? '\u00A0' : ch}
+                    </motion.span>
+                  )
+                })}
+              </span>
+            ))}
+          </h1>
 
-        {/* 信任条：版本号用 mono——版本号是机器的话，该长得像机器的话。 */}
-        <motion.div
-          {...rise(lines.length + 2)}
-          className="mt-6 flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-[12px] text-graphite"
-        >
-          {state.status === 'ready' && (
-            <>
-              <span className="text-brand">{state.release.version}</span>
-              <span aria-hidden="true">·</span>
-              {match?.sizeMB ? (
-                <>
-                  <span>{match.sizeMB} MB</span>
-                  <span aria-hidden="true">·</span>
-                </>
-              ) : null}
-            </>
-          )}
-          <span className="font-sans">{t(hero.trust)}</span>
-        </motion.div>
+          <motion.p {...rise(1)} className="mt-[26px] max-w-[46ch] text-[16.5px] leading-[1.7] text-dim">
+            {t(hero.subline)}
+          </motion.p>
 
-        <motion.div
-          {...(reduced
-            ? {}
-            : {
-                initial: { opacity: 0, y: 28 },
-                animate: { opacity: 1, y: 0 },
-                transition: { duration: 0.8, delay: 0.5, ease: [0.22, 1, 0.36, 1] as const },
-              })}
-          className="mt-16"
-        >
-          <AppFrame caption={t(hero.shotCaption)} prompt={t(hero.shotPrompt)} />
-        </motion.div>
+          <motion.div {...rise(2)} className="mt-[38px] flex flex-wrap items-center gap-4">
+            <Magnetic>
+              <a
+                href={state.status === 'loading' ? undefined : primaryHref}
+                aria-disabled={state.status === 'loading'}
+                className={`btn-glow relative inline-flex items-center gap-2.5 rounded-[14px] bg-gradient-to-br from-brand to-teal px-[30px] py-[15px] text-[15px] font-semibold text-on-brand ${
+                  state.status === 'loading' ? 'pointer-events-none opacity-70' : ''
+                }`}
+              >
+                <DownloadIcon />
+                {state.status === 'loading' ? t({ zh: '正在获取最新版本…', en: 'Fetching latest…' }) : primaryLabel}
+              </a>
+            </Magnetic>
+            <Magnetic>
+              <a
+                href="#outputs"
+                className="inline-block rounded-[14px] border border-edge px-[30px] py-[15px] text-[15px] font-semibold text-ink transition-colors hover:border-edge-brand"
+              >
+                {t(hero.secondaryCta)}
+              </a>
+            </Magnetic>
+          </motion.div>
+
+          {/* 信任条：真实版本号 + 体积（拿不到就只剩定位语，优雅降级） */}
+          <motion.p {...rise(3)} className="mt-[22px] font-mono text-[12px] text-dim">
+            {state.status === 'ready' && (
+              <>
+                <b className="font-medium text-brand">{state.release.version}</b>
+                {' · '}
+                {match?.sizeMB ? `${match.sizeMB} MB · ` : ''}
+              </>
+            )}
+            {t(hero.trust)}
+          </motion.p>
+        </div>
+
+        <Orbit />
+      </div>
+
+      <motion.div {...rise(4)} className="mt-16">
+        <Terminal />
+      </motion.div>
+
+      <div aria-hidden="true" className="absolute bottom-[26px] left-1/2 flex -translate-x-1/2 flex-col items-center gap-2 font-mono text-[11px] tracking-[0.3em] text-dim">
+        SCROLL
+        <i className="cue-line block h-[34px] w-px" style={{ background: 'linear-gradient(180deg,var(--brand),transparent)' }} />
       </div>
     </section>
   )

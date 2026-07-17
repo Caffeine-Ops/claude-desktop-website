@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>设计稿 A · 指令台</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/*
+  方向 A「指令台」——深色终端质感。
+  论点：这个产品的魔法时刻是「敲一句话 → 文件出现」，那首屏就把这个时刻
+  做成一段循环播放的真实演示，而不是一张静态截图。
+  科技感来源：深底、等宽字、逐字打字、文件逐个物化、极细的网格底纹。
+*/
+:root{
+  --bg:#0a0f0d; --panel:#0e1512; --panel2:#101a15;
+  --line:rgba(74,222,128,.12); --line2:rgba(255,255,255,.07);
+  --ink:#e8f0ea; --dim:#7d8f85;
+  --green:#4ade80; --cyan:#22d3ee; --deep:#15803d;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+  background:var(--bg); color:var(--ink);
+  font-family:'Archivo',system-ui,'PingFang SC','Microsoft YaHei',sans-serif;
+  -webkit-font-smoothing:antialiased; overflow-x:hidden;
+}
+.mono{font-family:'IBM Plex Mono',ui-monospace,monospace}
+
+/* ── 底纹：极细网格 + 顶部一束绿光 ─────────────────── */
+.stage{position:relative;min-height:100vh}
+.stage::before{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:
+    linear-gradient(var(--line2) 1px,transparent 1px) 0 0/100% 72px,
+    linear-gradient(90deg,var(--line2) 1px,transparent 1px) 0 0/72px 100%;
+  mask:radial-gradient(ellipse 90% 70% at 50% 0%,#000 30%,transparent 75%);
+}
+.stage::after{
+  content:"";position:absolute;top:-30%;left:50%;transform:translateX(-50%);
+  width:900px;height:600px;pointer-events:none;
+  background:radial-gradient(closest-side,rgba(74,222,128,.14),transparent 70%);
+  animation:breathe 7s ease-in-out infinite;
+}
+@keyframes breathe{50%{opacity:.55;transform:translateX(-50%) scale(1.06)}}
+
+/* ── 顶栏 ─────────────────────────────────────────── */
+nav{position:relative;z-index:2;display:flex;align-items:center;gap:32px;
+  max-width:1180px;margin:0 auto;padding:22px 32px}
+.logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:15px;letter-spacing:-.01em}
+nav a{color:var(--dim);text-decoration:none;font-size:13.5px;transition:color .2s}
+nav a:hover{color:var(--ink)}
+.nav-cta{margin-left:auto;background:linear-gradient(135deg,var(--green),var(--cyan));
+  color:#06120b!important;font-weight:600;padding:9px 18px;border-radius:10px;font-size:13.5px}
+
+/* ── Hero ─────────────────────────────────────────── */
+.hero{position:relative;z-index:1;max-width:1180px;margin:0 auto;
+  padding:72px 32px 90px;display:grid;grid-template-columns:1.05fr 1fr;gap:64px;align-items:center}
+.badge{display:inline-flex;align-items:center;gap:8px;font-size:12px;color:var(--green);
+  border:1px solid var(--line);border-radius:999px;padding:6px 14px;margin-bottom:28px;
+  animation:fadeUp .7s .1s cubic-bezier(.22,1,.36,1) both}
+.badge .dot{width:6px;height:6px;border-radius:50%;background:var(--green);
+  box-shadow:0 0 12px var(--green);animation:pulse 2s infinite}
+@keyframes pulse{50%{opacity:.4}}
+h1{font-size:clamp(2.6rem,4.6vw,4rem);line-height:1.1;font-weight:800;
+  font-variation-settings:'wdth' 112;letter-spacing:-.03em}
+h1 .row{display:block;animation:fadeUp .7s cubic-bezier(.22,1,.36,1) both}
+h1 .row:nth-child(2){animation-delay:.12s}
+h1 .row:nth-child(3){animation-delay:.24s}
+.grad{background:linear-gradient(100deg,var(--green) 10%,var(--cyan) 90%);
+  -webkit-background-clip:text;background-clip:text;color:transparent}
+.sub{margin-top:24px;color:var(--dim);font-size:16px;line-height:1.7;max-width:44ch;
+  animation:fadeUp .7s .36s cubic-bezier(.22,1,.36,1) both}
+.ctas{display:flex;gap:14px;margin-top:36px;animation:fadeUp .7s .48s cubic-bezier(.22,1,.36,1) both}
+.btn{display:inline-flex;align-items:center;gap:10px;padding:14px 26px;border-radius:12px;
+  font-size:15px;font-weight:600;text-decoration:none;transition:transform .25s,box-shadow .25s}
+.btn-primary{background:linear-gradient(135deg,var(--green),var(--cyan));color:#06120b;
+  box-shadow:0 0 0 0 rgba(74,222,128,.4)}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 12px 40px -8px rgba(74,222,128,.45)}
+.btn-ghost{color:var(--ink);border:1px solid var(--line2)}
+.btn-ghost:hover{border-color:var(--green)}
+.meta{margin-top:22px;font-size:12px;color:var(--dim);
+  animation:fadeUp .7s .6s cubic-bezier(.22,1,.36,1) both}
+.meta b{color:var(--green);font-weight:500}
+@keyframes fadeUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
+
+/* ── 终端窗口：核心签名动画 ────────────────────────── */
+.term{background:linear-gradient(180deg,var(--panel2),var(--panel));
+  border:1px solid var(--line);border-radius:16px;overflow:hidden;
+  box-shadow:0 40px 90px -30px rgba(0,0,0,.8),0 0 60px -20px rgba(74,222,128,.15);
+  animation:fadeUp .9s .3s cubic-bezier(.22,1,.36,1) both}
+.term-bar{display:flex;align-items:center;gap:7px;padding:13px 16px;border-bottom:1px solid var(--line2)}
+.term-bar i{width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,.14)}
+.term-bar span{margin-left:10px;font-size:11px;color:var(--dim)}
+.term-body{padding:22px 22px 26px;font-size:13.5px;line-height:2.05;min-height:270px}
+.line-in{color:var(--ink)}
+.line-in .p{color:var(--green)}
+.caret{display:inline-block;width:8px;height:17px;background:var(--green);
+  vertical-align:-3px;margin-left:2px;animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.line-log{color:var(--dim);opacity:0;animation:fadeIn .4s ease both}
+.line-log .ok{color:var(--green)}
+.files{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+.file{display:flex;align-items:center;gap:9px;background:rgba(74,222,128,.06);
+  border:1px solid var(--line);border-radius:10px;padding:9px 14px;font-size:12px;
+  opacity:0;animation:pop .5s cubic-bezier(.34,1.4,.64,1) both}
+.file .ext{color:var(--green)}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes pop{from{opacity:0;transform:translateY(12px) scale(.92)}to{opacity:1;transform:none}}
+
+/* ── 产出跑道 ─────────────────────────────────────── */
+.rail{position:relative;z-index:1;border-top:1px solid var(--line2);padding:26px 0;overflow:hidden}
+.rail-track{display:flex;gap:56px;width:max-content;animation:scroll 26s linear infinite;
+  font-size:12.5px;color:var(--dim);white-space:nowrap}
+.rail-track b{color:var(--green);font-weight:500;margin-right:8px}
+@keyframes scroll{to{transform:translateX(-50%)}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important}}
+@media (max-width:900px){.hero{grid-template-columns:1fr;gap:44px}}
+</style>
+</head>
+<body>
+<div class="stage">
+  <nav>
+    <div class="logo">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><defs><linearGradient id="g" x1="4" y1="3" x2="20" y2="21"><stop stop-color="#4ade80"/><stop offset="1" stop-color="#22d3ee"/></linearGradient></defs><path d="M5.2 3.6 L19.8 10.6 L13.1 13.4 L10.3 20.4 Z" stroke="url(#g)" stroke-width="1.9" stroke-linejoin="round"/></svg>
+      Claude Desktop
+    </div>
+    <a href="#">产出</a><a href="#">功能</a><a href="#">开发者</a>
+    <a class="nav-cta" href="#">下载</a>
+  </nav>
+
+  <section class="hero">
+    <div>
+      <span class="badge mono"><i class="dot"></i>141+ 创作技能已就绪</span>
+      <h1>
+        <span class="row">一句话，</span>
+        <span class="row">让 AI 帮你做完</span>
+        <span class="row grad">PPT、表格、方案。</span>
+      </h1>
+      <p class="sub">桌面端的 Claude。内置 141+ 创作技能、可视化设计画布和你自己的知识库——聊天，然后收文件。</p>
+      <div class="ctas">
+        <a class="btn btn-primary" href="#">⬇ 下载 macOS 版</a>
+        <a class="btn btn-ghost" href="#">看看能产出什么</a>
+      </div>
+      <p class="meta mono"><b>v0.0.16</b> · 361 MB · 基于 Claude Agent SDK · 开源可审计</p>
+    </div>
+
+    <div class="term mono">
+      <div class="term-bar"><i></i><i></i><i></i><span>claude-desktop — 会话</span></div>
+      <div class="term-body">
+        <div class="line-in"><span class="p">›</span> <span id="typed"></span><span class="caret" id="caret"></span></div>
+        <div class="line-log" id="l1"><span class="ok">✓</span> 已调用技能 ppt-master</div>
+        <div class="line-log" id="l2"><span class="ok">✓</span> 生成 24 页 · 套用品牌模板 · 嵌入图表</div>
+        <div class="files">
+          <span class="file" id="f1">📊 Q3-复盘.pptx <span class="ext">4.2 MB</span></span>
+          <span class="file" id="f2">📈 数据附录.xlsx <span class="ext">890 KB</span></span>
+          <span class="file" id="f3">🖼 封面备选.png <span class="ext">1.1 MB</span></span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="rail mono">
+    <div class="rail-track">
+      <span><b>.pptx</b>演示文稿</span><span><b>.xlsx</b>数据表格</span><span><b>.docx</b>方案文档</span><span><b>.pdf</b>简历报告</span><span><b>.png</b>海报卡片</span><span><b>.mp4</b>成片视频</span><span><b>.html</b>数据可视化</span>
+      <span><b>.pptx</b>演示文稿</span><span><b>.xlsx</b>数据表格</span><span><b>.docx</b>方案文档</span><span><b>.pdf</b>简历报告</span><span><b>.png</b>海报卡片</span><span><b>.mp4</b>成片视频</span><span><b>.html</b>数据可视化</span>
+    </div>
+  </div>
+</div>
+
+<script>
+/* 打字 → 日志 → 文件物化，整段循环。正式实现时换成 Motion 的时间线。 */
+const text='帮我做一份 Q3 复盘 PPT'
+const typed=document.getElementById('typed')
+const show=(id,d)=>setTimeout(()=>{const e=document.getElementById(id);e.style.animation='none';e.offsetHeight;e.style.animation='';e.style.animationDelay='0s';e.style.animationPlayState='running';e.classList.add('on');e.style.opacity=''; e.style.animationName=id.startsWith('f')?'pop':'fadeIn'},d)
+function loop(){
+  typed.textContent='';['l1','l2','f1','f2','f3'].forEach(id=>{const e=document.getElementById(id);e.style.animationName='none';e.style.opacity='0'})
+  let i=0
+  const t=setInterval(()=>{typed.textContent=text.slice(0,++i)
+    if(i>=text.length){clearInterval(t)
+      show('l1',500);show('l2',1100);show('f1',1700);show('f2',2000);show('f3',2300)
+      setTimeout(loop,5600)}},95)
+}
+loop()
+</script>
+</body>
+</html>

@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>设计稿 C · 动态纸面</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/*
+  方向 C「动态纸面」——保留现有浅色身份，动画量拉满的对照组。
+  科技感来源不是深色，而是「动的方式」：标题里的产出词每两秒翻一次牌、
+  文件后缀跑马灯、鼠标跟随的光晕、卡片弹性悬浮。
+  给出这版是为了回答一个问题：不推翻已有配色，光靠动效能不能到位？
+*/
+:root{
+  --paper:#fbfbf9; --surface:#f2f2ee; --ink:#14171a; --dim:#5b6470;
+  --rule:#e3e5e1; --brand:#15803d; --mint:#4ade80; --soft:#eaf7ef;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);overflow-x:hidden;
+  font-family:'Archivo',system-ui,'PingFang SC','Microsoft YaHei',sans-serif;
+  -webkit-font-smoothing:antialiased}
+.mono{font-family:'IBM Plex Mono',ui-monospace,monospace}
+
+/* 鼠标跟随的品牌绿光晕（JS 驱动，慢速跟随） */
+#halo{position:fixed;width:520px;height:520px;border-radius:50%;pointer-events:none;z-index:0;
+  background:radial-gradient(circle,rgba(74,222,128,.13),transparent 65%);
+  transform:translate(-50%,-50%);transition:none}
+
+nav{position:relative;z-index:3;display:flex;align-items:center;gap:30px;
+  max-width:1160px;margin:0 auto;padding:20px 32px}
+.logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:15px}
+nav a{color:var(--dim);text-decoration:none;font-size:13.5px;position:relative;transition:color .2s}
+nav a:hover{color:var(--ink)}
+/* 悬停时下划线从左往右画出来 */
+nav a::after{content:"";position:absolute;left:0;bottom:-5px;height:2px;width:0;
+  background:var(--brand);transition:width .3s cubic-bezier(.22,1,.36,1)}
+nav a:hover::after{width:100%}
+.nav-cta{margin-left:auto;background:var(--ink);color:var(--paper)!important;
+  padding:9px 18px;border-radius:10px;font-weight:600;font-size:13.5px}
+.nav-cta::after{display:none}
+
+.hero{position:relative;z-index:2;max-width:1160px;margin:0 auto;padding:76px 32px 60px}
+h1{font-size:clamp(2.6rem,5.8vw,5rem);line-height:1.12;font-weight:800;
+  letter-spacing:-.035em;font-variation-settings:'wdth' 112}
+h1 .row{display:block;overflow:hidden}
+h1 .row span{display:inline-block;animation:rise .9s cubic-bezier(.22,1,.36,1) both}
+h1 .row:nth-child(2) span{animation-delay:.1s}
+h1 .row:nth-child(3) span{animation-delay:.2s}
+@keyframes rise{from{transform:translateY(110%)}to{transform:none}}
+
+/* ── 签名动画：产出词翻牌机 ────────────────────────── */
+.flip{display:inline-block;position:relative;vertical-align:bottom;
+  height:1.18em;overflow:hidden;color:var(--brand);min-width:5.2ch;text-align:left}
+.flip ul{list-style:none;animation:flip 10s cubic-bezier(.83,0,.17,1) infinite}
+.flip li{height:1.18em;line-height:1.18em}
+@keyframes flip{
+  0%,17%{transform:translateY(0)}
+  20%,37%{transform:translateY(-1.18em)}
+  40%,57%{transform:translateY(-2.36em)}
+  60%,77%{transform:translateY(-3.54em)}
+  80%,97%{transform:translateY(-4.72em)}
+  100%{transform:translateY(-5.9em)}
+}
+.sub{margin-top:26px;color:var(--dim);font-size:17px;line-height:1.7;max-width:50ch;
+  animation:fade .8s .4s both}
+.ctas{display:flex;gap:16px;align-items:center;margin-top:36px;animation:fade .8s .55s both}
+@keyframes fade{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.btn{display:inline-flex;align-items:center;gap:10px;background:var(--brand);color:#fff;
+  padding:15px 30px;border-radius:13px;font-size:15px;font-weight:600;text-decoration:none;
+  transition:transform .25s cubic-bezier(.34,1.56,.64,1),box-shadow .25s}
+.btn:hover{transform:translateY(-3px) scale(1.02);box-shadow:0 16px 36px -12px rgba(21,128,61,.5)}
+.link{color:var(--dim);font-size:14px;text-decoration:none}
+.link:hover{color:var(--ink)}
+
+/* ── 后缀跑马灯（两条反向）────────────────────────── */
+.marquee{position:relative;z-index:2;border-block:1px solid var(--rule);
+  padding:20px 0;overflow:hidden;background:var(--surface)}
+.mq{display:flex;gap:14px;width:max-content}
+.mq.rev{margin-top:12px;animation:mq2 30s linear infinite}
+.mq:not(.rev){animation:mq1 24s linear infinite}
+@keyframes mq1{to{transform:translateX(-50%)}}
+@keyframes mq2{from{transform:translateX(-50%)}to{transform:none}}
+.chip{display:inline-flex;gap:8px;align-items:center;background:var(--paper);
+  border:1px solid var(--rule);border-radius:10px;padding:9px 16px;
+  font-size:12.5px;color:var(--dim);white-space:nowrap}
+.chip b{color:var(--brand);font-weight:500}
+
+/* ── 产出卡片：入场交错 + 悬浮弹性 ─────────────────── */
+.grid-wrap{position:relative;z-index:2;max-width:1160px;margin:0 auto;padding:72px 32px 90px}
+.eyebrow{display:flex;gap:12px;align-items:center;font-size:12px;letter-spacing:.14em;
+  color:var(--brand);margin-bottom:18px}
+.eyebrow::before{content:"";width:34px;height:1px;background:var(--brand)}
+h2{font-size:clamp(1.8rem,3.4vw,2.6rem);font-weight:800;letter-spacing:-.02em;
+  font-variation-settings:'wdth' 112}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:40px}
+.gcard{background:var(--paper);border:1px solid var(--rule);border-radius:16px;padding:24px;
+  transition:transform .35s cubic-bezier(.34,1.56,.64,1),border-color .3s,box-shadow .35s;
+  animation:fade .7s both}
+.gcard:nth-child(1){animation-delay:.15s}.gcard:nth-child(2){animation-delay:.25s}
+.gcard:nth-child(3){animation-delay:.35s}.gcard:nth-child(4){animation-delay:.45s}
+.gcard:hover{transform:translateY(-8px) rotate(-.6deg);border-color:var(--brand);
+  box-shadow:0 20px 44px -18px rgba(21,128,61,.28)}
+.gcard .ic{width:42px;height:42px;border-radius:12px;background:var(--soft);
+  display:grid;place-items:center;font-size:19px;margin-bottom:16px;transition:.3s}
+.gcard:hover .ic{background:var(--brand);transform:rotate(-8deg) scale(1.08)}
+.gcard h3{font-size:16.5px;font-weight:700;margin-bottom:7px}
+.gcard p{font-size:13px;color:var(--dim);line-height:1.6}
+.gcard .ext{margin-top:14px;font-size:11.5px;color:var(--brand)}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+@media (max-width:900px){.grid{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<div id="halo"></div>
+
+<nav>
+  <div class="logo">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><defs><linearGradient id="g" x1="4" y1="3" x2="20" y2="21"><stop stop-color="#4ade80"/><stop offset="1" stop-color="#15803d"/></linearGradient></defs><path d="M5.2 3.6 L19.8 10.6 L13.1 13.4 L10.3 20.4 Z" stroke="url(#g)" stroke-width="1.9" stroke-linejoin="round"/></svg>
+    Claude Desktop
+  </div>
+  <a href="#">产出</a><a href="#">功能</a><a href="#">开发者</a>
+  <a class="nav-cta" href="#">下载</a>
+</nav>
+
+<section class="hero">
+  <h1>
+    <span class="row"><span>一句话，</span></span>
+    <span class="row"><span>让 AI 帮你做完</span></span>
+    <span class="row"><span><span class="flip"><ul>
+      <li>PPT。</li><li>表格。</li><li>方案。</li><li>海报。</li><li>视频。</li><li>PPT。</li>
+    </ul></span></span></span>
+  </h1>
+  <p class="sub">桌面端的 Claude。内置 141+ 创作技能、可视化设计画布和你自己的知识库——聊天，然后收文件。</p>
+  <div class="ctas">
+    <a class="btn" href="#">⬇ 下载 macOS 版</a>
+    <a class="link" href="#">其它平台 ↓</a>
+    <a class="link" href="#">看看能产出什么</a>
+  </div>
+</section>
+
+<div class="marquee mono">
+  <div class="mq">
+    <span class="chip"><b>.pptx</b>Q3-复盘.pptx</span><span class="chip"><b>.xlsx</b>预算表.xlsx</span><span class="chip"><b>.docx</b>投标方案.docx</span><span class="chip"><b>.pdf</b>简历-2026.pdf</span><span class="chip"><b>.png</b>发布海报.png</span><span class="chip"><b>.mp4</b>产品演示.mp4</span><span class="chip"><b>.html</b>数据看板.html</span>
+    <span class="chip"><b>.pptx</b>Q3-复盘.pptx</span><span class="chip"><b>.xlsx</b>预算表.xlsx</span><span class="chip"><b>.docx</b>投标方案.docx</span><span class="chip"><b>.pdf</b>简历-2026.pdf</span><span class="chip"><b>.png</b>发布海报.png</span><span class="chip"><b>.mp4</b>产品演示.mp4</span><span class="chip"><b>.html</b>数据看板.html</span>
+  </div>
+  <div class="mq rev">
+    <span class="chip"><b>ppt-master</b></span><span class="chip"><b>spreadsheets</b></span><span class="chip"><b>proposal-writer</b></span><span class="chip"><b>imagegen</b></span><span class="chip"><b>sora</b></span><span class="chip"><b>d3-visualization</b></span><span class="chip"><b>resume-modern</b></span><span class="chip"><b>poster-hero</b></span>
+    <span class="chip"><b>ppt-master</b></span><span class="chip"><b>spreadsheets</b></span><span class="chip"><b>proposal-writer</b></span><span class="chip"><b>imagegen</b></span><span class="chip"><b>sora</b></span><span class="chip"><b>d3-visualization</b></span><span class="chip"><b>resume-modern</b></span><span class="chip"><b>poster-hero</b></span>
+  </div>
+</div>
+
+<section class="grid-wrap">
+  <div class="eyebrow mono">产出</div>
+  <h2>你要的是文件，不是建议。</h2>
+  <div class="grid">
+    <div class="gcard"><div class="ic">📊</div><h3>做 PPT / 演示</h3><p>一句话生成整套演示，套模板、配图表。</p><div class="ext mono">.pptx</div></div>
+    <div class="gcard"><div class="ic">📈</div><h3>做表格</h3><p>读表、算数、整理数据，直接出表。</p><div class="ext mono">.xlsx</div></div>
+    <div class="gcard"><div class="ic">📄</div><h3>写方案</h3><p>结构化方案与提案，框架自动搭好。</p><div class="ext mono">.docx</div></div>
+    <div class="gcard"><div class="ic">🎬</div><h3>生成视频</h3><p>从想法到成片，模板化的视频创作。</p><div class="ext mono">.mp4</div></div>
+  </div>
+</section>
+
+<script>
+/* 光晕慢速跟随鼠标：用 lerp（每帧走剩余距离的 8%）制造「跟不上」的柔感 */
+const halo=document.getElementById('halo')
+let tx=innerWidth/2,ty=260,x=tx,y=ty
+addEventListener('mousemove',e=>{tx=e.clientX;ty=e.clientY})
+;(function tick(){x+=(tx-x)*.08;y+=(ty-y)*.08
+  halo.style.left=x+'px';halo.style.top=y+'px';requestAnimationFrame(tick)})()
+</script>
+</body>
+</html>

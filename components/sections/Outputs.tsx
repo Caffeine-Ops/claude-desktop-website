@@ -1,84 +1,68 @@
 'use client'
 
 /*
-  ─────────────────────────────────────────────────────────────
-  产出清单——整页的签名段落，最想让人记住的就是这一段。
-  ─────────────────────────────────────────────────────────────
-  为什么做成「清单」而不是图标卡片墙：
-  这个产品的产出就是文件，而文件的语言是后缀名和目录列表。用产品自己的语汇讲它
-  自己的事，比一堆圆角图标卡片更贴题，也更难和别家撞脸——圆角卡片墙谁都能做。
-
-  最右一列是真实存在的技能名（对得上仓库 skills/ 目录）。这一列是整页最硬的东西：
-  它把「我们能做这些」从一句口号变成一份可以核对的清单。设计文档 §6 立的规矩是
-  「只展示真实能力，不虚构」——这一列就是那条规矩的兑现方式。
-
-  排版说明：桌面端是三列表格式；窄屏塌成堆叠卡片。用 CSS Grid 手搭而不是 <table>，
-  因为这不是数据表格，是导航式的清单，语义上更接近列表。
+  产出区（设计稿 D）：0→141 滚动计数器 + 六张产出卡（弹簧错峰入场）。
+  每张卡对应仓库里真实存在的技能（见 content.ts 注释）——不虚构原则不变。
 */
 
-import { outputs, outputsSection } from '@/lib/content'
+import { useEffect, useRef, useState } from 'react'
+import { animate, useInView, useReducedMotion } from 'motion/react'
+import { outputCards, outputsSection } from '@/lib/content'
 import { usePrefs } from '@/lib/prefs'
-import { Reveal } from '../Reveal'
+import { Reveal, RevealGrid, RevealGridItem } from '../fx/Reveal'
 import { SectionHead } from '../SectionHead'
+
+function Counter() {
+  const reduced = useReducedMotion()
+  const ref = useRef<HTMLSpanElement>(null)
+  const inView = useInView(ref, { once: true, amount: 0.6 })
+  const [n, setN] = useState(reduced ? 141 : 0)
+
+  useEffect(() => {
+    if (!inView || reduced) return
+    // animate 的「纯数值」形态：不绑元素，每帧把中间值喂给 onUpdate
+    const controls = animate(0, 141, {
+      duration: 1.6,
+      ease: [0.22, 1, 0.36, 1],
+      onUpdate: (v) => setN(Math.round(v)),
+    })
+    return () => controls.stop()
+  }, [inView, reduced])
+
+  return (
+    <span ref={ref} className="display-face bg-gradient-to-br from-brand to-teal bg-clip-text text-[clamp(3.4rem,7vw,5.6rem)] leading-none font-extrabold text-transparent">
+      {n}+
+    </span>
+  )
+}
 
 export function Outputs() {
   const { t } = usePrefs()
 
   return (
-    <section id="outputs" className="px-5 py-20 sm:px-8 sm:py-28">
-      <div className="mx-auto max-w-6xl">
-        <SectionHead
-          eyebrow={t(outputsSection.eyebrow)}
-          title={t(outputsSection.title)}
-          body={t(outputsSection.body)}
-        />
+    <section id="outputs" className="relative z-[1] mx-auto max-w-[1180px] px-8 py-[90px]">
+      <SectionHead eyebrow={t(outputsSection.eyebrow)} title={t(outputsSection.title)} />
 
-        <div className="mt-12">
-          {/* 列头只在桌面端出现：窄屏塌成卡片后，每行自己就说清了，列头反而是噪音 */}
-          <div className="hidden grid-cols-[minmax(0,2fr)_76px_minmax(0,7fr)] gap-6 border-b border-rule pb-3 font-mono text-[11px] tracking-wider text-graphite uppercase md:grid">
-            <span>{t(outputsSection.colOutput)}</span>
-            <span>{t(outputsSection.colFormat)}</span>
-            <span>{t(outputsSection.colSkills)}</span>
-          </div>
+      <Reveal delay={0.1} className="mt-[34px] flex items-baseline gap-3.5">
+        <Counter />
+        <span className="text-[15px] text-dim">{t(outputsSection.counterLabel)}</span>
+      </Reveal>
 
-          <ul>
-            {/* as="li" 让入场动画的外壳自己就是 <li>。别在这儿套一层 <div> 再放 <li>——
-                <ul> 和 <li> 中间夹任何东西都会打断列表语义，读屏软件就不播报「共 8 项」了。 */}
-            {outputs.map((row, i) => (
-              <Reveal
-                key={row.label.en}
-                as="li"
-                delay={Math.min(i, 5) * 0.05}
-                className="group grid grid-cols-1 gap-1.5 border-b border-rule py-5 transition-colors hover:bg-brand-soft md:grid-cols-[minmax(0,2fr)_76px_minmax(0,7fr)] md:items-center md:gap-6"
-              >
-                <span className="text-[16.5px] font-semibold transition-colors group-hover:text-brand">
-                  {t(row.label)}
-                </span>
-
-                <span className="font-mono text-[13px] text-brand">{row.ext}</span>
-
-                {/* 技能名横向可滚：宽内容自己滚，别把整个页面撑出横向滚动条 */}
-                <span className="-mx-1 flex gap-1.5 overflow-x-auto px-1 py-0.5 md:flex-wrap md:overflow-visible">
-                  {row.skills.map((s) => (
-                    <code
-                      key={s}
-                      className="shrink-0 rounded-md border border-rule bg-surface px-2 py-1 font-mono text-[11.5px] whitespace-nowrap text-graphite"
-                    >
-                      {s}
-                    </code>
-                  ))}
-                </span>
-              </Reveal>
-            ))}
-          </ul>
-
-          <Reveal>
-            <p className="pt-6 font-mono text-[12.5px] text-graphite">
-              <span className="text-brand">+</span> {t(outputsSection.footnote)}
-            </p>
-          </Reveal>
-        </div>
-      </div>
+      <RevealGrid className="mt-11 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {outputCards.map((card) => (
+          <RevealGridItem
+            key={card.ext + card.title.en}
+            className="rounded-2xl border border-edge bg-panel p-[26px] transition-[border-color,box-shadow] duration-300 hover:border-edge-brand"
+          >
+            <span className="mb-3.5 block text-[22px]" aria-hidden="true">
+              {card.icon}
+            </span>
+            <h3 className="text-[16.5px] font-bold">{t(card.title)}</h3>
+            <p className="mt-[7px] text-[13px] leading-[1.65] text-dim">{t(card.body)}</p>
+            <div className="mt-3.5 font-mono text-[11.5px] text-brand">{card.ext}</div>
+          </RevealGridItem>
+        ))}
+      </RevealGrid>
     </section>
   )
 }

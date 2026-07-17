@@ -1,95 +1,83 @@
 'use client'
 
 /*
-  顶栏。固定在顶上（sticky），滚动时变成半透明毛玻璃。
-
-  多页扩展的口子（设计文档 §5.8）：现在每个链接是页内锚点（#outputs 这种），
-  将来拆多页时把 href 换成 /features、/download 就行，结构不用动。
+  顶栏：浮岛式玻璃条（设计稿 D）。fixed 悬浮居中，不是通栏 sticky。
+  开场幕布掀走后从上方浮入（延迟由 useIntroDelay 提供）。
+  主题切换按钮在这里——图标显示「点了会变成什么」，不是当前状态。
 */
 
-import { useEffect, useState } from 'react'
+import { motion, useReducedMotion } from 'motion/react'
 import { Logo } from './Logo'
+import { Magnetic } from './fx/Magnetic'
+import { useIntroDelay } from './fx/Intro'
 import { nav, site, ui } from '@/lib/content'
 import { usePrefs } from '@/lib/prefs'
 
 export function Nav() {
   const { t, lang, setLang, theme, toggleTheme } = usePrefs()
-  const [scrolled, setScrolled] = useState(false)
-
-  // 只在滚出首屏后才给顶栏加毛玻璃和描边——停在最顶上时它该融进页面里，别一开始就切一道线。
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 24)
-    onScroll()
-    window.addEventListener('scroll', onScroll, { passive: true })
-    return () => window.removeEventListener('scroll', onScroll)
-  }, [])
+  const reduced = useReducedMotion()
+  const introDelay = useIntroDelay()
 
   return (
-    <header
-      className={`sticky top-0 z-50 transition-colors duration-300 ${
-        scrolled ? 'border-b border-rule bg-paper/80 backdrop-blur-xl' : 'border-b border-transparent'
-      }`}
+    <motion.header
+      initial={reduced ? false : { opacity: 0, y: -16 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: introDelay + 0.2, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+      className="fixed inset-x-0 top-[14px] z-50 mx-auto flex w-[min(1080px,calc(100%-40px))] items-center gap-6 rounded-2xl border border-edge px-3 py-[11px] pl-5 backdrop-blur-xl"
+      style={{ background: 'var(--glass)', boxShadow: 'var(--shadow-nav)' }}
     >
-      <div className="mx-auto flex h-16 max-w-6xl items-center gap-6 px-5 sm:px-8">
-        <a href="#top" className="flex shrink-0 items-center gap-2.5">
-          <Logo size={26} />
-          <span className="display-face text-[15px] font-bold tracking-tight">Claude Desktop</span>
+      <a href="#top" className="flex shrink-0 items-center gap-2.5">
+        <Logo size={22} id="nav" />
+        <span className="display-face text-[14.5px] font-bold">Claude Desktop</span>
+      </a>
+
+      <nav className="hidden items-center gap-6 md:flex">
+        {nav.map((item) => (
+          <a key={item.href} href={item.href} className="text-[13px] text-dim transition-colors hover:text-ink">
+            {t(item.label)}
+          </a>
+        ))}
+      </nav>
+
+      <div className="ml-auto flex items-center gap-1">
+        <button
+          onClick={toggleTheme}
+          aria-label={t(ui.themeToggle)}
+          className="grid size-9 place-items-center rounded-lg text-dim transition-colors hover:bg-panel hover:text-ink"
+        >
+          {theme === 'dark' ? <SunIcon /> : <MoonIcon />}
+        </button>
+
+        <button
+          onClick={() => setLang(lang === 'zh' ? 'en' : 'zh')}
+          aria-label={t(ui.langToggle)}
+          className="h-9 rounded-lg px-2.5 font-mono text-[12px] text-dim transition-colors hover:bg-panel hover:text-ink"
+        >
+          {lang === 'zh' ? 'EN' : '中'}
+        </button>
+
+        <a
+          href={site.repoUrl}
+          target="_blank"
+          rel="noreferrer noopener"
+          aria-label="GitHub"
+          className="grid size-9 place-items-center rounded-lg text-dim transition-colors hover:bg-panel hover:text-ink"
+        >
+          <GitHubIcon />
         </a>
 
-        {/* 锚点链接在窄屏藏起来：手机上首要任务是「读懂 + 下载」，导航挤进来只会碍事。 */}
-        <nav className="ml-4 hidden items-center gap-7 md:flex">
-          {nav.map((item) => (
-            <a
-              key={item.href}
-              href={item.href}
-              className="text-[13.5px] text-graphite transition-colors hover:text-ink"
-            >
-              {t(item.label)}
-            </a>
-          ))}
-        </nav>
-
-        <div className="ml-auto flex items-center gap-1">
-          <button
-            onClick={toggleTheme}
-            aria-label={t(ui.themeToggle)}
-            className="grid size-9 place-items-center rounded-lg text-graphite transition-colors hover:bg-surface hover:text-ink"
-          >
-            {/* 图标显示的是「点了会变成什么」，不是当前状态——按钮该说它会做什么。 */}
-            {theme === 'dark' ? <SunIcon /> : <MoonIcon />}
-          </button>
-
-          <button
-            onClick={() => setLang(lang === 'zh' ? 'en' : 'zh')}
-            aria-label={t(ui.langToggle)}
-            className="h-9 rounded-lg px-2.5 font-mono text-[12px] text-graphite transition-colors hover:bg-surface hover:text-ink"
-          >
-            {lang === 'zh' ? 'EN' : '中'}
-          </button>
-
-          <a
-            href={site.repoUrl}
-            target="_blank"
-            rel="noreferrer noopener"
-            aria-label="GitHub"
-            className="grid size-9 place-items-center rounded-lg text-graphite transition-colors hover:bg-surface hover:text-ink"
-          >
-            <GitHubIcon />
-          </a>
-
+        <Magnetic className="ml-2">
           <a
             href="#download"
-            className="ml-2 rounded-lg bg-ink px-4 py-2 text-[13.5px] font-semibold text-paper transition-opacity hover:opacity-85"
+            className="inline-block rounded-[11px] bg-gradient-to-br from-brand to-teal px-[18px] py-[9px] text-[13px] font-semibold text-on-brand"
           >
             {t({ zh: '下载', en: 'Download' })}
           </a>
-        </div>
+        </Magnetic>
       </div>
-    </header>
+    </motion.header>
   )
 }
-
-/* 图标一律 currentColor + aria-hidden：颜色跟着父元素走，读屏软件跳过（旁边有 aria-label）。 */
 
 function SunIcon() {
   return (

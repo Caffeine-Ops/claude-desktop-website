@@ -3,112 +3,258 @@
 
 /*
   ─────────────────────────────────────────────────────────────
-  设计令牌（design token = 给颜色/字体起的名字，全站只认名字不认具体色值）
+  设计令牌——「发布会」版（设计稿 D 定稿，2026-07-17）。
   ─────────────────────────────────────────────────────────────
-  为什么浅色打底而不是深黑科技风：
-  1. 这个产品的产出是「文档」——PPT、表格、方案。文档天生是纸白的，浅色更诚实。
-  2. 「近黑底 + 亮绿点缀」是当下 AI 生成落地页的通病款，撞脸风险极高。
-  深色主题仍然保留（跟随系统 + 手动切换），但浅色是被设计的那一版。
+  主题结构：**深色是默认**（:root 就是深色值），浅色是覆盖层（.light 类）。
+  为什么反过来（之前是浅色默认）：产品定位定稿为深色科技感优先，且「默认」
+  必须在 JS 加载前就成立——把默认写进 :root，不挂任何类就是深色，
+  首帧不会闪白（prefs.tsx 的 themeInitScript 只在用户选过浅色时补 .light 类）。
 
-  @theme inline 里的 --color-* 会被 Tailwind v4 自动变成工具类（bg-paper / text-brand …）。
-  这些值故意写成 var(...) 的间接引用：切换深浅主题时只要换下面 :root / .dark
-  里那一层原始变量，所有工具类自动跟着变——不需要给每个类手写 dark: 变体。
+  浅色不是深色的反色，是重新翻译（设计稿 D 白天版验证过的三原则）：
+  1. 亮绿/亮青在白底上是荧光笔，换深绿 #15803d → 深青 #0e7490（对比度达标）；
+  2. 终端演示区两个主题下都保持深色（白纸上的黑玻璃反而最抓眼）；
+  3. 黑底的 glow 是光、白底的 glow 是渍——浅色下光效全线收敛。
+
+  @theme inline 的 --color-* 会被 Tailwind 编成工具类（bg-canvas / text-brand…）。
+  全部走 var() 间接引用：换主题只动下面 :root / .light 两层原始值。
 */
 @theme inline {
-  --color-paper: var(--paper); /* 页面主底色 */
-  --color-surface: var(--surface); /* 卡片/凹槽，比 paper 深一档 */
-  --color-ink: var(--ink); /* 正文与标题 */
-  --color-graphite: var(--graphite); /* 次要文字 */
-  --color-rule: var(--rule); /* 分隔线、描边 */
-  --color-brand: var(--brand); /* 唯一强调色：品牌绿 */
-  --color-brand-on: var(--brand-on); /* 压在品牌绿上的字色（深浅主题里是反的） */
-  --color-brand-soft: var(--brand-soft); /* 品牌绿的极淡底，用于高亮区 */
-  --color-mint: var(--mint); /* 图标里的薄荷青，只给 logo 记号用 */
+  --color-canvas: var(--canvas); /* 页面底色 */
+  --color-panel: var(--panel); /* 卡片/浮层 */
+  --color-ink: var(--ink); /* 正文 */
+  --color-dim: var(--dim); /* 次要文字 */
+  --color-edge: var(--edge); /* 中性描边 */
+  --color-edge-brand: var(--edge-brand); /* 品牌调描边（悬停/强调容器） */
+  --color-brand: var(--brand); /* 强调绿（深浅主题各自的可读档） */
+  --color-teal: var(--teal); /* 渐变的另一端 */
+  --color-on-brand: var(--on-brand); /* 压在品牌渐变上的字色 */
 
   --font-display: var(--font-archivo), system-ui, 'PingFang SC', 'Microsoft YaHei', sans-serif;
   --font-body: var(--font-archivo), system-ui, 'PingFang SC', 'Microsoft YaHei', sans-serif;
   --font-mono: var(--font-plex-mono), ui-monospace, 'SF Mono', Menlo, monospace;
 }
 
-/* 浅色（默认，被设计的那一版） */
+/* 深色（默认——不挂类就是它，JS 未加载时也成立） */
 :root {
-  --paper: #fbfbf9; /* 微暖的灰白，刻意避开 AI 常见的奶油色 #F4F1EA */
-  --surface: #f2f2ee;
-  --ink: #14171a; /* 近黑但偏冷，和「奶油 + 赤陶」那一挂拉开距离 */
-  --graphite: #5b6470;
-  --rule: #e3e5e1;
-  /*
-    品牌绿。产品里的 --brand 浅色档是 142 76% 36%（≈ #16a34a），这里刻意压深了一档。
-    为什么：#16a34a 配白字只有 3.3:1 的对比度，配浅底做小字也只有 3.16:1，
-    都够不到 WCAG AA 要求的 4.5:1——按钮上的字会糊，眼神不好的人直接读不出来。
-    #15803d 是同一个色相族往下压一档，白字上到 5.0:1，小字也到 5.0:1，全过。
-    强调色是拿来被读的，不是拿来被欣赏的：读不清的强调色等于没有。
-  */
-  --brand: #15803d;
-  --brand-on: #ffffff; /* 浅色主题：深绿底 + 白字 */
-  --brand-soft: #eaf7ef;
-  --mint: #4ade80; /* = 产品 --brand 深色档 145 60% 52%，也是 app 图标里的青绿 */
-  color-scheme: light;
-}
-
-/* 深色（备选，跟随系统或手动切换） */
-.dark {
-  --paper: #0f1113; /* 不用纯黑：纯黑会让内容边界在 OLED 上糊掉 */
-  --surface: #17191c;
-  --ink: #eceef0;
-  --graphite: #939ba6;
-  --rule: #262a2e;
-  /* 深绿在深底上读不出来，换成产品 --brand 深色档的薄荷绿（145 60% 52%）。
-     深色主题下这个绿是「亮的那一方」，所以压在它上面的字必须反过来用深色——
-     深色模式沿用白字是最常见的对比度事故（白字压亮绿只有 1.8:1，基本没法读）。 */
+  --canvas: #070b09;
+  --panel: #0d1410;
+  --ink: #e9f1ec;
+  --dim: #7c8d83;
+  --edge: rgba(255, 255, 255, 0.08);
+  --edge-brand: rgba(74, 222, 128, 0.18);
   --brand: #4ade80;
-  --brand-on: #0f1113; /* 深色主题：亮绿底 + 深字 */
-  --brand-soft: #14251b;
-  --mint: #4ade80;
+  --teal: #22d3ee;
+  --on-brand: #06130b; /* 亮渐变上用深字（白字压亮绿只有 1.8:1，读不出来） */
+  /* 非颜色令牌：阴影/光效按主题走（黑底要光，白底要影） */
+  --shadow-card: 0 10px 30px -20px rgba(0, 0, 0, 0.5);
+  --shadow-card-hover: 0 18px 44px -20px rgba(74, 222, 128, 0.18);
+  --shadow-nav: none;
+  --shadow-term: 0 50px 110px -35px rgba(0, 0, 0, 0.85), 0 0 70px -25px rgba(74, 222, 128, 0.2);
+  --glow-tint: rgba(74, 222, 128, 0.09);
+  --glass: rgba(13, 20, 16, 0.55);
+  --btn-glow-idle: 0.4;
+  --btn-glow-peak: 0.72;
   color-scheme: dark;
 }
 
+/* 浅色（覆盖层——只在用户手选浅色时由 prefs 挂 .light 类） */
+.light {
+  --canvas: #fafaf7;
+  --panel: #ffffff;
+  --ink: #14171a;
+  --dim: #5b6470;
+  --edge: rgba(20, 23, 26, 0.09);
+  --edge-brand: rgba(21, 128, 61, 0.24);
+  --brand: #15803d;
+  --teal: #0e7490;
+  --on-brand: #ffffff; /* 深渐变上换白字（#15803d 配白字 5.0:1，达标） */
+  --shadow-card: 0 10px 30px -20px rgba(20, 60, 35, 0.2);
+  --shadow-card-hover: 0 18px 44px -20px rgba(21, 128, 61, 0.25);
+  --shadow-nav: 0 8px 32px -18px rgba(20, 40, 30, 0.25);
+  --shadow-term: 0 44px 90px -36px rgba(20, 40, 30, 0.5);
+  --glow-tint: rgba(21, 128, 61, 0.07);
+  --glass: rgba(255, 255, 255, 0.66);
+  --btn-glow-idle: 0.18;
+  --btn-glow-peak: 0.38;
+  color-scheme: light;
+}
+
 html {
-  scroll-behavior: smooth;
-  /* 顶栏是 sticky 的，锚点跳转要留出它的高度，否则标题被压在栏底下 */
-  scroll-padding-top: 5rem;
+  /* 锚点跳转瞬时到位：传送带等滚动驱动的动效自己会给滚动加戏，
+     再叠 smooth 滚动会拖泥带水（设计稿 D 实测的取舍）。 */
+  scroll-behavior: auto;
 }
 
 body {
-  background-color: var(--paper);
+  background-color: var(--canvas);
   color: var(--ink);
   font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+  overflow-x: hidden;
 }
 
-/*
-  Archivo 是可变字体，带一根「宽度轴」(wdth)。同一个家族，
-  宽度拉到 112 + 字重 800 就是气势很足的标题脸；回到 100 + 400 就是老实的正文脸。
-  一个家族演两个角色，比硬凑两款没关系的字体更成体系。
-*/
+::selection {
+  background: color-mix(in srgb, var(--brand) 25%, transparent);
+}
+
+/* Archivo 宽度轴拉满的标题脸（同旧版，家族一分为二的写法） */
 .display-face {
   font-variation-settings: 'wdth' 112;
   letter-spacing: -0.035em;
 }
 
-/* 键盘可达性的地板：焦点必须看得见，否则只能用键盘的人被挡在门外 */
+/* 键盘焦点必须可见——可达性的地板，不随主题妥协 */
 :focus-visible {
   outline: 2px solid var(--brand);
   outline-offset: 3px;
   border-radius: 2px;
 }
 
-/* 尊重系统的「减少动态效果」——前庭功能敏感的人会被大幅位移动画弄到不适 */
+/*
+  ─────────────────────────────────────────────────────────────
+  纯 CSS 的循环动画（不进 Motion 的编排：它们是永动的氛围层，
+  compositor 自己跑最省；Motion 只管「跟手」和「入场」）。
+  ─────────────────────────────────────────────────────────────
+*/
+
+/* 产出轨道：rotate(θ) translateX(R) rotate(-θ) 首尾抵消保持芯片直立；
+   同圈卫星用负 animation-delay 摊开角度（内联 style 指定）。 */
+.orbit-rings {
+  animation: ringspin 110s linear infinite;
+}
+@keyframes ringspin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.sat-outer {
+  animation: orbitOuter 44s linear infinite;
+}
+.sat-inner {
+  animation: orbitInner 30s linear infinite reverse;
+}
+@keyframes orbitOuter {
+  from {
+    transform: rotate(0deg) translateX(258px) rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg) translateX(258px) rotate(-360deg);
+  }
+}
+@keyframes orbitInner {
+  from {
+    transform: rotate(0deg) translateX(156px) rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg) translateX(156px) rotate(-360deg);
+  }
+}
+.pulse-ring {
+  animation: pulseRing 3.4s ease-out infinite;
+}
+@keyframes pulseRing {
+  from {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0.6;
+  }
+  to {
+    transform: translate(-50%, -50%) scale(2.7);
+    opacity: 0;
+  }
+}
+
+/* 终端光标闪烁 + 徽章圆点呼吸 + 滚动提示线 */
+.caret-blink {
+  animation: blink 1s steps(1) infinite;
+}
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+.dot-pulse {
+  animation: dotPulse 2s infinite;
+}
+@keyframes dotPulse {
+  50% {
+    opacity: 0.35;
+  }
+}
+.cue-line {
+  animation: cue 1.6s ease-in-out infinite;
+}
+@keyframes cue {
+  50% {
+    transform: scaleY(0.4);
+    opacity: 0.4;
+  }
+}
+
+/* 主按钮光晕呼吸：强度走主题令牌（浅色收敛） */
+.btn-glow::after {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  border-radius: inherit;
+  z-index: -1;
+  background: linear-gradient(135deg, var(--brand), var(--teal));
+  filter: blur(18px);
+  opacity: var(--btn-glow-idle);
+  animation: glowPulse 3.2s ease-in-out infinite;
+}
+@keyframes glowPulse {
+  50% {
+    opacity: var(--btn-glow-peak);
+  }
+}
+
+/* 开场序列：logo 描线 + 幕布上掀。带纯 CSS 时间兜底——JS 全挂也照样掀走。 */
+.intro-overlay {
+  animation: introOut 0.7s 2.6s cubic-bezier(0.83, 0, 0.17, 1) forwards;
+}
+.intro-draw {
+  stroke-dasharray: 60;
+  stroke-dashoffset: 60;
+  animation: draw 1s 0.15s cubic-bezier(0.65, 0, 0.35, 1) forwards;
+}
+.intro-word {
+  opacity: 0;
+  animation: introFade 0.5s 1s forwards;
+}
+@keyframes introOut {
+  to {
+    transform: translateY(-100%);
+  }
+}
+@keyframes draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes introFade {
+  to {
+    opacity: 1;
+  }
+}
+
+/* 尊重「减少动态效果」：氛围层全停；Motion 侧由 useReducedMotion 各自兜。 */
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
   }
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
+  .orbit-rings,
+  .sat-outer,
+  .sat-inner,
+  .pulse-ring,
+  .dot-pulse,
+  .cue-line,
+  .btn-glow::after,
+  .intro-draw,
+  .intro-word {
+    animation: none !important;
+  }
+  .intro-overlay {
+    display: none;
   }
 }

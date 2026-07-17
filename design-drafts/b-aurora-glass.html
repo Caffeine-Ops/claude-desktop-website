@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>设计稿 B · 极光玻璃</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/*
+  方向 B「极光玻璃」——Linear / Apple 那一挂的高级感。
+  科技感来源：深空底色上缓慢流动的绿→青极光、玻璃拟态卡片（毛玻璃+细描边）、
+  渐变大字 + 光泽扫过、悬浮的 3D 透视产品窗口、细颗粒噪点压住廉价感。
+  动效哲学：所有动画都「慢」——极光 20 秒一循环，窗口 7 秒一浮动。
+  快的动画像功能演示，慢的动画像氛围，高级感来自后者。
+*/
+:root{
+  --bg:#0b0d10; --ink:#eef1f4; --dim:#8b94a1;
+  --glass:rgba(255,255,255,.04); --edge:rgba(255,255,255,.09);
+  --green:#4ade80; --cyan:#22d3ee;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);overflow-x:hidden;
+  font-family:'Archivo',system-ui,'PingFang SC','Microsoft YaHei',sans-serif;
+  -webkit-font-smoothing:antialiased}
+.mono{font-family:'IBM Plex Mono',ui-monospace,monospace}
+
+/* ── 极光背景：三团模糊光斑缓慢漂移 ──────────────── */
+.sky{position:fixed;inset:0;pointer-events:none;overflow:hidden}
+.blob{position:absolute;border-radius:50%;filter:blur(90px);opacity:.5;mix-blend-mode:screen}
+.b1{width:640px;height:640px;left:-8%;top:-22%;background:radial-gradient(circle,#15803d,transparent 65%);
+  animation:drift1 22s ease-in-out infinite alternate}
+.b2{width:560px;height:560px;right:-6%;top:-10%;background:radial-gradient(circle,#0e7490,transparent 65%);
+  animation:drift2 26s ease-in-out infinite alternate}
+.b3{width:480px;height:480px;left:36%;top:34%;background:radial-gradient(circle,rgba(74,222,128,.7),transparent 65%);
+  opacity:.22;animation:drift3 30s ease-in-out infinite alternate}
+@keyframes drift1{to{transform:translate(90px,70px) scale(1.15)}}
+@keyframes drift2{to{transform:translate(-80px,90px) scale(.9)}}
+@keyframes drift3{to{transform:translate(-60px,-70px) scale(1.2)}}
+/* 细颗粒噪点：压住渐变的塑料感 */
+.grain{position:fixed;inset:0;pointer-events:none;opacity:.05;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+
+/* ── 顶栏：玻璃条 ────────────────────────────────── */
+nav{position:relative;z-index:3;display:flex;align-items:center;gap:30px;
+  max-width:1160px;margin:18px auto 0;padding:13px 24px;
+  background:var(--glass);border:1px solid var(--edge);border-radius:16px;
+  backdrop-filter:blur(18px)}
+.logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:15px}
+nav a{color:var(--dim);text-decoration:none;font-size:13.5px;transition:color .2s}
+nav a:hover{color:var(--ink)}
+.nav-cta{margin-left:auto;color:#071209!important;font-weight:600;font-size:13.5px;
+  background:linear-gradient(135deg,var(--green),var(--cyan));padding:9px 18px;border-radius:11px}
+
+/* ── Hero ────────────────────────────────────────── */
+.hero{position:relative;z-index:2;max-width:1160px;margin:0 auto;padding:88px 32px 40px;text-align:center}
+.eyebrow{display:inline-flex;gap:8px;align-items:center;font-size:12px;color:var(--dim);
+  border:1px solid var(--edge);background:var(--glass);backdrop-filter:blur(12px);
+  padding:7px 16px;border-radius:999px;margin-bottom:30px;
+  animation:up .8s .05s cubic-bezier(.22,1,.36,1) both}
+.eyebrow b{color:var(--green);font-weight:500}
+h1{font-size:clamp(2.8rem,5.4vw,4.8rem);line-height:1.08;font-weight:800;
+  letter-spacing:-.035em;font-variation-settings:'wdth' 112;
+  animation:up .8s .15s cubic-bezier(.22,1,.36,1) both}
+.shine{background:linear-gradient(110deg,var(--green) 20%,var(--cyan) 45%,#b3ffd1 50%,var(--cyan) 55%,var(--green) 80%);
+  background-size:220% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;
+  animation:sheen 5.5s linear infinite}
+@keyframes sheen{to{background-position:-220% 0}}
+.sub{margin:26px auto 0;max-width:52ch;color:var(--dim);font-size:16.5px;line-height:1.7;
+  animation:up .8s .28s cubic-bezier(.22,1,.36,1) both}
+.ctas{display:flex;gap:14px;justify-content:center;margin-top:38px;
+  animation:up .8s .4s cubic-bezier(.22,1,.36,1) both}
+.btn{display:inline-flex;align-items:center;gap:10px;padding:15px 30px;border-radius:14px;
+  font-size:15px;font-weight:600;text-decoration:none;transition:.3s}
+.btn-primary{position:relative;background:linear-gradient(135deg,var(--green),var(--cyan));color:#071209}
+.btn-primary::after{content:"";position:absolute;inset:-2px;border-radius:16px;z-index:-1;
+  background:linear-gradient(135deg,var(--green),var(--cyan));filter:blur(16px);opacity:.45;
+  animation:glow 3s ease-in-out infinite}
+@keyframes glow{50%{opacity:.75}}
+.btn-primary:hover{transform:translateY(-2px)}
+.btn-glass{background:var(--glass);border:1px solid var(--edge);color:var(--ink);backdrop-filter:blur(12px)}
+.btn-glass:hover{border-color:rgba(74,222,128,.5)}
+@keyframes up{from{opacity:0;transform:translateY(26px)}to{opacity:1;transform:none}}
+
+/* ── 悬浮的产品窗口（3D 透视 + 缓慢浮动）──────────── */
+.float-zone{perspective:1400px;max-width:1020px;margin:64px auto 0;padding:0 32px;position:relative;z-index:2}
+.window{transform:rotateX(9deg);transform-style:preserve-3d;
+  background:linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.02));
+  border:1px solid var(--edge);border-radius:20px;backdrop-filter:blur(20px);
+  box-shadow:0 60px 120px -40px rgba(0,0,0,.85),0 0 80px -30px rgba(74,222,128,.25);
+  overflow:hidden;animation:hover-float 7s ease-in-out infinite,up 1s .5s cubic-bezier(.22,1,.36,1) both}
+@keyframes hover-float{50%{transform:rotateX(9deg) translateY(-14px)}}
+.win-bar{display:flex;gap:7px;align-items:center;padding:14px 18px;border-bottom:1px solid var(--edge)}
+.win-bar i{width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,.15)}
+.win-bar span{margin-left:10px;font-size:11px;color:var(--dim)}
+.win-body{display:grid;grid-template-columns:5fr 7fr;min-height:300px}
+.pane-chat{padding:22px;border-right:1px solid var(--edge)}
+.bar{height:9px;border-radius:6px;background:rgba(255,255,255,.09);margin-bottom:13px}
+.bubble{background:linear-gradient(135deg,var(--green),var(--cyan));color:#071209;
+  font-size:12px;padding:10px 14px;border-radius:12px 12px 4px 12px;width:fit-content;
+  margin:10px 0 14px auto;font-weight:500}
+.pane-canvas{padding:22px;display:grid;grid-template-columns:1fr 1fr;gap:14px;align-content:start}
+.card{background:rgba(255,255,255,.04);border:1px solid var(--edge);border-radius:12px;
+  padding:14px;min-height:82px}
+.card i{display:block;height:7px;border-radius:5px;background:rgba(255,255,255,.1);margin-bottom:9px}
+.card i:first-child{width:62%;background:linear-gradient(90deg,var(--green),var(--cyan))}
+
+/* ── 玻璃数据条 ──────────────────────────────────── */
+.stats{position:relative;z-index:2;display:flex;gap:16px;justify-content:center;
+  max-width:1160px;margin:70px auto 90px;padding:0 32px;flex-wrap:wrap}
+.stat{flex:1;min-width:200px;background:var(--glass);border:1px solid var(--edge);
+  border-radius:16px;backdrop-filter:blur(14px);padding:24px 26px;transition:.3s;
+  animation:up .8s cubic-bezier(.22,1,.36,1) both}
+.stat:nth-child(1){animation-delay:.62s}.stat:nth-child(2){animation-delay:.72s}.stat:nth-child(3){animation-delay:.82s}
+.stat:hover{border-color:rgba(74,222,128,.4);transform:translateY(-4px)}
+.stat .n{font-size:26px;font-weight:800;background:linear-gradient(120deg,var(--green),var(--cyan));
+  -webkit-background-clip:text;background-clip:text;color:transparent}
+.stat .l{margin-top:6px;font-size:13px;color:var(--dim)}
+@media (prefers-reduced-motion:reduce){*{animation:none!important}}
+@media (max-width:900px){.win-body{grid-template-columns:1fr}.pane-chat{border-right:0;border-bottom:1px solid var(--edge)}}
+</style>
+</head>
+<body>
+<div class="sky"><div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div></div>
+<div class="grain"></div>
+
+<nav>
+  <div class="logo">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><defs><linearGradient id="g" x1="4" y1="3" x2="20" y2="21"><stop stop-color="#4ade80"/><stop offset="1" stop-color="#22d3ee"/></linearGradient></defs><path d="M5.2 3.6 L19.8 10.6 L13.1 13.4 L10.3 20.4 Z" stroke="url(#g)" stroke-width="1.9" stroke-linejoin="round"/></svg>
+    Claude Desktop
+  </div>
+  <a href="#">产出</a><a href="#">功能</a><a href="#">开发者</a>
+  <a class="nav-cta" href="#">下载</a>
+</nav>
+
+<section class="hero">
+  <span class="eyebrow mono"><b>v0.0.16</b> · 基于 Claude Agent SDK</span>
+  <h1>一句话，让 AI 帮你<br><span class="shine">做完 PPT、表格、方案。</span></h1>
+  <p class="sub">桌面端的 Claude。内置 141+ 创作技能、可视化设计画布和你自己的知识库——聊天，然后收文件。</p>
+  <div class="ctas">
+    <a class="btn btn-primary" href="#">⬇ 下载 macOS 版</a>
+    <a class="btn btn-glass" href="#">看看能产出什么</a>
+  </div>
+</section>
+
+<div class="float-zone">
+  <div class="window">
+    <div class="win-bar"><i></i><i></i><i></i><span class="mono">Claude Desktop</span></div>
+    <div class="win-body">
+      <div class="pane-chat">
+        <div class="bar" style="width:56%"></div>
+        <div class="bar" style="width:78%"></div>
+        <div class="bubble">帮我做一份 Q3 复盘 PPT</div>
+        <div class="bar" style="width:66%"></div>
+        <div class="bar" style="width:42%"></div>
+      </div>
+      <div class="pane-canvas">
+        <div class="card"><i></i><i style="width:88%"></i><i style="width:70%"></i></div>
+        <div class="card"><i style="width:55%"></i><i style="width:92%"></i><i style="width:63%"></i></div>
+        <div class="card"><i style="width:70%"></i><i style="width:80%"></i><i style="width:58%"></i></div>
+        <div class="card"><i style="width:48%"></i><i style="width:85%"></i><i style="width:75%"></i></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="stats">
+  <div class="stat"><div class="n">141+</div><div class="l">内置创作技能，持续增长</div></div>
+  <div class="stat"><div class="n">.pptx → .mp4</div><div class="l">从演示到成片，产出即文件</div></div>
+  <div class="stat"><div class="n">100%</div><div class="l">开源可审计 · 权限先问后动</div></div>
+</div>
+</body>
+</html>
