@@ -93,52 +93,6 @@ body {
   ─────────────────────────────────────────────────────────────
 */
 
-/* 产出轨道：rotate(θ) translateX(R) rotate(-θ) 首尾抵消保持芯片直立；
-   同圈卫星用负 animation-delay 摊开角度（内联 style 指定）。 */
-.orbit-rings {
-  animation: ringspin 110s linear infinite;
-}
-@keyframes ringspin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-.sat-outer {
-  animation: orbitOuter 44s linear infinite;
-}
-.sat-inner {
-  animation: orbitInner 30s linear infinite reverse;
-}
-@keyframes orbitOuter {
-  from {
-    transform: rotate(0deg) translateX(258px) rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg) translateX(258px) rotate(-360deg);
-  }
-}
-@keyframes orbitInner {
-  from {
-    transform: rotate(0deg) translateX(156px) rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg) translateX(156px) rotate(-360deg);
-  }
-}
-.pulse-ring {
-  animation: pulseRing 3.4s ease-out infinite;
-}
-@keyframes pulseRing {
-  from {
-    transform: translate(-50%, -50%) scale(1);
-    opacity: 0.6;
-  }
-  to {
-    transform: translate(-50%, -50%) scale(2.7);
-    opacity: 0;
-  }
-}
-
 /*
   Hero 内容墙（Linear intake 式）：一面 rotateX 向后倾倒的 3D 平面，
   几行产品痕迹卡以不同速度漂移。行内容渲染两遍，位移到 -50% 时首尾无缝。
@@ -232,10 +186,6 @@ body {
   html {
     scroll-behavior: auto;
   }
-  .orbit-rings,
-  .sat-outer,
-  .sat-inner,
-  .pulse-ring,
   .dot-pulse,
   .cue-line,
   .btn-glow::after,

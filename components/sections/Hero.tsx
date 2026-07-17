@@ -2,7 +2,8 @@
 
 /*
   第一屏（设计稿 D「发布会」）。
-  左：逐字从模糊里升起的标题 + 真实下载按钮（磁性）；右：产出轨道永动装置；
+  左：逐字从模糊里升起的标题 + 真实下载按钮（磁性）；右栏暂空——
+  Orbit 轨道装置已退役（和 HeroWall 的 3D 纵深叠在一起打架），版面留给后续任务重排；
   下：终端演示。主按钮的数据链路沿用旧版三态（loading / 直链 / 降级到 Releases）。
 */
 
@@ -15,7 +16,6 @@ import { getPlatformCards, guessPlatform, FALLBACK_HREF } from '@/lib/github'
 import { Magnetic } from '../fx/Magnetic'
 import { useIntroDelay } from '../fx/Intro'
 import { HeroWall } from '../HeroWall'
-import { Orbit } from '../Orbit'
 import { Terminal } from '../Terminal'
 
 const EASE = [0.22, 1, 0.36, 1] as const
@@ -140,8 +140,6 @@ export function Hero() {
             {t(hero.trust)}
           </motion.p>
         </div>
-
-        <Orbit />
       </div>
 
       <motion.div {...rise(4)} className="mt-16">

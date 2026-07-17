@@ -15,7 +15,7 @@ import { Footer } from '@/components/sections/Footer'
 
   「发布会」版（设计稿 D，2026-07-17 定稿）的段落编排：
     Intro     开场序列（每会话首次，幕布掀走后 Hero 才起）
-    Hero      逐字标题 + 产出轨道 + 终端演示（一屏讲清产品是干嘛的）
+    Hero      逐字标题 + 真实下载按钮 + 终端演示（一屏讲清产品是干嘛的）
     Conveyor  滚动驱动的文件传送带（跟手的重量感）
     Outputs   ← 签名段落：141 计数器 + 六张产出卡
     Platform  撑起产出的四样底座（术语从这里才允许出现）
