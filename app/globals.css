@@ -123,14 +123,6 @@ body {
   animation: breathe 6s ease-in-out infinite;
 }
 
-/* 减少动效偏好：墙静止但仍可见——不是把它藏起来，是让它别动。 */
-@media (prefers-reduced-motion: reduce) {
-  .wall-row,
-  .pulse-core {
-    animation: none;
-  }
-}
-
 /* 终端光标闪烁 + 徽章圆点呼吸 + 滚动提示线 */
 .caret-blink {
   animation: blink 1s steps(1) infinite;
@@ -215,7 +207,8 @@ body {
   .btn-glow::after,
   .intro-draw,
   .intro-word,
-  .wall-row {
+  .wall-row,
+  .pulse-core {
     animation: none !important;
   }
   .intro-overlay {

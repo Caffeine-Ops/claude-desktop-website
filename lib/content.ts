@@ -55,13 +55,15 @@ export const nav: { href: string; label: Copy }[] = [
 
 export const hero = {
   badge: { zh: '141+ 创作技能已就绪', en: '141+ creation skills, ready' },
-  /* 标题拆成行：入场动画一行一行起，顺带锁死断行位置（设计稿 D 定稿的分行）。 */
+  /* 标题拆成行：入场动画一行一行起，顺带锁死断行位置（铺满版定稿的分行）。
+     手动定死断行，不靠宽度限制——中文靠宽度断字会断在词中间（原型实测
+     踩过「做/完 PPT」「方/案」），很难看。 */
   headline: {
-    zh: ['一句话，', '让 AI 帮你做完', 'PPT、表格、方案。'],
-    en: ['One prompt away', 'from finished slides,', 'sheets, and proposals.'],
+    zh: ['一句话，让 AI 帮你做完', 'PPT、表格、方案。'],
+    en: ['One sentence. Claude ships', 'the deck, the sheet, the plan.'],
   },
   /** 标题里要染成品牌渐变的那一行（索引）。强调落在「产出」上，不是落在「AI」上。 */
-  accentLine: 2,
+  accentLine: 1,
   subline: {
     zh: '桌面端的 Claude。内置 141+ 创作技能、一块可视化设计画布和你自己的知识库——聊天，然后收文件。',
     en: 'Claude on your desktop. 141+ built-in creation skills, a visual design canvas, and a knowledge base of your own. Chat, then collect the files.',

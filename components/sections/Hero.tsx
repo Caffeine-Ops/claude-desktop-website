@@ -1,10 +1,11 @@
 'use client'
 
 /*
-  第一屏（设计稿 D「发布会」）。
-  左：逐字从模糊里升起的标题 + 真实下载按钮（磁性）；右栏暂空——
-  Orbit 轨道装置已退役（和 HeroWall 的 3D 纵深叠在一起打架），版面留给后续任务重排；
-  下：终端演示。主按钮的数据链路沿用旧版三态（loading / 直链 / 降级到 Releases）。
+  第一屏（Linear intake 式铺满版）。
+  背景是铺满的 3D 倾斜卡片墙（HeroWall），文案单栏压在左侧、用毛玻璃 +
+  两层遮罩托底可读性。真实下载按钮（磁性）。终端演示已移到第二屏独立
+  成节（app/page.tsx）——第一屏只讲清「一句话」这件事。
+  主按钮的数据链路沿用旧版三态（loading / 直链 / 降级到 Releases）。
 */
 
 import { useEffect, useState } from 'react'
@@ -16,7 +17,6 @@ import { getPlatformCards, guessPlatform, FALLBACK_HREF } from '@/lib/github'
 import { Magnetic } from '../fx/Magnetic'
 import { useIntroDelay } from '../fx/Intro'
 import { HeroWall } from '../HeroWall'
-import { Terminal } from '../Terminal'
 
 const EASE = [0.22, 1, 0.36, 1] as const
 
@@ -54,14 +54,54 @@ export function Hero() {
   let charIndex = 0
 
   return (
-    <section id="top" className="relative z-[1] mx-auto grid min-h-screen max-w-[1180px] content-center px-8 pt-[120px] pb-10">
-      {/* 背景内容墙（Linear intake 式的 3D 倾斜卡片墙）。
-          原来的四根光束退役了——和墙叠在一起是两种纵深语言打架。 */}
-      <div className="pointer-events-none absolute inset-0">
-        <HeroWall />
-      </div>
+    <section id="top" className="relative z-[1] min-h-screen overflow-hidden">
+      {/* 墙（z0）+ 核心光（z1，在 HeroWall 内部） */}
+      <HeroWall />
 
-      <div className="relative grid items-center gap-12 lg:grid-cols-[1.08fr_1fr]">
+      {/* glass（z2）：文字栏背后的毛玻璃。
+          压暗会杀掉墙的存在感，模糊不会——卡片的轮廓、动感、绿光全留着，
+          只把它的字揉糊，就不跟副标题抢眼睛了。这是可读性的主力，不是装饰。
+          边缘必须用 mask 化开：一旦让人看出这里有块方玻璃，整个效果就塌了。
+          数值出自 spec §4.5（遮罩 48 的固化结果）。 */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute z-[2] max-lg:hidden"
+        style={{
+          left: '-4%',
+          top: '30%',
+          width: '62%',
+          height: '56%',
+          backdropFilter: 'blur(15.3px) saturate(.85)',
+          WebkitBackdropFilter: 'blur(15.3px) saturate(.85)',
+          maskImage: 'radial-gradient(ellipse 54% 54% at 34% 50%, #000 42%, transparent 80%)',
+          WebkitMaskImage: 'radial-gradient(ellipse 54% 54% at 34% 50%, #000 42%, transparent 80%)',
+        }}
+      />
+
+      {/* veil1（z2）：上下压边，保住导航和滚动提示 */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 z-[2]"
+        style={{
+          opacity: 0.766,
+          background:
+            'linear-gradient(180deg, var(--canvas) 0%, transparent 32%, transparent 56%, rgba(7,11,9,.88) 90%, var(--canvas) 100%)',
+        }}
+      />
+
+      {/* veil2（z2）：文字栏的保命符。重心压在副标题+按钮那一带（y58%）
+          而不是标题——大标题字大字粗，自己扛得住，不需要保护。
+          移动端没有 glass，靠它加强到 0.85 顶上（spec §8）。 */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 z-[2] opacity-[0.48] max-lg:opacity-[0.85]"
+        style={{
+          background:
+            'radial-gradient(ellipse 46% 42% at 27% 58%, var(--canvas) 30%, rgba(7,11,9,.72) 62%, transparent 84%)',
+        }}
+      />
+
+      <div className="relative z-[3] mx-auto grid min-h-screen max-w-[1180px] content-center px-8 pt-[120px] pb-10">
         <div>
           <motion.span
             {...rise(0)}
@@ -71,7 +111,7 @@ export function Hero() {
             {t(hero.badge)}
           </motion.span>
 
-          <h1 className="display-face text-[clamp(2.7rem,5.6vw,4.9rem)] leading-[1.1] font-extrabold">
+          <h1 className="display-face text-[clamp(2.4rem,4.4vw,3.9rem)] leading-[1.1] font-extrabold">
             {lines.map((line, li) => (
               <span key={line} className="block overflow-hidden pb-[0.08em]">
                 {[...line].map((ch, ci) => {
@@ -142,11 +182,7 @@ export function Hero() {
         </div>
       </div>
 
-      <motion.div {...rise(4)} className="mt-16">
-        <Terminal />
-      </motion.div>
-
-      <div aria-hidden="true" className="absolute bottom-[26px] left-1/2 flex -translate-x-1/2 flex-col items-center gap-2 font-mono text-[11px] tracking-[0.3em] text-dim">
+      <div aria-hidden="true" className="absolute bottom-[26px] left-1/2 z-[3] flex -translate-x-1/2 flex-col items-center gap-2 font-mono text-[11px] tracking-[0.3em] text-dim">
         SCROLL
         <i className="cue-line block h-[34px] w-px" style={{ background: 'linear-gradient(180deg,var(--brand),transparent)' }} />
       </div>
