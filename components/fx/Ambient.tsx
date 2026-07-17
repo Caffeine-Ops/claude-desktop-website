@@ -7,7 +7,6 @@
 
 import { useEffect, useRef, useState } from 'react'
 import { motion, useReducedMotion, useScroll, useSpring, useTransform } from 'motion/react'
-import { usePrefs } from '@/lib/prefs'
 import { ensurePointerTracking, pointerX, pointerY } from './pointer'
 
 /*
@@ -64,14 +63,14 @@ export function Glow() {
   )
 }
 
-/** 数据尘埃：canvas 上缓慢上飘的小点。颜色按主题走（白底上亮绿看不见）。 */
+/** 数据尘埃：canvas 上缓慢上飘的小点。 */
 export function Dust() {
   const reduced = useReducedMotion()
-  const { theme } = usePrefs()
   const ref = useRef<HTMLCanvasElement>(null)
-  // 颜色放 ref：换主题不重启粒子（重启会看到所有粒子闪一下重新洗牌）
+  // 颜色放 ref：绘制循环每帧读它，不需要为它触发 React 重渲染。
   const color = useRef({ fill: '#4ade80', boost: 1 })
-  color.current = theme === 'light' ? { fill: '#15803d', boost: 0.55 } : { fill: '#4ade80', boost: 1 }
+  // 主题在 2026-07-17 下线，只剩深色——不再有分支
+  color.current = { fill: '#4ade80', boost: 1 }
 
   useEffect(() => {
     if (reduced) return

@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import type { ReactNode } from 'react'
 import { Archivo, IBM_Plex_Mono } from 'next/font/google'
-import { PrefsProvider, themeInitScript } from '@/lib/prefs'
+import { PrefsProvider } from '@/lib/prefs'
 import './globals.css'
 
 /*
@@ -57,17 +57,11 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     // lang 先给 zh-CN（默认语言）；访客切到英文时 PrefsProvider 会在浏览器里改掉它。
-    // suppressHydrationWarning：上面那段脚本会在 React 接管前给 <html> 加 .dark 类，
-    // 这会让服务器版和浏览器版第一帧对不上——这是我们主动要的，让 React 别为它报警。
+    // suppressHydrationWarning 留着当安全网：浏览器插件常往 <html> 上乱塞属性，
+    // 那会让服务器版和浏览器版第一帧对不上，不值得为它报警。
+    // （2026-07-17 前这里还有个防闪白脚本会在 React 接管前改 <html>，随浅色主题一起删了。）
     <html lang="zh-CN" suppressHydrationWarning>
       <head>
-        {/*
-          这段脚本必须在页面画第一帧之前跑完，否则深色主题用户会先被白底闪一下。
-          dangerouslySetInnerHTML 是 React 里插入原始 HTML 的唯一口子，名字吓人是因为
-          插入外部内容会有注入风险——这里插的是我们自己写死的常量，不含用户输入，安全。
-        */}
-        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
-
         {/*
           动画的安全网。
 

@@ -339,7 +339,6 @@ export const footer = {
 
 export const ui = {
   downloadFor: { zh: '下载', en: 'Download for' },
-  themeToggle: { zh: '切换深浅色', en: 'Toggle theme' },
   langToggle: { zh: 'Switch to English', en: '切换到中文' },
   skipToContent: { zh: '跳到主要内容', en: 'Skip to content' },
   menu: { zh: '菜单', en: 'Menu' },

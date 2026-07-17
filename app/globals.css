@@ -5,18 +5,15 @@
   ─────────────────────────────────────────────────────────────
   设计令牌——「发布会」版（设计稿 D 定稿，2026-07-17）。
   ─────────────────────────────────────────────────────────────
-  主题结构：**深色是默认**（:root 就是深色值），浅色是覆盖层（.light 类）。
-  为什么反过来（之前是浅色默认）：产品定位定稿为深色科技感优先，且「默认」
-  必须在 JS 加载前就成立——把默认写进 :root，不挂任何类就是深色，
-  首帧不会闪白（prefs.tsx 的 themeInitScript 只在用户选过浅色时补 .light 类）。
+  **只有深色。** 浅色主题于 2026-07-17 下线（产品拍板），
+  连同切换按钮、.light 覆盖层、防闪白脚本一起删除——留着没人维护的
+  死代码是负债，需要时去翻 git 历史。
 
-  浅色不是深色的反色，是重新翻译（设计稿 D 白天版验证过的三原则）：
-  1. 亮绿/亮青在白底上是荧光笔，换深绿 #15803d → 深青 #0e7490（对比度达标）；
-  2. 终端演示区两个主题下都保持深色（白纸上的黑玻璃反而最抓眼）；
-  3. 黑底的 glow 是光、白底的 glow 是渍——浅色下光效全线收敛。
+  深色值直接写在 :root，不挂任何类就成立，JS 加载前也成立，首帧不闪白。
 
   @theme inline 的 --color-* 会被 Tailwind 编成工具类（bg-canvas / text-brand…）。
-  全部走 var() 间接引用：换主题只动下面 :root / .light 两层原始值。
+  颜色一律走 var() 间接引用——正因为有这层间接，砍掉整个浅色主题只需要删
+  两个 CSS 块，而不用去 20 个组件里逐个改颜色。这层别拆。
 */
 @theme inline {
   --color-canvas: var(--canvas); /* 页面底色 */
@@ -34,7 +31,7 @@
   --font-mono: var(--font-plex-mono), ui-monospace, 'SF Mono', Menlo, monospace;
 }
 
-/* 深色（默认——不挂类就是它，JS 未加载时也成立） */
+/* 深色——唯一的主题。不挂类就是它，JS 未加载时也成立。 */
 :root {
   --canvas: #070b09;
   --panel: #0d1410;
@@ -45,7 +42,7 @@
   --brand: #4ade80;
   --teal: #22d3ee;
   --on-brand: #06130b; /* 亮渐变上用深字（白字压亮绿只有 1.8:1，读不出来） */
-  /* 非颜色令牌：阴影/光效按主题走（黑底要光，白底要影） */
+  /* 非颜色令牌：阴影/光效（黑底要光，不要影） */
   --shadow-card: 0 10px 30px -20px rgba(0, 0, 0, 0.5);
   --shadow-card-hover: 0 18px 44px -20px rgba(74, 222, 128, 0.18);
   --shadow-nav: none;
@@ -55,28 +52,6 @@
   --btn-glow-idle: 0.4;
   --btn-glow-peak: 0.72;
   color-scheme: dark;
-}
-
-/* 浅色（覆盖层——只在用户手选浅色时由 prefs 挂 .light 类） */
-.light {
-  --canvas: #fafaf7;
-  --panel: #ffffff;
-  --ink: #14171a;
-  --dim: #5b6470;
-  --edge: rgba(20, 23, 26, 0.09);
-  --edge-brand: rgba(21, 128, 61, 0.24);
-  --brand: #15803d;
-  --teal: #0e7490;
-  --on-brand: #ffffff; /* 深渐变上换白字（#15803d 配白字 5.0:1，达标） */
-  --shadow-card: 0 10px 30px -20px rgba(20, 60, 35, 0.2);
-  --shadow-card-hover: 0 18px 44px -20px rgba(21, 128, 61, 0.25);
-  --shadow-nav: 0 8px 32px -18px rgba(20, 40, 30, 0.25);
-  --shadow-term: 0 44px 90px -36px rgba(20, 40, 30, 0.5);
-  --glow-tint: rgba(21, 128, 61, 0.07);
-  --glass: rgba(255, 255, 255, 0.66);
-  --btn-glow-idle: 0.18;
-  --btn-glow-peak: 0.38;
-  color-scheme: light;
 }
 
 html {
@@ -176,12 +151,6 @@ body {
   to {
     transform: translateX(-50%);
   }
-}
-:root {
-  --wall-opacity: 0.5; /* 深色：墙隐约可见 */
-}
-.light {
-  --wall-opacity: 0.42; /* 浅色：白底噪声容忍度更低，再压一档 */
 }
 
 /* 终端光标闪烁 + 徽章圆点呼吸 + 滚动提示线 */

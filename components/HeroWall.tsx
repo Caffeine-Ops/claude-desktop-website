@@ -11,8 +11,8 @@
   3. 鼠标微视差（×0.012，比轨道装置更轻）——全站「跟手」哲学的延续。
   跟手值照例走「挂载后再接线」门闩（hydration 教训）。
 
-  可读性纪律：墙是背景不是内容（aria-hidden），透明度走 --wall-opacity 令牌
-  （深色 .5 / 浅色 .42），任何时候不许为了「让墙更好看」调亮到和前景抢眼。
+  可读性纪律：墙是背景不是内容（aria-hidden），透明度压在 .5，
+  任何时候不许为了「让墙更好看」调亮到和前景抢眼。
 */
 
 import { useEffect, useRef, useState } from 'react'
@@ -58,7 +58,9 @@ export function HeroWall() {
           style={{
             transform: 'rotateX(38deg) rotateZ(-6deg)',
             transformStyle: 'preserve-3d',
-            opacity: 'var(--wall-opacity)',
+            // --wall-opacity 令牌随浅色主题一起下线；这里先写死深色档的原值，
+            // Task 4 重写本组件时会改成每行独立的 opacity（届时这行消失）。
+            opacity: 0.5,
             x: still ? 0 : mx,
             y: still ? 0 : my,
             translateY: still ? 0 : parallaxY,

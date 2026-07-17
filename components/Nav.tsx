@@ -3,7 +3,6 @@
 /*
   顶栏：浮岛式玻璃条（设计稿 D）。fixed 悬浮居中，不是通栏 sticky。
   开场幕布掀走后从上方浮入（延迟由 useIntroDelay 提供）。
-  主题切换按钮在这里——图标显示「点了会变成什么」，不是当前状态。
 */
 
 import { motion, useReducedMotion } from 'motion/react'
@@ -14,7 +13,7 @@ import { nav, site, ui } from '@/lib/content'
 import { usePrefs } from '@/lib/prefs'
 
 export function Nav() {
-  const { t, lang, setLang, theme, toggleTheme } = usePrefs()
+  const { t, lang, setLang } = usePrefs()
   const reduced = useReducedMotion()
   const introDelay = useIntroDelay()
 
@@ -40,14 +39,6 @@ export function Nav() {
       </nav>
 
       <div className="ml-auto flex items-center gap-1">
-        <button
-          onClick={toggleTheme}
-          aria-label={t(ui.themeToggle)}
-          className="grid size-9 place-items-center rounded-lg text-dim transition-colors hover:bg-panel hover:text-ink"
-        >
-          {theme === 'dark' ? <SunIcon /> : <MoonIcon />}
-        </button>
-
         <button
           onClick={() => setLang(lang === 'zh' ? 'en' : 'zh')}
           aria-label={t(ui.langToggle)}
@@ -76,23 +67,6 @@ export function Nav() {
         </Magnetic>
       </div>
     </motion.header>
-  )
-}
-
-function SunIcon() {
-  return (
-    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" aria-hidden="true">
-      <circle cx="12" cy="12" r="4" />
-      <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" />
-    </svg>
-  )
-}
-
-function MoonIcon() {
-  return (
-    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z" />
-    </svg>
   )
 }
 
