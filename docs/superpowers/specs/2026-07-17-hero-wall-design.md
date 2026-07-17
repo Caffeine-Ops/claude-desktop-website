@@ -192,16 +192,47 @@ export const heroWall: WallCard[][] = [ /* 5 行 × 5 张 */ ]
 - 漂移保留，`duration` ×1.3（小屏上同样速度显得更快）
 - 鼠标视差自然失效（无指针），不用特殊处理
 
-## 9. 已知欠账
+## 9. 前置清理：浅色主题下线
 
-**浅色主题本轮不做精细翻译**（用户明确决定）。
+**产品决策（2026-07-17）：只保留深色。浅色主题及其切换按钮全部删除。**
 
-但不能崩。兜底：浅色下 `--wall-opacity` 降到安全档（约 0.22）、`glass` 关闭、
-`core` 绿光关闭（项目既有纪律：「黑底的 glow 是光、白底的 glow 是渍」）。
-结果是白天模式下墙退回成一面很淡的背景——不精致，但不刺眼、字能读、不显脏。
+这一节**先于** Hero 改版实施——砍掉浅色，Hero 就少一整套约束，
+上面所有规格都只需要在一种主题下成立。
 
-后续单独一轮做浅色的重新翻译（白底卡片 + 深色字 + 真实阴影），参照 `globals.css`
-顶部记的浅色三原则。
+### 9.1 为什么是「删」不是「藏」
+
+彻底删代码，不是只隐藏按钮。留着没人维护的死代码是负债：
+下次调配色，有人得对着一套永远看不到的浅色值瞎猜要不要同步改。
+git 有完整历史，需要时捞得回来。
+
+### 9.2 范围（6 个文件，基本是纯删除）
+
+| 文件 | 动作 |
+|---|---|
+| `app/globals.css` | 删 `.light` 两个覆盖块（约 61–80 行 + 183 行附近）；改顶部注释；`:root` 保留 `color-scheme: dark`。**连带**：`--wall-opacity` 令牌（181 行）整体作废——见下 |
+| `lib/prefs.tsx` | 删 `Theme` 类型、`theme` state、`toggleTheme`、`THEME_KEY`、`themeInitScript`、挂 `.light` 类的 effect。文件只剩语言偏好 |
+| `components/Nav.tsx` | 删切换按钮 + `SunIcon` + `MoonIcon` |
+| `app/layout.tsx` | 删 `themeInitScript` 的 import 和内联 `<script>` |
+| `components/fx/Ambient.tsx` | 删主题分支，写死深色值 `{ fill: '#4ade80', boost: 1 }` |
+| `lib/content.ts` | 删 `ui.themeToggle` |
+
+`lib/useRelease.ts` 是 grep 误报（`inflight` 撞上 `light` 子串），**不要动**。
+
+**`--wall-opacity` 一并删除**（不是只删它的浅色覆盖）。旧墙用「整面墙一个透明度」
+控制存在感；新墙改成每行独立的 opacity + blur（§4.2），这个令牌没有消费者了。
+删干净，别留孤儿令牌。
+
+### 9.3 不用动的东西
+
+所有组件里的 `bg-canvas` / `text-brand` / `border-edge` 等工具类**一个都不动**。
+颜色走 `var()` 间接引用，浅色只是最外层的覆盖层——掀掉覆盖层，底下的深色值原地生效。
+`@theme inline` 那一层原样保留。
+
+### 9.4 顺带的收益与遗留
+
+- **收益**：`layout.tsx` 少一个阻塞首帧的内联 `<script>`（防闪白脚本没有存在意义了）。
+- **老访客**：localStorage 里存过 `cd-theme=light` 的人，脚本没了、`.light` 也没了，
+  自动就是深色。**不需要写清理代码**——残留的键值不影响任何行为，为它写迁移是过度设计。
 
 ## 10. 验收清单
 
@@ -210,7 +241,14 @@ export const heroWall: WallCard[][] = [ /* 5 行 × 5 张 */ ]
 - [ ] `prefers-reduced-motion: reduce` 下墙完全静止
 - [ ] 移动端 390 宽：无横向滚动条，墙 3 行正常
 - [ ] 键盘 Tab 顺序不受墙影响；读屏软件读不到墙上的卡片
-- [ ] 浅色主题：不刺眼、文字可读（不要求精致）
 - [ ] 下载按钮三态与改版前完全一致
 - [ ] `Terminal` 在第二屏独立成节，功能不变
 - [ ] `Orbit.tsx` 及其 CSS 已彻底删除，无死代码
+
+**浅色下线（§9）单独验：**
+
+- [ ] Nav 上没有主题切换按钮，布局不留空洞
+- [ ] 全站 grep 不到 `\.light` / `toggleTheme` / `themeInitScript` 残留
+- [ ] `lib/useRelease.ts` 未被误伤
+- [ ] 首帧无闪白（防闪白脚本删掉后依然成立——因为深色本来就是 `:root` 默认）
+- [ ] 老访客（localStorage 存过 `cd-theme=light`）打开是深色，无异常
