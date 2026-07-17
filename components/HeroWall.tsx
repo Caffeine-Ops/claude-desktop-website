@@ -60,16 +60,42 @@ export function HeroWall() {
 
   return (
     <div ref={ref} aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">
-      {/* 3D 舞台：透视点偏上，平面向后倒 */}
-      <div className="absolute inset-0" style={{ perspective: '1000px', perspectiveOrigin: '50% 30%' }}>
-        <motion.div
+      {/*
+        3D 舞台，必须分两层，别合并回一个 style ——
+        motion 的 style 里只要出现 x / y / translateY 这类「transform 类」属性
+        （哪怕值是 0），motion 就会接管整个 transform 的生成权：它会无视我们
+        手写在同一个 style 对象里的 `transform` 字符串，直接用自己从
+        x/y/translateY 算出来的一份把它覆盖掉（源码见
+        framer-motion/motion-dom 的 useStyle → buildTransform：
+        copyRawValuesOnly 先把手写字符串抄进去，随后
+        Object.assign(style, useInitialMotionValues(...)) 无条件覆盖）。
+        三个视差值都是 0（首帧 SSR、或 still===true）时，算出来的就是
+        transform:none —— rotateX/rotateZ 原地消失，这正是这面墙从来没
+        倾斜过的根因。
+        所以：视差位移（x/y/translateY，交给 motion 的 style）放外层
+        motion.div；3D 倾斜（rotateX/rotateZ，纯 CSS 字符串，motion 完全
+        碰不到）留在内层普通 div。谁都别把这两组 transform 揉回同一个
+        style——揉回去这个 bug 会原地复活。
+        另外 perspective 只对直接子元素生效：把它和位移放在同一个
+        motion.div 上（perspective 是独立 CSS 属性，不受 motion 的
+        transform 接管影响），让做 rotateX 的普通 div 是它的直接子元素，
+        这样「倾斜」和「近大远小」才能同时成立。
+      */}
+      <motion.div
+        className="absolute inset-0"
+        style={{
+          perspective: '1000px',
+          perspectiveOrigin: '50% 30%',
+          x: still ? 0 : mx,
+          y: still ? 0 : my,
+          translateY: still ? 0 : parallaxY,
+        }}
+      >
+        <div
           className="absolute top-[-34%] left-[-30%] flex h-[176%] w-[176%] flex-col justify-between gap-[30px]"
           style={{
             transform: 'rotateX(42deg) rotateZ(-8deg)',
             transformStyle: 'preserve-3d',
-            x: still ? 0 : mx,
-            y: still ? 0 : my,
-            translateY: still ? 0 : parallaxY,
           }}
         >
           {heroWall.map((row, ri) => {
@@ -128,8 +154,8 @@ export function HeroWall() {
               </div>
             )
           })}
-        </motion.div>
-      </div>
+        </div>
+      </motion.div>
 
       {/* 核心光晕：Orbit 唯一被继承下来的东西——「所有产出都出自同一个核心」
           这个信息不能白丢。现在它是墙背后透出来的一团光，不是一个转圈的装置。 */}
