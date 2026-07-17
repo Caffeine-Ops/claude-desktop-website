@@ -20,6 +20,28 @@ import { HeroWall } from '../HeroWall'
 
 const EASE = [0.22, 1, 0.36, 1] as const
 
+/*
+  把标题切成动画用的「原子」（words/chars）。
+  ─────────────────────────────────────────────────────────────
+  逐字入场动画要求每个字符独立做 inline-block（这样才能各自单独淡入
+  上升）。但浏览器换行算法把每个 inline-block 都当成一个独立的「词」，
+  于是可以在任意两个字符之间断行——完全不管这几个字符本来是不是同一个
+  英文单词。这就是 "Claude" 会被断成 "Cl" / "aude" 的根因。
+
+  修法：连续的拉丁字母/数字先合并成一个「词原子」，外面套一层
+  inline-block + whitespace-nowrap 兜住，词内部的字符再各自套
+  inline-block 做动画——词内不许断，词间随便断。中文单字、标点、空格
+  各自是长度为 1 的原子，不套 nowrap 外壳，所以依然可以在任意字之间
+  断行（中文本来就该这样断，不需要也不该被词化）。
+  这套逻辑不看当前语言（zh/en）——中文标题里混进的英文词（比如
+  "AI"）一样会被当词原子保护，不用为语言分叉两套渲染路径。
+*/
+const WORD_ATOM_RE = /[A-Za-z0-9]+(?:['’-][A-Za-z0-9]+)*|./g
+
+function splitIntoAtoms(line: string): string[] {
+  return line.match(WORD_ATOM_RE) ?? []
+}
+
 export function Hero() {
   const { t, lang } = usePrefs()
   const reduced = useReducedMotion()
@@ -111,34 +133,66 @@ export function Hero() {
             {t(hero.badge)}
           </motion.span>
 
-          <h1 className="display-face text-[clamp(2.4rem,4.4vw,3.9rem)] leading-[1.1] font-extrabold">
-            {lines.map((line, li) => (
-              <span key={line} className="block overflow-hidden pb-[0.08em]">
-                {[...line].map((ch, ci) => {
-                  const delay = introDelay + charIndex++ * 0.028
-                  const cls =
-                    li === hero.accentLine
-                      ? 'inline-block bg-gradient-to-br from-brand to-teal bg-clip-text text-transparent'
-                      : 'inline-block'
-                  return reduced ? (
-                    <span key={ci} className={cls}>
-                      {ch === ' ' ? '\u00A0' : ch}
-                    </span>
-                  ) : (
-                    <motion.span
-                      key={ci}
-                      className={`${cls} will-change-transform`}
-                      initial={{ opacity: 0, y: '0.7em', filter: 'blur(10px)' }}
-                      animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-                      transition={{ duration: 0.7, delay, ease: EASE }}
-                    >
-                      {/* 空格必须是   转义：inline-block 里的普通空格塌成零宽（踩过两次） */}
-                      {ch === ' ' ? '\u00A0' : ch}
-                    </motion.span>
-                  )
-                })}
-              </span>
-            ))}
+          <h1 className="display-face text-[clamp(1.9rem,4.4vw,3.9rem)] leading-[1.1] font-extrabold">
+            {lines.map((line, li) => {
+              const cls =
+                li === hero.accentLine
+                  ? 'inline-block bg-gradient-to-br from-brand to-teal bg-clip-text text-transparent'
+                  : 'inline-block'
+
+              return (
+                <span key={line} className="block overflow-hidden pb-[0.08em]">
+                  {splitIntoAtoms(line).map((atom, ai) => {
+                    /* 空格原子：原样吐一个文本节点，不套 inline-block。
+                       不是转义成 nbsp——一旦套進 inline-block，「普通空格
+                       是这个盒子唯一内容」会被当成盒子自己的首尾空白直接塌成
+                       0 宽（项目踩过两次的坑）；而如果转成 nbsp，虽然不塌宽
+                       但换成了「此处禁止换行」，恰好是这次要修的反模式（词间
+                       必须能断行）。这里两难都躲开：让空格当一个普通的行内
+                       文本字符，夹在两个 inline-block 词/字之间，浏览器按
+                       标准规则处理——不塌宽，也是合法断行点。 */
+                    if (atom === ' ') {
+                      charIndex++ // 编号继续走，后面字符的错峰节奏不受影响
+                      return ' '
+                    }
+
+                    const chars = [...atom]
+                    const rendered = chars.map((ch, ci) => {
+                      const delay = introDelay + charIndex++ * 0.028
+                      // key 必须跨 atom 唯一：单用 ci 的话，每个单字符原子的
+                      // ci 永远是 0，会跟其它单字符原子一起撞出重复 key
+                      // （踩过：React 报 "两个子元素用了同一个 key"）。
+                      const key = `${ai}-${ci}`
+                      return reduced ? (
+                        <span key={key} className={cls}>
+                          {ch}
+                        </span>
+                      ) : (
+                        <motion.span
+                          key={key}
+                          className={`${cls} will-change-transform`}
+                          initial={{ opacity: 0, y: '0.7em', filter: 'blur(10px)' }}
+                          animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+                          transition={{ duration: 0.7, delay, ease: EASE }}
+                        >
+                          {ch}
+                        </motion.span>
+                      )
+                    })
+
+                    // 多字符的词原子：套一层不可断行的壳子，词内绝不允许断行；
+                    // 单字符原子（中文单字/标点）没有断词风险，直接吐字符本身。
+                    return chars.length > 1 ? (
+                      <span key={ai} className="inline-block whitespace-nowrap">
+                        {rendered}
+                      </span>
+                    ) : (
+                      rendered[0]
+                    )
+                  })}
+                </span>
+              )
+            })}
           </h1>
 
           <motion.p {...rise(1)} className="mt-[26px] max-w-[46ch] text-[16.5px] leading-[1.7] text-dim">
