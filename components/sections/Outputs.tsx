@@ -1,7 +1,8 @@
 'use client'
 
 /*
-  产出区（设计稿 D）：0→141 滚动计数器 + 六张产出卡（弹簧错峰入场）。
+  产出区（设计稿 D）：0→139 滚动计数器 + 六张产出卡（弹簧错峰入场）。
+  139 = 产品「设置 → 技能」页的真实总数，不是拍的——改数字前先开产品核对。
   每张卡对应仓库里真实存在的技能（见 content.ts 注释）——不虚构原则不变。
 */
 
@@ -16,12 +17,12 @@ function Counter() {
   const reduced = useReducedMotion()
   const ref = useRef<HTMLSpanElement>(null)
   const inView = useInView(ref, { once: true, amount: 0.6 })
-  const [n, setN] = useState(reduced ? 141 : 0)
+  const [n, setN] = useState(reduced ? 139 : 0)
 
   useEffect(() => {
     if (!inView || reduced) return
     // animate 的「纯数值」形态：不绑元素，每帧把中间值喂给 onUpdate
-    const controls = animate(0, 141, {
+    const controls = animate(0, 139, {
       duration: 1.6,
       ease: [0.22, 1, 0.36, 1],
       onUpdate: (v) => setN(Math.round(v)),
@@ -31,7 +32,7 @@ function Counter() {
 
   return (
     <span ref={ref} className="display-face bg-gradient-to-br from-brand to-teal bg-clip-text text-[clamp(3.4rem,7vw,5.6rem)] leading-none font-extrabold text-transparent">
-      {n}+
+      {n}
     </span>
   )
 }

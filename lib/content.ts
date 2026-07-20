@@ -30,7 +30,8 @@ export const site = {
   latestReleaseUrl: 'https://github.com/Caffeine-Ops/claude-desktop/releases/latest',
   issuesUrl: 'https://github.com/Caffeine-Ops/claude-desktop/issues',
   readmeUrl: 'https://github.com/Caffeine-Ops/claude-desktop#readme',
-  licenseUrl: 'https://github.com/Caffeine-Ops/claude-desktop/blob/main/LICENSE',
+  /* 仓库根本没有 LICENSE 文件(点过去是 404),许可情况写在 README 的 License 一节里——指到那儿。 */
+  licenseUrl: 'https://github.com/Caffeine-Ops/claude-desktop#license',
   agentSdkUrl: 'https://docs.claude.com/en/api/agent-sdk/overview',
 } as const
 
@@ -54,26 +55,33 @@ export const nav: { href: string; label: Copy }[] = [
 ]
 
 export const hero = {
-  badge: { zh: '141+ 创作技能已就绪', en: '141+ creation skills, ready' },
+  /* 139 不是拍脑袋:产品「设置 → 技能」页显示的就是「全部 (139)」。改这个数字前先开产品核对。 */
+  badge: { zh: '139 项创作技能已就绪', en: '139 creation skills, ready' },
   /* 标题拆成行：入场动画一行一行起，顺带锁死断行位置（铺满版定稿的分行）。
      手动定死断行，不靠宽度限制——中文靠宽度断字会断在词中间（原型实测
      踩过「做/完 PPT」「方/案」），很难看。 */
+  /* 不罗列品类（PPT/表格/方案…）——列几样都嫌局限，产品早就不止这些。
+     定位宣言式：第一行说清「这是什么」，第二行说「它做什么」。
+     具体能产出什么，交给标题正后方的卡片墙和「产出」区去展示。 */
   headline: {
-    zh: ['一句话，让 AI 帮你做完', 'PPT、表格、方案。'],
-    en: ['One sentence. Claude ships', 'the deck, the sheet, the plan.'],
+    zh: ['桌面上的 AI 工作台，', '想法直达成品。'],
+    en: ['The AI workbench on your desktop.', 'Ideas straight to finished work.'],
   },
   /** 标题里要染成品牌渐变的那一行（索引）。强调落在「产出」上，不是落在「AI」上。 */
   accentLine: 1,
+  /* 「智能助手」「工作画布」是产品里两个面的真实叫法(左侧栏原文),别改成别的词。 */
   subline: {
-    zh: '桌面端的 Claude。内置 141+ 创作技能、一块可视化设计画布和你自己的知识库——聊天，然后收文件。',
-    en: 'Claude on your desktop. 141+ built-in creation skills, a visual design canvas, and a knowledge base of your own. Chat, then collect the files.',
+    zh: '桌面端的 Claude。智能助手加工作画布，139 项内置创作技能和你自己的知识库——聊天，然后收文件。',
+    en: 'Claude on your desktop. An assistant plus a work canvas, 139 built-in creation skills, and a knowledge base of your own. Chat, then collect the files.',
   },
   // 这个按钮也指向「产出」那一段，所以用同一个词（见 nav 的注释第 2 条）。
   secondaryCta: { zh: '看看能产出什么', en: 'See the output' },
   otherPlatforms: { zh: '其它平台', en: 'Other platforms' },
+  /* 不写「开源」:仓库虽公开,但没有开源协议(License: None,README 明说私有)。
+     「代码公开」是真话,「开源」不是——开源 = 公开 + 授权你用,这里只有前一半。 */
   trust: {
-    zh: '基于 Claude Agent SDK · 开源可审计',
-    en: 'Built on the Claude Agent SDK · Open source, auditable',
+    zh: '基于 Claude Agent SDK · 代码公开在 GitHub',
+    en: 'Built on the Claude Agent SDK · Source public on GitHub',
   },
 }
 
@@ -120,7 +128,8 @@ export const heroWall: WallCard[][] = [
     { id: { zh: '已完成 · 出图 4 张', en: 'Done · 4 images' }, title: { zh: 'imagegen · 生成完毕', en: 'imagegen · complete' }, tag: { zh: '技能', en: 'Skill' } },
     { id: { zh: '产出 · 1.1 MB', en: 'Output · 1.1 MB' }, title: { zh: '发布海报.png', en: 'launch-poster.png' }, tag: { zh: '.png', en: '.png' } },
     { id: { zh: 'ENG · 会话 #13', en: 'ENG · Session #13' }, title: { zh: '写一版融资方案的框架', en: 'Draft a fundraising proposal outline' }, tag: { zh: 'proposal-writer', en: 'proposal-writer' }, brand: true, ask: true },
-    { id: { zh: '已完成', en: 'Done' }, title: { zh: 'proposal-writer · 框架已搭好', en: 'proposal-writer · outline ready' }, tag: { zh: '技能', en: 'Skill' } },
+    /* 「封面→目录→正文」是产品方案写作模式的真实三步(草稿面板顶栏原文)。 */
+    { id: { zh: '方案草稿 · 2/3', en: 'Draft · 2/3' }, title: { zh: '封面 → 目录 → 正文', en: 'Cover → Outline → Body' }, tag: { zh: '方案写作', en: 'Proposal mode' } },
     { id: { zh: '产出 · 36 KB', en: 'Output · 36 KB' }, title: { zh: '投标方案.docx', en: 'proposal.docx' }, tag: { zh: '.docx', en: '.docx' } },
   ],
   [
@@ -139,9 +148,10 @@ export const heroWall: WallCard[][] = [
   ],
 ]
 
-/** 终端演示（Hero 下方的循环动画）。所有可见字都双语。 */
+/* 会话演示（Hero 下方的循环动画）。所有可见字都双语。
+   窗口标题用产品里聊天面的真实叫法「智能助手」——产品不是终端软件,别把它演成命令行。 */
 export const terminal = {
-  windowTitle: { zh: 'claude-desktop — 会话', en: 'claude-desktop — session' },
+  windowTitle: { zh: 'Claude Desktop — 智能助手', en: 'Claude Desktop — assistant' },
   prompt: { zh: '帮我做一份 Q3 复盘 PPT', en: 'Make me a Q3 review deck' },
   logs: [
     { zh: '已调用技能 ppt-master', en: 'Invoked skill ppt-master' },
@@ -157,9 +167,11 @@ export const terminal = {
 /** 文件传送带（滚动驱动）。A 带是产出文件，B 带是真实技能名（不翻译）。 */
 export const conveyor = {
   title: { zh: '说一句，收一堆。', en: 'Say one thing. Collect a pile.' },
+  /* 这句要讲产品,不讲网页效果(原来写的是"传送带跟着你的滚动走"——那是在介绍动画,不是产品)。
+     现在解释两条带子各是什么:上带 = 交付的文件,下带 = 干活的技能,且都真实存在。 */
   hint: {
-    zh: '传送带跟着你的滚动走——滚多快，它走多快。',
-    en: 'The belts follow your scroll — as fast as you go.',
+    zh: '上面一条是它交回来的文件，下面一条是干活的技能——每个名字都真实装在产品里。',
+    en: 'The top belt is the files it hands back; the bottom, the skills doing the work — every name ships in the product.',
   },
   filesBelt: [
     { icon: '📊', ext: '.pptx', name: { zh: 'Q3-复盘.pptx', en: 'Q3-review.pptx' } },
@@ -174,7 +186,7 @@ export const conveyor = {
 }
 
 /*
-  产出区（设计稿 D）：一个 0→141 的滚动计数器 + 六张产出卡。
+  产出区（设计稿 D）：一个 0→139 的滚动计数器 + 六张产出卡。
   诚实原则不变：每张卡的产出类型都对应仓库 skills/ 里真实存在的技能
   （ppt-master / spreadsheets / proposal-writer / imagegen / sora / d3-visualization…），
   不为了好看编能力。
@@ -202,7 +214,8 @@ export const outputCards: { icon: string; title: Copy; body: Copy; ext: string }
   {
     icon: '📄',
     title: { zh: '写方案 / 文档', en: 'Proposals & docs' },
-    body: { zh: '结构化方案与提案，框架自动搭好，条理先于文笔。', en: 'Structured proposals with the outline built first, prose second.' },
+    /* 对应产品真实的「方案写作模式」:从知识库取材,封面/目录/正文逐步确认,右侧真预览,导出 Word。 */
+    body: { zh: '方案写作从你的知识库取材，封面、目录、正文逐步确认，导出就是能交付的 Word。', en: 'Proposals draw on your knowledge base — cover, outline, body confirmed step by step, exported as a ready-to-send Word file.' },
     ext: '.docx',
   },
   {
@@ -229,33 +242,35 @@ export const platform = {
   // 和导航项「功能」同名（一物一名，见 nav 注释第 2 条）。
   eyebrow: { zh: '功能', en: 'Features' },
   title: { zh: '撑起这些产出的四样东西。', en: 'The four things holding it all up.' },
+  /* 四个块全部对着产品真实界面写:名字用产品里的原文(工作画布 / 知识库…),
+     列举的子能力(原型/幻灯片/HyperFrames…、文档识别/图片识别/分类管理)都是界面上真实存在的入口。 */
   blocks: [
     {
-      name: { zh: '设计画布', en: 'Design canvas' },
+      name: { zh: '工作画布', en: 'Work canvas' },
       body: {
-        zh: '聊出来的东西直接落在一块画布上，你在上面接着改、排、组织，最后导出。不用在聊天窗和设计软件之间来回倒腾。',
-        en: 'What the chat produces lands on a canvas, where you keep editing, arranging, and organizing it before exporting. No shuttling between a chat window and a design tool.',
+        zh: '说出需求，画布直接产出原型、幻灯片、图片、视频、动效和音频，还有几百个社区模板和插件市场可以直接翻用。不用在聊天窗和设计软件之间来回倒腾。',
+        en: 'Describe what you want and the canvas produces prototypes, slides, images, video, motion frames, and audio — with hundreds of community templates and a plugin marketplace to draw from. No shuttling between a chat window and a design tool.',
       },
     },
     {
       name: { zh: '知识库', en: 'Knowledge base' },
       body: {
-        zh: '把你的资料喂进去，它回答前先去里面查。（这套做法叫 RAG——让 AI 先查资料再开口，答案就不容易是编的。）',
-        en: 'Feed it your material and it searches that before answering. (The technique is called RAG — look it up first, then speak — which is what keeps answers from being invented.)',
+        zh: '把你的资料喂进去——文档、图片都能识别并分类管理。它回答和写方案前先去里面查。（这套做法叫 RAG——让 AI 先查资料再开口，答案就不容易是编的。）',
+        en: 'Feed it your material — documents and images get recognized and organized. It searches that before answering or drafting. (The technique is called RAG — look it up first, then speak — which is what keeps answers from being invented.)',
       },
     },
     {
       name: { zh: '聊天与 Agent', en: 'Chat & agents' },
       body: {
-        zh: '不止一问一答：它能连着调用工具走完一整套多步骤的活，还带会话和项目管理。（Agent = 能自己动手用工具的 AI，不只是回话。）',
-        en: 'More than question-and-answer: it chains tool calls to finish multi-step work, with sessions and projects to keep it organized. (An agent is an AI that uses tools itself, not one that only replies.)',
+        zh: '不止一问一答：它能连着调用工具走完一整套多步骤的活，带会话和项目管理，每一步敏感操作都先问你，也可以切到全自动。（Agent = 能自己动手用工具的 AI，不只是回话。）',
+        en: 'More than question-and-answer: it chains tool calls to finish multi-step work, with sessions and projects, asking before each sensitive step — or set it to fully automatic. (An agent is an AI that uses tools itself, not one that only replies.)',
       },
     },
     {
       name: { zh: '插件与连接器', en: 'Plugins & connectors' },
       body: {
-        zh: '接上你已经在用的外部系统，或者装新插件给它加本事。能力是可以往上加的，不是出厂就封死。',
-        en: 'Connect the outside systems you already use, or install plugins to give it new abilities. The capability set grows; it is not sealed at the factory.',
+        zh: '插件市场装新本事，外部 MCP 接你在用的系统，连接器还能把这里的项目喂给 Claude Code、Cursor 这类编码助手。能力是可以往上加的，不是出厂就封死。',
+        en: 'Install new abilities from the plugin marketplace, hook up your systems over MCP, and connectors feed your projects to coding assistants like Claude Code and Cursor. The capability set grows; it is not sealed at the factory.',
       },
     },
   ],
@@ -280,17 +295,19 @@ export const developers = {
       },
     },
     {
-      title: { zh: '插件与连接器体系', en: 'Plugin & connector system' },
+      /* BYOK = Bring Your Own Key,自带 API 账号。提供方列表照抄产品「执行模式」页的真实选项卡。 */
+      title: { zh: '多提供方 BYOK', en: 'Multi-provider BYOK' },
       body: {
-        zh: '技能、插件、连接器都是可加装的，扩展点是设计出来的，不是硬改代码。',
-        en: 'Skills, plugins, and connectors are all installable. The extension points are designed in, not patched on.',
+        zh: '不想用本机 CLI，就自带 API key：Anthropic、OpenAI、Azure、Gemini、Ollama Cloud 都接得上。（BYOK = 用你自己的 API 账号。）',
+        en: 'Skip the local CLI and bring your own key: Anthropic, OpenAI, Azure, Gemini, and Ollama Cloud all plug in. (BYOK = bring your own API account.)',
       },
     },
     {
-      title: { zh: '开源可审计', en: 'Open source, auditable' },
+      /* 措辞是「代码公开」不是「开源」——仓库公开但没有开源协议(见 hero.trust 的注释)。 */
+      title: { zh: '代码公开可审计', en: 'Source public, auditable' },
       body: {
-        zh: '代码在 GitHub 上，权限怎么把关、数据怎么走，你自己翻得到。',
-        en: 'The code is on GitHub. How permissions gate actions and where data goes, you can read for yourself.',
+        zh: '完整源码公开在 GitHub 上，权限怎么把关、数据怎么走，你自己翻得到。',
+        en: 'The full source is public on GitHub. How permissions gate actions and where data goes, you can read for yourself.',
       },
     },
   ],
@@ -348,7 +365,7 @@ export const footer = {
   links: {
     github: { zh: 'GitHub 仓库', en: 'GitHub repo' },
     readme: { zh: 'README', en: 'README' },
-    license: { zh: '开源协议', en: 'License' },
+    license: { zh: '许可说明', en: 'License' },
     issues: { zh: '反馈问题', en: 'Report an issue' },
     releases: { zh: '历史版本', en: 'Releases' },
   },

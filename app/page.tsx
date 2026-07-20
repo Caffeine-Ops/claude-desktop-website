@@ -20,7 +20,7 @@ import { Footer } from '@/components/sections/Footer'
               （终端演示不在第一屏了——单栏文案得先讲清「一句话」这件事）
     Terminal  终端演示，独立成节，滚下去才看到
     Conveyor  滚动驱动的文件传送带（跟手的重量感）
-    Outputs   ← 签名段落：141 计数器 + 六张产出卡
+    Outputs   ← 签名段落：139 计数器 + 六张产出卡
     Platform  撑起产出的四样底座（术语从这里才允许出现）
     Developers 给技术用户的深度
     Download  结尾大字 + 真实下载卡（GitHub 数据三态：加载/直链/降级）
