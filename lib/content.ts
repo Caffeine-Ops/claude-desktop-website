@@ -198,18 +198,31 @@ export const outputsSection = {
   counterLabel: { zh: '项内置创作技能，持续增长', en: 'built-in creation skills, and growing' },
 }
 
-export const outputCards: { icon: string; title: Copy; body: Copy; ext: string }[] = [
+/*
+  shot = 产品真实截图(2026-07-20 CDP 实截,均为产品界面/内置模板,非合成图):
+  - ppt: 画布社区「瑞士国际主义 Deck」官方模板详情的幻灯片预览
+  - xlsx: 设置→技能页搜 excel 的真实结果(data-report / spreadsheets)
+  - docx: 方案写作模式右侧草稿面板(封面→目录→正文;演示文案,隐私已处理)
+  - png: 画布「3D Stone Staircase Evolution」官方模板的成品信息图
+  - mp4: 画布「故障艺术标题帧」官方视频模板的成品帧
+  - html: 画布「Dashboard」官方原型模板的成品报告页
+*/
+export const outputCards: { icon: string; title: Copy; body: Copy; ext: string; shot: string; shotAlt: Copy }[] = [
   {
     icon: '📊',
     title: { zh: '做 PPT / 演示', en: 'Slides & decks' },
     body: { zh: '一句话生成整套演示：套模板、配图表、写讲稿。', en: 'One prompt, a whole deck: template, charts, speaker notes.' },
     ext: '.pptx',
+    shot: '/screens/outputs/ppt.webp',
+    shotAlt: { zh: '画布内置幻灯片模板的成品页', en: 'A finished slide from a built-in deck template' },
   },
   {
     icon: '📈',
     title: { zh: '做表格', en: 'Spreadsheets' },
     body: { zh: '读表、算数、整理数据，直接交回一张能用的表。', en: 'Reads, computes, and organizes — hands back a usable sheet.' },
     ext: '.xlsx',
+    shot: '/screens/outputs/xlsx.webp',
+    shotAlt: { zh: '技能库里真实的表格技能:data-report 与 spreadsheets', en: 'Real spreadsheet skills in the library: data-report and spreadsheets' },
   },
   {
     icon: '📄',
@@ -217,24 +230,32 @@ export const outputCards: { icon: string; title: Copy; body: Copy; ext: string }
     /* 对应产品真实的「方案写作模式」:从知识库取材,封面/目录/正文逐步确认,右侧真预览,导出 Word。 */
     body: { zh: '方案写作从你的知识库取材，封面、目录、正文逐步确认，导出就是能交付的 Word。', en: 'Proposals draw on your knowledge base — cover, outline, body confirmed step by step, exported as a ready-to-send Word file.' },
     ext: '.docx',
+    shot: '/screens/outputs/docx.webp',
+    shotAlt: { zh: '方案写作模式:封面→目录→正文,一键导出 Word', en: 'Proposal mode: cover, outline, body — exported to Word' },
   },
   {
     icon: '🖼',
     title: { zh: '生成图片 / 海报', en: 'Images & posters' },
     body: { zh: '从提示词到成图，海报、封面、社交卡片一步到位。', en: 'Prompt to picture: posters, covers, and social cards in one step.' },
     ext: '.png',
+    shot: '/screens/outputs/png.webp',
+    shotAlt: { zh: '画布图片模板的成品信息图', en: 'A finished infographic from a built-in image template' },
   },
   {
     icon: '🎬',
     title: { zh: '生成视频', en: 'Video' },
     body: { zh: '从想法到成片，模板化的视频创作流程。', en: 'From idea to final cut with a templated video pipeline.' },
     ext: '.mp4',
+    shot: '/screens/outputs/mp4.webp',
+    shotAlt: { zh: '画布视频模板「故障艺术标题帧」成品帧', en: 'A frame from the glitch-title video template' },
   },
   {
     icon: '📉',
     title: { zh: '数据报告与图表', en: 'Data reports & charts' },
     body: { zh: '数据进去，可交互的可视化报告出来。', en: 'Data in, an interactive visual report out.' },
     ext: '.html',
+    shot: '/screens/outputs/html.webp',
+    shotAlt: { zh: '画布原型模板生成的数据看板页', en: 'A data dashboard page from a prototype template' },
   },
 ]
 
@@ -271,6 +292,58 @@ export const platform = {
       body: {
         zh: '插件市场装新本事，外部 MCP 接你在用的系统，连接器还能把这里的项目喂给 Claude Code、Cursor 这类编码助手。能力是可以往上加的，不是出厂就封死。',
         en: 'Install new abilities from the plugin marketplace, hook up your systems over MCP, and connectors feed your projects to coding assistants like Claude Code and Cursor. The capability set grows; it is not sealed at the factory.',
+      },
+    },
+  ],
+}
+
+/*
+  真实界面区:四张图全部截自本机运行的产品(v0.0.16 开发版),不是效果图。
+  截图前做过隐私处理——侧栏会话标题临时替换成了演示文字,画面里没有真实业务数据。
+  想重截:启动产品后用 CDP 连渲染进程的 9222 调试口摆拍(细节见项目记忆)。
+*/
+export const screens = {
+  eyebrow: { zh: '真实界面', en: 'Real screens' },
+  title: { zh: '不是效果图，是真实操作。', en: 'Not mockups — real interaction.' },
+  note: {
+    zh: '截自本机运行的 v0.0.16 · 悬停右侧场景，主窗口实时播放操作录屏',
+    en: 'Captured from v0.0.16 running locally · hover a scene and the main window plays the recording',
+  },
+  /* 第一张当主图铺全宽,其余三张一排。
+     src 是封面截图(2 倍图),video 是同场景的真实操作录屏(CDP 逐帧录制合成)。
+     w/h 写死真实像素,浏览器先留好位置,加载进来页面不跳(防布局抖动)。
+     截图与录屏都做过隐私处理:侧栏会话标题替换成演示文字,画面里无真实业务数据。 */
+  items: [
+    {
+      src: '/screens/canvas.webp', video: '/screens/canvas.mp4', w: 2560, h: 1400,
+      bar: { zh: '工作画布', en: 'Work canvas' },
+      caption: {
+        zh: '工作画布主页：选一种产出、说出需求——原型、幻灯片、图片、视频、动效、音频；往下是社区模板墙。',
+        en: 'The work canvas home: pick an output, describe what you want — prototype, slides, image, video, motion, audio — with the community template wall below.',
+      },
+    },
+    {
+      src: '/screens/chat.webp', video: '/screens/chat.mp4', w: 2560, h: 1400,
+      bar: { zh: '智能助手', en: 'Assistant' },
+      caption: {
+        zh: '智能助手聊天面：输入框下面就近选模型、挂知识库、切权限模式。',
+        en: 'The assistant chat surface: model picker, knowledge base, and permission mode sit right under the composer.',
+      },
+    },
+    {
+      src: '/screens/skills.webp', video: '/screens/skills.mp4', w: 2560, h: 1400,
+      bar: { zh: '设置 · 技能', en: 'Settings · Skills' },
+      caption: {
+        zh: '技能库：139 项技能即搜即滤，逐个可开关，也能新建自己的。',
+        en: 'The skills library: search-as-you-type across all 139 skills, individually toggleable, plus your own.',
+      },
+    },
+    {
+      src: '/screens/byok.webp', video: '/screens/byok.mp4', w: 2560, h: 1400,
+      bar: { zh: '设置 · 执行模式', en: 'Settings · Execution' },
+      caption: {
+        zh: '执行模式：本机 CLI 或自带 API key，多家提供方随便挑。',
+        en: 'Execution mode: local CLI or bring your own key, across providers.',
       },
     },
   ],

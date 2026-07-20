@@ -1,13 +1,23 @@
 'use client'
 
 /*
-  产出区（设计稿 D）：0→139 滚动计数器 + 六张产出卡（弹簧错峰入场）。
-  139 = 产品「设置 → 技能」页的真实总数，不是拍的——改数字前先开产品核对。
-  每张卡对应仓库里真实存在的技能（见 content.ts 注释）——不虚构原则不变。
+  产出区（设计稿 D → 2026-07-20 升级）：0→139 滚动计数器 + 六张「3D 跟手」产出卡。
+  139 = 产品「设置 → 技能」页的真实总数（2026-07-20 复核过）——改数字前先开产品核对。
+  每张卡上半是一扇迷你产品窗，装的是产品真实截图（来源见 content.ts 注释）——不虚构原则不变。
+
+  动效（与首屏 Hero 卡片墙、Terminal 同一套语言）：
+  - 指针在卡上移动 → 整卡小幅 rotateX/rotateY（弹簧平滑），移开回弹归零。
+    倾斜量按指针相对卡中心的偏移算，用卡自己的 onPointerMove 而不是全局
+    指针流：六张卡只有指针底下那张该动，全局流会让整排一起歪。
+  - 截图在窗内做反向视差（translate 反号 + 微放大）——「图浮在卡里」的层次感。
+    放大是常驻 1.06：视差会把图往边上推，不放大就露出图窗底色。
+  - 一层跟随指针的径向柔光扫过卡面。
+  - 触屏没有 hover：pointerType !== 'mouse' 直接不响应，卡保持静态截图。
+  - 开了「减少动态效果」：不绑事件，光斑常隐，只剩静态图。
 */
 
 import { useEffect, useRef, useState } from 'react'
-import { animate, useInView, useReducedMotion } from 'motion/react'
+import { animate, motion, useInView, useMotionValue, useReducedMotion, useSpring, useTransform } from 'motion/react'
 import { outputCards, outputsSection } from '@/lib/content'
 import { usePrefs } from '@/lib/prefs'
 import { Reveal, RevealGrid, RevealGridItem } from '../fx/Reveal'
@@ -37,6 +47,96 @@ function Counter() {
   )
 }
 
+const SPRING = { stiffness: 150, damping: 18 }
+
+function OutputCard({ card }: { card: (typeof outputCards)[number] }) {
+  const { t } = usePrefs()
+  const reduced = useReducedMotion()
+
+  // 指针在卡内的归一化位置（0..1），中心 0.5——事件驱动，不用全局指针流
+  const px = useMotionValue(0.5)
+  const py = useMotionValue(0.5)
+  const [lit, setLit] = useState(false)
+
+  const rotateX = useSpring(useTransform(py, (v) => (v - 0.5) * -8), SPRING)
+  const rotateY = useSpring(useTransform(px, (v) => (v - 0.5) * 8), SPRING)
+  // 截图反向视差：与倾斜反号,幅度按图窗尺寸给像素值
+  const shotX = useSpring(useTransform(px, (v) => (v - 0.5) * -12), SPRING)
+  const shotY = useSpring(useTransform(py, (v) => (v - 0.5) * -10), SPRING)
+  // 光斑跟指针（模板字符串驱动 background，不参与 transform）
+  const glow = useTransform([px, py], ([x, y]: number[]) =>
+    `radial-gradient(280px circle at ${x * 100}% ${y * 100}%, rgba(255,255,255,.10), transparent 65%)`,
+  )
+
+  const onMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (reduced || e.pointerType !== 'mouse') return
+    const r = e.currentTarget.getBoundingClientRect()
+    px.set((e.clientX - r.left) / r.width)
+    py.set((e.clientY - r.top) / r.height)
+    setLit(true)
+  }
+  const onLeave = () => {
+    px.set(0.5)
+    py.set(0.5)
+    setLit(false)
+  }
+
+  return (
+    <div style={{ perspective: 900 }}>
+      <motion.div
+        onPointerMove={onMove}
+        onPointerLeave={onLeave}
+        className="relative overflow-hidden rounded-2xl border border-edge bg-panel transition-[border-color] duration-300 hover:border-edge-brand"
+        style={{
+          transformStyle: 'preserve-3d',
+          rotateX: reduced ? 0 : rotateX,
+          rotateY: reduced ? 0 : rotateY,
+        }}
+      >
+        {/* ── 迷你产品窗：三点栏 + 真实截图（chrome 与 Screens 区同语言）── */}
+        <div className="border-b border-edge">
+          <div className="flex items-center gap-[6px] px-3.5 py-[9px]">
+            <i className="size-2 rounded-full bg-white/13" />
+            <i className="size-2 rounded-full bg-white/13" />
+            <i className="size-2 rounded-full bg-white/13" />
+            <span className="ml-2 font-mono text-[10.5px] text-dim">{card.ext.slice(1)}</span>
+          </div>
+          {/* 图窗 16:9 = 六张素材的统一裁剪比;换素材时保持这个比率,否则 object-cover 会裁字 */}
+          <div className="relative aspect-video overflow-hidden">
+            <motion.img
+              src={card.shot}
+              alt={t(card.shotAlt)}
+              loading="lazy"
+              className="absolute inset-0 h-full w-full object-cover"
+              style={{ x: reduced ? 0 : shotX, y: reduced ? 0 : shotY, scale: 1.06 }}
+            />
+          </div>
+        </div>
+
+        <div className="p-[22px]">
+          <div className="flex items-center gap-2.5">
+            <span className="text-[19px]" aria-hidden="true">
+              {card.icon}
+            </span>
+            <h3 className="text-[16px] font-bold">{t(card.title)}</h3>
+            <span className="ml-auto font-mono text-[11.5px] text-brand">{card.ext}</span>
+          </div>
+          <p className="mt-[7px] text-[13px] leading-[1.65] text-dim">{t(card.body)}</p>
+        </div>
+
+        {/* 跟随指针的柔光；pointer-events-none 别挡住卡自己的指针事件 */}
+        {!reduced && (
+          <motion.div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-0 transition-opacity duration-300"
+            style={{ background: glow, opacity: lit ? 1 : 0 }}
+          />
+        )}
+      </motion.div>
+    </div>
+  )
+}
+
 export function Outputs() {
   const { t } = usePrefs()
 
@@ -51,16 +151,8 @@ export function Outputs() {
 
       <RevealGrid className="mt-11 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {outputCards.map((card) => (
-          <RevealGridItem
-            key={card.ext + card.title.en}
-            className="rounded-2xl border border-edge bg-panel p-[26px] transition-[border-color,box-shadow] duration-300 hover:border-edge-brand"
-          >
-            <span className="mb-3.5 block text-[22px]" aria-hidden="true">
-              {card.icon}
-            </span>
-            <h3 className="text-[16.5px] font-bold">{t(card.title)}</h3>
-            <p className="mt-[7px] text-[13px] leading-[1.65] text-dim">{t(card.body)}</p>
-            <div className="mt-3.5 font-mono text-[11.5px] text-brand">{card.ext}</div>
+          <RevealGridItem key={card.ext + card.title.en}>
+            <OutputCard card={card} />
           </RevealGridItem>
         ))}
       </RevealGrid>

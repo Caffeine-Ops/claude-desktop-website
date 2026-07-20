@@ -7,6 +7,7 @@ import { Terminal } from '@/components/Terminal'
 import { Conveyor } from '@/components/sections/Conveyor'
 import { Outputs } from '@/components/sections/Outputs'
 import { Platform } from '@/components/sections/Platform'
+import { Screens } from '@/components/sections/Screens'
 import { Developers } from '@/components/sections/Developers'
 import { Download } from '@/components/sections/Download'
 import { Footer } from '@/components/sections/Footer'
@@ -22,6 +23,7 @@ import { Footer } from '@/components/sections/Footer'
     Conveyor  滚动驱动的文件传送带（跟手的重量感）
     Outputs   ← 签名段落：139 计数器 + 六张产出卡
     Platform  撑起产出的四样底座（术语从这里才允许出现）
+    Screens   真实产品截图（浅色应用窗口浮在深色页面上）
     Developers 给技术用户的深度
     Download  结尾大字 + 真实下载卡（GitHub 数据三态：加载/直链/降级）
     Footer
@@ -46,6 +48,7 @@ export default function Home() {
         <Conveyor />
         <Outputs />
         <Platform />
+        <Screens />
         <Developers />
         <Download />
       </main>
