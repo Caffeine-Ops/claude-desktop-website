@@ -44,9 +44,18 @@ export function HeroWall() {
   const reduced = useReducedMotion()
   const ref = useRef<HTMLDivElement>(null)
   const [mounted, setMounted] = useState(false)
+  const [narrow, setNarrow] = useState(false)
   useEffect(() => {
     setMounted(true)
     if (!reduced) ensurePointerTracking()
+
+    // 移动端减档：行数和速度是 CSS 做不到的，只能在 JS 里判。
+    // 必须在 mounted 之后——服务器上没有 matchMedia，首帧对不上会 hydration 报错。
+    const mq = window.matchMedia('(max-width: 1023px)')
+    const sync = () => setNarrow(mq.matches)
+    sync()
+    mq.addEventListener('change', sync)
+    return () => mq.removeEventListener('change', sync)
   }, [reduced])
 
   // 滚动视差：首屏滚出过程中墙上移 60px（比内容慢 = 在更远处）
@@ -98,14 +107,17 @@ export function HeroWall() {
             transformStyle: 'preserve-3d',
           }}
         >
-          {heroWall.map((row, ri) => {
-            const conf = ROWS[ri % ROWS.length]
+          {/* 移动端只留中间 3 行（保住焦点行）——小屏上五行挤成一团，
+              而且每行都在跑动画，白耗电。 */}
+          {(narrow ? heroWall.slice(1, 4) : heroWall).map((row, ri) => {
+            const conf = (narrow ? ROWS.slice(1, 4) : ROWS)[ri]
             return (
               <div
                 key={ri}
                 className="wall-row flex w-max gap-[22px] will-change-transform max-lg:gap-4"
                 style={{
-                  animationDuration: `${conf.duration}s`,
+                  // 小屏上同样的速度显得更快（视野窄，卡片划过得更频繁）——放慢 30%
+                  animationDuration: `${conf.duration * (narrow ? 1.3 : 1)}s`,
                   animationDirection: conf.reverse ? 'reverse' : 'normal',
                   animationPlayState: reduced ? 'paused' : 'running',
                   opacity: conf.opacity,
