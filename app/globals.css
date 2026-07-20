@@ -150,7 +150,7 @@ body {
   }
 }
 
-/* 主按钮光晕呼吸：强度走主题令牌（浅色收敛） */
+/* 主按钮光晕呼吸：强度走 --btn-glow-idle/peak 令牌 */
 .btn-glow::after {
   content: '';
   position: absolute;

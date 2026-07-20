@@ -35,7 +35,7 @@ export function ProgressBar() {
   )
 }
 
-/** 鼠标光斑：慢半拍跟随的品牌色光晕（浅色主题下是极淡的绿晕，令牌控制）。 */
+/** 鼠标光斑：慢半拍跟随的品牌色光晕（光强走 --glow-tint 令牌）。 */
 export function Glow() {
   const mounted = useMounted()
   const reduced = useReducedMotion()
@@ -68,9 +68,8 @@ export function Dust() {
   const reduced = useReducedMotion()
   const ref = useRef<HTMLCanvasElement>(null)
   // 颜色放 ref：绘制循环每帧读它，不需要为它触发 React 重渲染。
+  // 主题在 2026-07-17 下线，只剩深色——曾经这里按主题分支，现在是定值。
   const color = useRef({ fill: '#4ade80', boost: 1 })
-  // 主题在 2026-07-17 下线，只剩深色——不再有分支
-  color.current = { fill: '#4ade80', boost: 1 }
 
   useEffect(() => {
     if (reduced) return
