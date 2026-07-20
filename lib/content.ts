@@ -55,13 +55,15 @@ export const nav: { href: string; label: Copy }[] = [
 
 export const hero = {
   badge: { zh: '141+ 创作技能已就绪', en: '141+ creation skills, ready' },
-  /* 标题拆成行：入场动画一行一行起，顺带锁死断行位置（设计稿 D 定稿的分行）。 */
+  /* 标题拆成行：入场动画一行一行起，顺带锁死断行位置（铺满版定稿的分行）。
+     手动定死断行，不靠宽度限制——中文靠宽度断字会断在词中间（原型实测
+     踩过「做/完 PPT」「方/案」），很难看。 */
   headline: {
-    zh: ['一句话，', '让 AI 帮你做完', 'PPT、表格、方案。'],
-    en: ['One prompt away', 'from finished slides,', 'sheets, and proposals.'],
+    zh: ['一句话，让 AI 帮你做完', 'PPT、表格、方案。'],
+    en: ['One sentence. Claude ships', 'the deck, the sheet, the plan.'],
   },
   /** 标题里要染成品牌渐变的那一行（索引）。强调落在「产出」上，不是落在「AI」上。 */
-  accentLine: 2,
+  accentLine: 1,
   subline: {
     zh: '桌面端的 Claude。内置 141+ 创作技能、一块可视化设计画布和你自己的知识库——聊天，然后收文件。',
     en: 'Claude on your desktop. 141+ built-in creation skills, a visual design canvas, and a knowledge base of your own. Chat, then collect the files.',
@@ -81,43 +83,59 @@ export const hero = {
   知识库检索——全部对应产品真实功能与仓库里真实存在的技能名，不虚构。
   纯装饰层（aria-hidden），但英文版界面不能漏中文，所以照样双语。
 */
-export type WallCard = { icon: string; text: Copy; accent?: boolean }
+/*
+  Hero 卡片墙的内容。文案是「产品干活的真实痕迹」——
+  每行必有一张 ask 卡（用户说的话），它是这面墙的叙事锚点：
+  先有人说一句话，然后才有那一串产出。别把 ask 卡删光，会散架。
+*/
+export type WallCard = {
+  /** 顶行：会话号 / 产出体积 / 耗时 */
+  id: Copy
+  /** 主行：指令原话，或产出文件名 */
+  title: Copy
+  /** 底部标签：技能名 / 扩展名 */
+  tag: Copy
+  /** 标签用品牌绿 */
+  brand?: boolean
+  /** 用户指令卡（每行一张，描边和背景都不同） */
+  ask?: boolean
+}
 
 export const heroWall: WallCard[][] = [
   [
-    { icon: '›', text: { zh: '帮我做一份 Q3 复盘 PPT', en: 'Make me a Q3 review deck' }, accent: true },
-    { icon: '✓', text: { zh: 'ppt-master · 生成 24 页', en: 'ppt-master · 24 slides' } },
-    { icon: '📊', text: { zh: 'Q3-复盘.pptx · 4.2 MB', en: 'Q3-review.pptx · 4.2 MB' } },
-    { icon: '🎨', text: { zh: '画布已更新 · 3 处修改', en: 'Canvas updated · 3 edits' } },
-    { icon: '✓', text: { zh: 'd3-visualization · 图表已嵌入', en: 'd3-visualization · charts embedded' } },
+    { id: { zh: 'ENG · 会话 #12', en: 'ENG · Session #12' }, title: { zh: '帮我做一份 Q3 复盘 PPT', en: 'Make me a Q3 review deck' }, tag: { zh: 'ppt-master', en: 'ppt-master' }, brand: true, ask: true },
+    { id: { zh: '已完成 · 2 分 14 秒', en: 'Done · 2m 14s' }, title: { zh: 'ppt-master · 生成 24 页', en: 'ppt-master · 24 slides' }, tag: { zh: '技能', en: 'Skill' } },
+    { id: { zh: '产出 · 4.2 MB', en: 'Output · 4.2 MB' }, title: { zh: 'Q3-复盘.pptx', en: 'Q3-review.pptx' }, tag: { zh: '.pptx', en: '.pptx' } },
+    { id: { zh: '画布 · 3 处修改', en: 'Canvas · 3 edits' }, title: { zh: '画布已更新', en: 'Canvas updated' }, tag: { zh: 'canvas', en: 'canvas' }, brand: true },
+    { id: { zh: '已完成', en: 'Done' }, title: { zh: 'd3-visualization · 图表已嵌入', en: 'd3-visualization · charts embedded' }, tag: { zh: '技能', en: 'Skill' } },
   ],
   [
-    { icon: '🔍', text: { zh: '检索知识库 · 12 条命中', en: 'Knowledge base · 12 hits' } },
-    { icon: '›', text: { zh: '把这份表格算个季度汇总', en: 'Summarize this sheet by quarter' }, accent: true },
-    { icon: '✓', text: { zh: 'spreadsheets · 公式已写入', en: 'spreadsheets · formulas written' } },
-    { icon: '📈', text: { zh: '年度预算表.xlsx · 890 KB', en: 'annual-budget.xlsx · 890 KB' } },
-    { icon: '⚠', text: { zh: '请求运行命令 · 等待确认', en: 'Command request · awaiting approval' } },
+    { id: { zh: '知识库 · 12 条命中', en: 'Knowledge base · 12 hits' }, title: { zh: '检索本地知识库', en: 'Searching local knowledge' }, tag: { zh: 'RAG', en: 'RAG' } },
+    { id: { zh: 'ENG · 会话 #12', en: 'ENG · Session #12' }, title: { zh: '把这份表格算个季度汇总', en: 'Summarize this sheet by quarter' }, tag: { zh: 'spreadsheets', en: 'spreadsheets' }, brand: true, ask: true },
+    { id: { zh: '已完成', en: 'Done' }, title: { zh: 'spreadsheets · 公式已写入', en: 'spreadsheets · formulas written' }, tag: { zh: '技能', en: 'Skill' } },
+    { id: { zh: '产出 · 890 KB', en: 'Output · 890 KB' }, title: { zh: '年度预算表.xlsx', en: 'annual-budget.xlsx' }, tag: { zh: '.xlsx', en: '.xlsx' } },
+    { id: { zh: '等待确认', en: 'Awaiting approval' }, title: { zh: '请求运行命令', en: 'Command request' }, tag: { zh: '权限', en: 'Permission' } },
   ],
   [
-    { icon: '✓', text: { zh: 'imagegen · 出图 4 张', en: 'imagegen · 4 images' } },
-    { icon: '🖼', text: { zh: '发布海报.png · 1.1 MB', en: 'launch-poster.png · 1.1 MB' } },
-    { icon: '›', text: { zh: '写一版融资方案的框架', en: 'Draft a fundraising proposal outline' }, accent: true },
-    { icon: '✓', text: { zh: 'proposal-writer · 框架已搭好', en: 'proposal-writer · outline ready' } },
-    { icon: '📄', text: { zh: '投标方案.docx · 36 KB', en: 'proposal.docx · 36 KB' } },
+    { id: { zh: '已完成 · 出图 4 张', en: 'Done · 4 images' }, title: { zh: 'imagegen · 生成完毕', en: 'imagegen · complete' }, tag: { zh: '技能', en: 'Skill' } },
+    { id: { zh: '产出 · 1.1 MB', en: 'Output · 1.1 MB' }, title: { zh: '发布海报.png', en: 'launch-poster.png' }, tag: { zh: '.png', en: '.png' } },
+    { id: { zh: 'ENG · 会话 #13', en: 'ENG · Session #13' }, title: { zh: '写一版融资方案的框架', en: 'Draft a fundraising proposal outline' }, tag: { zh: 'proposal-writer', en: 'proposal-writer' }, brand: true, ask: true },
+    { id: { zh: '已完成', en: 'Done' }, title: { zh: 'proposal-writer · 框架已搭好', en: 'proposal-writer · outline ready' }, tag: { zh: '技能', en: 'Skill' } },
+    { id: { zh: '产出 · 36 KB', en: 'Output · 36 KB' }, title: { zh: '投标方案.docx', en: 'proposal.docx' }, tag: { zh: '.docx', en: '.docx' } },
   ],
   [
-    { icon: '●', text: { zh: '会话 #14 · 3 个任务进行中', en: 'Session #14 · 3 tasks running' } },
-    { icon: '✓', text: { zh: 'sora · 成片渲染完成', en: 'sora · render complete' } },
-    { icon: '🎬', text: { zh: '产品演示.mp4 · 48 MB', en: 'product-demo.mp4 · 48 MB' } },
-    { icon: '›', text: { zh: '把这些数据做成可交互看板', en: 'Turn this data into a live dashboard' }, accent: true },
-    { icon: '📉', text: { zh: '数据看板.html · 交互式', en: 'dashboard.html · interactive' } },
+    { id: { zh: '运行中 · 3 个任务', en: 'Running · 3 tasks' }, title: { zh: '会话 #14', en: 'Session #14' }, tag: { zh: '进行中', en: 'Active' }, brand: true },
+    { id: { zh: '渲染完成', en: 'Render complete' }, title: { zh: 'sora · 成片已导出', en: 'sora · export done' }, tag: { zh: '技能', en: 'Skill' } },
+    { id: { zh: '产出 · 48 MB', en: 'Output · 48 MB' }, title: { zh: '产品演示.mp4', en: 'product-demo.mp4' }, tag: { zh: '.mp4', en: '.mp4' } },
+    { id: { zh: 'ENG · 会话 #14', en: 'ENG · Session #14' }, title: { zh: '把这些数据做成可交互看板', en: 'Turn this data into a live dashboard' }, tag: { zh: 'd3-visualization', en: 'd3-visualization' }, brand: true, ask: true },
+    { id: { zh: '产出 · 交互式', en: 'Output · interactive' }, title: { zh: '数据看板.html', en: 'dashboard.html' }, tag: { zh: '.html', en: '.html' } },
   ],
   [
-    { icon: '✓', text: { zh: 'resume-modern · 排版完成', en: 'resume-modern · layout done' } },
-    { icon: '🧾', text: { zh: '简历-2026.pdf · 220 KB', en: 'resume-2026.pdf · 220 KB' } },
-    { icon: '🔌', text: { zh: '连接器已接入 · 2 个外部系统', en: 'Connectors linked · 2 systems' } },
-    { icon: '›', text: { zh: '给发布会写三条社交卡片', en: 'Write three social cards for launch' }, accent: true },
-    { icon: '✓', text: { zh: 'card-twitter · 卡片已生成', en: 'card-twitter · cards generated' } },
+    { id: { zh: '排版完成', en: 'Layout done' }, title: { zh: 'resume-modern · 已生成', en: 'resume-modern · generated' }, tag: { zh: '技能', en: 'Skill' } },
+    { id: { zh: '产出 · 220 KB', en: 'Output · 220 KB' }, title: { zh: '简历-2026.pdf', en: 'resume-2026.pdf' }, tag: { zh: '.pdf', en: '.pdf' } },
+    { id: { zh: '已接入 2 个系统', en: '2 systems linked' }, title: { zh: '连接器 · MCP', en: 'Connectors · MCP' }, tag: { zh: '连接器', en: 'Connector' } },
+    { id: { zh: 'ENG · 会话 #15', en: 'ENG · Session #15' }, title: { zh: '给发布会写三条社交卡片', en: 'Write three social cards for launch' }, tag: { zh: 'card-twitter', en: 'card-twitter' }, brand: true, ask: true },
+    { id: { zh: '已完成', en: 'Done' }, title: { zh: 'card-twitter · 卡片已生成', en: 'card-twitter · cards generated' }, tag: { zh: '技能', en: 'Skill' } },
   ],
 ]
 
@@ -339,7 +357,6 @@ export const footer = {
 
 export const ui = {
   downloadFor: { zh: '下载', en: 'Download for' },
-  themeToggle: { zh: '切换深浅色', en: 'Toggle theme' },
   langToggle: { zh: 'Switch to English', en: '切换到中文' },
   skipToContent: { zh: '跳到主要内容', en: 'Skip to content' },
   menu: { zh: '菜单', en: 'Menu' },

@@ -3,6 +3,7 @@ import { SkipLink } from '@/components/SkipLink'
 import { Intro } from '@/components/fx/Intro'
 import { Dust, Glow, ProgressBar } from '@/components/fx/Ambient'
 import { Hero } from '@/components/sections/Hero'
+import { Terminal } from '@/components/Terminal'
 import { Conveyor } from '@/components/sections/Conveyor'
 import { Outputs } from '@/components/sections/Outputs'
 import { Platform } from '@/components/sections/Platform'
@@ -13,9 +14,11 @@ import { Footer } from '@/components/sections/Footer'
 /*
   首页（在 Next.js 里，app/page.tsx 就是网站根路径 "/" 的页面）。
 
-  「发布会」版（设计稿 D，2026-07-17 定稿）的段落编排：
+  铺满版（2026-07-17 定稿）的段落编排：
     Intro     开场序列（每会话首次，幕布掀走后 Hero 才起）
-    Hero      逐字标题 + 产出轨道 + 终端演示（一屏讲清产品是干嘛的）
+    Hero      3D 倾斜卡片墙铺满第一屏 + 逐字标题 + 真实下载按钮
+              （终端演示不在第一屏了——单栏文案得先讲清「一句话」这件事）
+    Terminal  终端演示，独立成节，滚下去才看到
     Conveyor  滚动驱动的文件传送带（跟手的重量感）
     Outputs   ← 签名段落：141 计数器 + 六张产出卡
     Platform  撑起产出的四样底座（术语从这里才允许出现）
@@ -37,6 +40,9 @@ export default function Home() {
       <Nav />
       <main>
         <Hero />
+        <section className="relative z-[1] mx-auto max-w-[1180px] px-8 py-24">
+          <Terminal />
+        </section>
         <Conveyor />
         <Outputs />
         <Platform />
