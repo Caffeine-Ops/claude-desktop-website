@@ -1,24 +1,18 @@
 /*
-  品牌记号：一个光标箭头（取自应用图标——你指一下、说一句，活就干完了）。
-  渐变端点走令牌（亮绿→亮青）。id 参数防止同页多个实例的渐变 id 互相打架。
+  品牌记号：Cowork 应用图标（深蓝底 + 玻璃质感的 Q）。
+  用真实 PNG（public/logo-mark.png，128px 源，够 retina）而不是内联 SVG——
+  这个玻璃/高光质感是位图渲染的，矢量重画不出来。
+  保留 size/id 入参签名，调用方（Nav/Footer）无需改动；id 现在用不上了。
 */
-export function Logo({ size = 24, id = 'logo' }: { size?: number; id?: string }) {
-  const gid = `cd-cursor-${id}`
+export function Logo({ size = 24 }: { size?: number; id?: string }) {
   return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <defs>
-        <linearGradient id={gid} x1="4" y1="3" x2="20" y2="21" gradientUnits="userSpaceOnUse">
-          <stop stopColor="var(--brand)" />
-          <stop offset="100%" stopColor="var(--teal)" />
-        </linearGradient>
-      </defs>
-      <path
-        d="M5.2 3.6 L19.8 10.6 L13.1 13.4 L10.3 20.4 Z"
-        stroke={`url(#${gid})`}
-        strokeWidth="1.9"
-        strokeLinejoin="round"
-        strokeLinecap="round"
-      />
-    </svg>
+    <img
+      src="/logo-mark.png"
+      width={size}
+      height={size}
+      alt="Cowork"
+      className="block shrink-0"
+      style={{ width: size, height: size }}
+    />
   )
 }

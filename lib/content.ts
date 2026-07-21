@@ -23,7 +23,7 @@ export type Lang = 'zh' | 'en'
 export type Copy = { zh: string; en: string }
 
 export const site = {
-  name: 'Claude Desktop',
+  name: 'Cowork',
   repoUrl: 'https://github.com/Caffeine-Ops/claude-desktop',
   /* 安装包与发布历史都在专门的发布仓库 claude-desktop-releases（源码仓库不放构建产物）。 */
   releasesUrl: 'https://github.com/Caffeine-Ops/claude-desktop-releases/releases',
@@ -152,7 +152,7 @@ export const heroWall: WallCard[][] = [
 /* 会话演示（Hero 下方的循环动画）。所有可见字都双语。
    窗口标题用产品里聊天面的真实叫法「智能助手」——产品不是终端软件,别把它演成命令行。 */
 export const terminal = {
-  windowTitle: { zh: 'Claude Desktop — 智能助手', en: 'Claude Desktop — assistant' },
+  windowTitle: { zh: 'Cowork — 智能助手', en: 'Cowork — assistant' },
   prompt: { zh: '帮我做一份 Q3 复盘 PPT', en: 'Make me a Q3 review deck' },
   logs: [
     { zh: '已调用技能 ppt-master', en: 'Invoked skill ppt-master' },

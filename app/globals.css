@@ -177,6 +177,12 @@ body {
   stroke-dashoffset: 60;
   animation: draw 1s 0.15s cubic-bezier(0.65, 0, 0.35, 1) forwards;
 }
+/* 位图 Q 图标描不了线，改成缩放淡入，落定在「COWORK」字浮现之前。 */
+.intro-mark {
+  opacity: 0;
+  transform: scale(0.82);
+  animation: introMark 0.7s 0.15s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
 .intro-word {
   opacity: 0;
   animation: introFade 0.5s 1s forwards;
@@ -189,6 +195,12 @@ body {
 @keyframes draw {
   to {
     stroke-dashoffset: 0;
+  }
+}
+@keyframes introMark {
+  to {
+    opacity: 1;
+    transform: scale(1);
   }
 }
 @keyframes introFade {
@@ -206,6 +218,7 @@ body {
   .cue-line,
   .btn-glow::after,
   .intro-draw,
+  .intro-mark,
   .intro-word,
   .wall-row,
   .pulse-core {

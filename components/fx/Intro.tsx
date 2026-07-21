@@ -1,7 +1,7 @@
 'use client'
 
 /*
-  开场序列：品牌光标自己描画出来 → 幕布上掀。
+  开场序列：品牌图标缩放淡入 → 幕布上掀。
 
   时间轴全在 CSS 里（globals.css 的 intro-* 动画），带 2.6s 的纯 CSS 兜底：
   就算这段 JS 全挂，幕布也会自己掀走，内容不可能被永远盖住。
@@ -52,23 +52,9 @@ export function Intro() {
   return (
     <div className="intro-overlay fixed inset-0 z-[100] grid place-items-center bg-canvas" aria-hidden="true">
       <div className="text-center">
-        <svg viewBox="0 0 24 24" fill="none" className="mx-auto size-[72px]">
-          <defs>
-            <linearGradient id="intro-g" x1="4" y1="3" x2="20" y2="21" gradientUnits="userSpaceOnUse">
-              <stop stopColor="var(--brand)" />
-              <stop offset="1" stopColor="var(--teal)" />
-            </linearGradient>
-          </defs>
-          <path
-            className="intro-draw"
-            d="M5.2 3.6 L19.8 10.6 L13.1 13.4 L10.3 20.4 Z"
-            stroke="url(#intro-g)"
-            strokeWidth="1.6"
-            strokeLinejoin="round"
-          />
-        </svg>
+        <img src="/app-icon.png" alt="Cowork" width={80} height={80} className="intro-mark mx-auto size-[80px]" />
         <div className="intro-word mt-[18px] font-mono text-[13px] tracking-[0.35em] text-dim">
-          CLAUDE DESKTOP
+          COWORK
         </div>
       </div>
     </div>

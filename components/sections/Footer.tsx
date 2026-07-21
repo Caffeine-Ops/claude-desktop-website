@@ -27,7 +27,7 @@ export function Footer() {
         <div className="flex items-center gap-2.5">
           <Logo size={20} id="footer" />
           <span className="font-mono text-[12px] text-dim">
-            Claude Desktop · {t(footer.credit)}
+            Cowork · {t(footer.credit)}
             {state.status === 'ready' && (
               <>
                 {' · '}

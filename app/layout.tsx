@@ -41,12 +41,12 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://claude-desktop-web
 // Metadata：Next.js 会把它渲染成 <title>/<meta>，这是 SEO（搜索引擎优化）的基础。
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  title: 'Claude Desktop — 一句话，让 AI 帮你做完 PPT、表格、方案',
+  title: 'Cowork — 一句话，让 AI 帮你做完 PPT、表格、方案',
   description:
     '桌面端的 Claude。智能助手加插件，139 项内置创作技能和你自己的知识库——聊天，然后收文件。支持 macOS 与 Windows。',
   icons: { icon: '/icon-256.png', apple: '/app-icon.png' },
   openGraph: {
-    title: 'Claude Desktop',
+    title: 'Cowork',
     description: '桌面端的 Claude。聊天，然后收文件。',
     images: ['/app-icon.png'],
     type: 'website',

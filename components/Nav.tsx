@@ -27,7 +27,7 @@ export function Nav() {
     >
       <a href="#top" className="flex shrink-0 items-center gap-2.5">
         <Logo size={22} id="nav" />
-        <span className="display-face text-[14.5px] font-bold">Claude Desktop</span>
+        <span className="display-face text-[14.5px] font-bold">Cowork</span>
       </a>
 
       <nav className="hidden items-center gap-6 md:flex">
