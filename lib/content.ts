@@ -199,13 +199,13 @@ export const outputsSection = {
 }
 
 /*
-  每张卡绑定一份 claude-desktop 仓库的真实成品(2026-07-21 接入):
+  每张卡绑定一份 claude-desktop 仓库的真实成品(2026-07-21 用户逐张评审后选定):
   - sample = public 下的成品文件;sampleKind 决定弹层用 iframe(html)还是 video。
   - shot = 该成品渲染出的缩略图(真成品画面,非过程截图);壁纸由卡片 CSS 单独铺。
-  源(skills/…):ppt=deck-swiss-international · xlsx=data-report(取其明细数字表) ·
-  docx=article-magazine · png=poster-hero · mp4=weread-year-in-review-video-template ·
-  html=frame-data-chart-nyt(NYT 折线图)。均为模板自带 example.html / default-showcase.mp4,不虚构。
-  (注:表格无纯 Excel 成品,用 data-report 里的真数字明细表顶上;数据报告改用 NYT 折线图避免与表格同源撞图。)
+  源(skills/…):ppt=ppt-keynote · xlsx=data-report(完整数据周报) · docx=resume-modern ·
+  png=card-xiaohongshu(小红书干货卡轮播) · mp4=8-bit-orbit-video-template ·
+  html=frame-data-chart-nyt(NYT 折线图,保持不变)。均为模板自带 example.html / default-showcase.mp4,不虚构。
+  (注:「表格」位放的是完整数据周报——其内含明细数据表,是库里最接近表格的真成品;数据报告位仍用 NYT 折线图,不撞图。)
 */
 export const outputCards: {
   icon: string
@@ -223,7 +223,7 @@ export const outputCards: {
     body: { zh: '一句话生成整套演示:套模板、配图表、写讲稿。点开翻真成品。', en: 'One prompt, a whole deck — template, charts, notes. Open to browse the real file.' },
     ext: '.pptx',
     shot: '/screens/outputs/ppt.webp',
-    shotAlt: { zh: '瑞士国际主义风格的整套幻灯片成品', en: 'A finished Swiss-International slide deck' },
+    shotAlt: { zh: 'HTML Anything 主题的 Keynote 风演示封面', en: 'A Keynote-style deck cover — “HTML Anything”' },
     sample: '/screens/outputs/samples/ppt.html',
     sampleKind: 'html',
   },
@@ -233,7 +233,7 @@ export const outputCards: {
     body: { zh: '读表、算数、整理数据,交回一张能用的表。点开翻真成品。', en: 'Reads, computes, organizes — a usable sheet. Open to browse the real file.' },
     ext: '.xlsx',
     shot: '/screens/outputs/xlsx.webp',
-    shotAlt: { zh: '数据周报里的明细数据表:月份 / MAU / 付费 / 流失率', en: 'A finished data table: month / MAU / paying / churn' },
+    shotAlt: { zh: '完整数据周报:KPI 卡 + 增长图表 + 明细数据表', en: 'A full weekly data report — KPI cards, charts, raw table' },
     sample: '/screens/outputs/samples/xlsx.html',
     sampleKind: 'html',
   },
@@ -243,7 +243,7 @@ export const outputCards: {
     body: { zh: '从素材到排版好的整篇文档,导出就是能交付的 Word。点开翻真成品。', en: 'Material to a fully typeset doc, exported as ready-to-send Word. Open to browse.' },
     ext: '.docx',
     shot: '/screens/outputs/docx.webp',
-    shotAlt: { zh: '杂志排版风格的整篇文档成品', en: 'A finished magazine-style document' },
+    shotAlt: { zh: '排版精良的现代简历成品', en: 'A cleanly typeset modern résumé' },
     sample: '/screens/outputs/samples/docx.html',
     sampleKind: 'html',
   },
@@ -253,7 +253,7 @@ export const outputCards: {
     body: { zh: '从提示词到成图,海报、封面、社交卡片一步到位。点开看真成品。', en: 'Prompt to picture — posters, covers, social cards. Open to see the real one.' },
     ext: '.png',
     shot: '/screens/outputs/png.webp',
-    shotAlt: { zh: '海报模板的成品', en: 'A finished poster from a poster template' },
+    shotAlt: { zh: '小红书风格的干货卡片轮播封面', en: 'A Xiaohongshu-style tips carousel cover card' },
     sample: '/screens/outputs/samples/poster.html',
     sampleKind: 'html',
   },
@@ -263,7 +263,7 @@ export const outputCards: {
     body: { zh: '从想法到成片,模板化的视频创作流程。点开直接播真成品。', en: 'Idea to final cut via a templated pipeline. Open to play the real clip.' },
     ext: '.mp4',
     shot: '/screens/outputs/mp4.webp',
-    shotAlt: { zh: '视频模板的成品帧', en: 'A frame from a finished video template' },
+    shotAlt: { zh: '8-bit 复古风演示视频的标题帧', en: 'The title frame of an 8-bit retro deck video' },
     sample: '/screens/outputs/samples/video.mp4',
     sampleKind: 'video',
   },
@@ -326,46 +326,53 @@ export const screens = {
   eyebrow: { zh: '真实界面', en: 'Real screens' },
   title: { zh: '不是效果图，是真实操作。', en: 'Not mockups — real interaction.' },
   note: {
-    zh: '截自本机运行的开发版 · 悬停右侧场景，主窗口实时播放操作录屏',
-    en: 'Captured from a local dev build · hover a scene and the main window plays the recording',
+    zh: '截自本机运行的开发版 · 同一个智能助手做四件真实活，悬停右侧场景切换录屏',
+    en: 'Captured from a local dev build · one assistant, four real jobs — hover a scene to switch the recording',
   },
   /* 第一张当主图铺全宽,其余三张一排。
-     src 是封面截图(2 倍图),video 是同场景的真实操作录屏(CDP 逐帧录制合成)。
+     src 是封面截图(2 倍图),video 是同场景的真实操作录屏(CDP 定时截图逐帧合成,~15s 循环)。
      w/h 写死真实像素,浏览器先留好位置,加载进来页面不跳(防布局抖动)。
-     截图与录屏都做过隐私处理:侧栏会话标题替换成演示文字,画面里无真实业务数据。 */
+     四段都是「智能助手」真跑:发话术→真执行,画面里的命令行/面板/写文件都是产品真实产出。
+     录屏做过隐私处理:侧栏会话标题替换成演示文字,话术均为无隐私的演示题目。
+     文案按录到的真实行为写(反幻觉):PPT 是右侧「预览/大纲」面板、图片走本机 draw 技能出 PNG、
+     代码在「全自动」下真写文件到本地——不吹产品做不到的事。 */
   items: [
     {
-      src: '/screens/chat.webp', video: '/screens/chat.mp4', w: 1920, h: 1050,
-      bar: { zh: '智能助手', en: 'Assistant' },
+      /* 录屏:日常办公→「制作PPT」预设,助手跑 ppt-master 流水线(定设计规范→逐页手绘 SVG),
+         右侧「预览幻灯片」工作区实时渲染出成套幻灯片(录屏驱动它确认设计后真出片)。 */
+      src: '/screens/ppt.webp', video: '/screens/ppt.mp4', w: 1920, h: 1050,
+      bar: { zh: '做 PPT', en: 'Make PPT' },
       caption: {
-        zh: '智能助手真实问答：提问后 Opus 4.8 流式作答，模型、知识库、权限模式就在输入框旁边。',
-        en: 'A real assistant Q&A: ask, and Opus 4.8 streams the answer — model, knowledge base, and permission mode sit right by the composer.',
+        zh: '选「制作 PPT」说清主题，它按流水线逐页手绘幻灯片，右侧「预览幻灯片」实时长出成套页面，做完可导出。',
+        en: 'Pick "Make PPT", give the topic, and it draws the deck page by page — real slides render live in the preview, ready to export.',
       },
     },
     {
-      /* 录屏是知识库「全部文件(1000)」页搜索过滤:输入 prototype,计数从 1000 实时筛到 32。
-         文案只讲画面里真实发生的事(1000 个文件 + 即时筛选 + 先查再答),不夸识别归类那两页(录屏里没展示)。 */
-      src: '/screens/kb.webp', video: '/screens/kb.mp4', w: 1920, h: 1050,
-      bar: { zh: '知识库', en: 'Knowledge base' },
+      /* 录屏:日常办公→「写方案」预设,进入方案写作模式,右侧「方案草稿」面板按 封面→目录→正文 分段生成,
+         实时渲染成 Word 预览(与导出逐像素一致)+ 导出。主题命中知识库时会取真实资料落笔。 */
+      src: '/screens/doc.webp', video: '/screens/doc.mp4', w: 1920, h: 1050,
+      bar: { zh: '写方案', en: 'Write proposal' },
       caption: {
-        zh: '知识库：把你的资料都喂进来——这里 1000 个文件，输入关键词实时筛选；它回答和写方案前，先来这儿查。',
-        en: 'The knowledge base: everything you feed it lives here — 1,000 files, filtered live as you type; it checks here before answering or drafting.',
+        zh: '选「写方案」说清题目，进入方案写作模式：按封面 → 目录 → 正文分段生成，右侧实时渲染成 Word 预览，写完一键导出。',
+        en: 'Pick "Write proposal", name the topic, and proposal mode drafts it — cover → contents → body, rendered live as a Word preview on the right, one-click export when done.',
       },
     },
     {
-      src: '/screens/skills.webp', video: '/screens/skills.mp4', w: 1920, h: 1050,
-      bar: { zh: '设置 · 技能', en: 'Settings · Skills' },
+      /* 录屏:设计创意→输入话术,助手调本机 draw 技能(node .../draw.js),把需求写成提示词后跑出 PNG 文件卡。 */
+      src: '/screens/img.webp', video: '/screens/img.mp4', w: 1920, h: 1050,
+      bar: { zh: '生成图片', en: 'Generate image' },
       caption: {
-        zh: '技能库：139 项技能即搜即滤，逐个可开关，也能新建自己的。',
-        en: 'The skills library: search-as-you-type across all 139 skills, individually toggleable, plus your own.',
+        zh: '描述你要的画面，它调用本机画图技能：把需求写成提示词，直接跑出一张 PNG 存到本地。',
+        en: 'Describe the image; it calls the local drawing skill — turning your ask into a prompt and rendering a PNG saved to disk.',
       },
     },
     {
-      src: '/screens/byok.webp', video: '/screens/byok.mp4', w: 1920, h: 1050,
-      bar: { zh: '设置 · 执行模式', en: 'Settings · Execution' },
+      /* 录屏:代码开发→输入话术,「全自动」权限下助手直接写入 pomodoro.html,代码块实时铺开。 */
+      src: '/screens/code.webp', video: '/screens/code.mp4', w: 1920, h: 1050,
+      bar: { zh: '代码开发', en: 'Write code' },
       caption: {
-        zh: '执行模式：本机 CLI 或自带 API key，多家提供方随便挑。',
-        en: 'Execution mode: local CLI or bring your own key, across providers.',
+        zh: '提个需求，它在「全自动」模式下真的动手写代码：把 HTML 文件直接写到本地，代码实时铺开，双击就能跑。',
+        en: 'Give it a task and, in full-auto mode, it actually writes the code — files land on disk, code streaming in live, ready to run.',
       },
     },
   ],
