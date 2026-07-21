@@ -35,11 +35,11 @@
 | 卡片 ext | 源(skills/…) | sample 路径 | sampleKind | 缩略图 |
 |---|---|---|---|---|
 | .pptx | `deck-swiss-international/example.html` | `/screens/outputs/samples/ppt.html` | html | `ppt.webp` |
-| .xlsx | `digits-fintech-swiss-template/example.html` | `/screens/outputs/samples/xlsx.html` | html | `xlsx.webp` |
+| .xlsx | `data-report/example.html`（含真数字明细表） | `/screens/outputs/samples/xlsx.html` | html | `xlsx.webp` |
 | .docx | `article-magazine/example.html` | `/screens/outputs/samples/docx.html` | html | `docx.webp` |
 | .png | `poster-hero/example.html` | `/screens/outputs/samples/poster.html` | html | `png.webp` |
 | .mp4 | `weread-year-in-review-video-template/assets/default-showcase.mp4` | `/screens/outputs/samples/video.mp4` | video | `mp4.webp` |
-| .html | `data-report/example.html` | `/screens/outputs/samples/report.html` | html | `html.webp` |
+| .html | `frame-data-chart-nyt/example.html`（NYT 折线图） | `/screens/outputs/samples/report.html` | html | `html.webp` |
 
 ---
 
@@ -167,9 +167,10 @@ git commit -m "assets: 产出区六卡缩略图换成真成品渲染图"
   每张卡绑定一份 claude-desktop 仓库的真实成品(2026-07-21 接入):
   - sample = public 下的成品文件;sampleKind 决定弹层用 iframe(html)还是 video。
   - shot = 该成品渲染出的缩略图(真成品画面,非过程截图);壁纸由卡片 CSS 单独铺。
-  源(skills/…):ppt=deck-swiss-international · xlsx=digits-fintech-swiss-template ·
+  源(skills/…):ppt=deck-swiss-international · xlsx=data-report(取其明细数字表) ·
   docx=article-magazine · png=poster-hero · mp4=weread-year-in-review-video-template ·
-  html=data-report。均为模板自带 example.html / default-showcase.mp4,不虚构。
+  html=frame-data-chart-nyt(NYT 折线图)。均为模板自带 example.html / default-showcase.mp4,不虚构。
+  (注:表格无纯 Excel 成品,用 data-report 里的真数字明细表顶上;数据报告改用 NYT 折线图避免与表格同源撞图。)
 */
 export const outputCards: {
   icon: string
@@ -197,7 +198,7 @@ export const outputCards: {
     body: { zh: '读表、算数、整理数据,交回一张能用的表。点开翻真成品。', en: 'Reads, computes, organizes — a usable sheet. Open to browse the real file.' },
     ext: '.xlsx',
     shot: '/screens/outputs/xlsx.webp',
-    shotAlt: { zh: '财务表格模板的成品:满是表格与数字的看板', en: 'A finished financial spreadsheet full of tables and figures' },
+    shotAlt: { zh: '数据周报里的明细数据表:月份 / MAU / 付费 / 流失率', en: 'A finished data table: month / MAU / paying / churn' },
     sample: '/screens/outputs/samples/xlsx.html',
     sampleKind: 'html',
   },
@@ -237,7 +238,7 @@ export const outputCards: {
     body: { zh: '数据进去,可交互的可视化报告出来。点开翻真成品。', en: 'Data in, an interactive visual report out. Open to browse the real file.' },
     ext: '.html',
     shot: '/screens/outputs/html.webp',
-    shotAlt: { zh: '数据报告模板的可交互看板成品', en: 'A finished interactive data-report dashboard' },
+    shotAlt: { zh: 'NYT 编辑风格的折线图成品', en: 'A finished NYT-style editorial line chart' },
     sample: '/screens/outputs/samples/report.html',
     sampleKind: 'html',
   },
