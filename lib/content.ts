@@ -199,63 +199,83 @@ export const outputsSection = {
 }
 
 /*
-  shot = 产品真实截图(2026-07-20 CDP 实截,均为产品界面/内置模板,非合成图):
-  - ppt: 画布社区「瑞士国际主义 Deck」官方模板详情的幻灯片预览
-  - xlsx: 设置→技能页搜 excel 的真实结果(data-report / spreadsheets)
-  - docx: 方案写作模式右侧草稿面板(封面→目录→正文;演示文案,隐私已处理)
-  - png: 画布「3D Stone Staircase Evolution」官方模板的成品信息图
-  - mp4: 画布「故障艺术标题帧」官方视频模板的成品帧
-  - html: 画布「Dashboard」官方原型模板的成品报告页
+  每张卡绑定一份 claude-desktop 仓库的真实成品(2026-07-21 接入):
+  - sample = public 下的成品文件;sampleKind 决定弹层用 iframe(html)还是 video。
+  - shot = 该成品渲染出的缩略图(真成品画面,非过程截图);壁纸由卡片 CSS 单独铺。
+  源(skills/…):ppt=deck-swiss-international · xlsx=data-report(取其明细数字表) ·
+  docx=article-magazine · png=poster-hero · mp4=weread-year-in-review-video-template ·
+  html=frame-data-chart-nyt(NYT 折线图)。均为模板自带 example.html / default-showcase.mp4,不虚构。
+  (注:表格无纯 Excel 成品,用 data-report 里的真数字明细表顶上;数据报告改用 NYT 折线图避免与表格同源撞图。)
 */
-export const outputCards: { icon: string; title: Copy; body: Copy; ext: string; shot: string; shotAlt: Copy }[] = [
+export const outputCards: {
+  icon: string
+  title: Copy
+  body: Copy
+  ext: string
+  shot: string
+  shotAlt: Copy
+  sample: string
+  sampleKind: 'html' | 'video'
+}[] = [
   {
     icon: '📊',
     title: { zh: '做 PPT / 演示', en: 'Slides & decks' },
-    body: { zh: '一句话生成整套演示：套模板、配图表、写讲稿。', en: 'One prompt, a whole deck: template, charts, speaker notes.' },
+    body: { zh: '一句话生成整套演示:套模板、配图表、写讲稿。点开翻真成品。', en: 'One prompt, a whole deck — template, charts, notes. Open to browse the real file.' },
     ext: '.pptx',
     shot: '/screens/outputs/ppt.webp',
-    shotAlt: { zh: '画布内置幻灯片模板的成品页', en: 'A finished slide from a built-in deck template' },
+    shotAlt: { zh: '瑞士国际主义风格的整套幻灯片成品', en: 'A finished Swiss-International slide deck' },
+    sample: '/screens/outputs/samples/ppt.html',
+    sampleKind: 'html',
   },
   {
     icon: '📈',
     title: { zh: '做表格', en: 'Spreadsheets' },
-    body: { zh: '读表、算数、整理数据，直接交回一张能用的表。', en: 'Reads, computes, and organizes — hands back a usable sheet.' },
+    body: { zh: '读表、算数、整理数据,交回一张能用的表。点开翻真成品。', en: 'Reads, computes, organizes — a usable sheet. Open to browse the real file.' },
     ext: '.xlsx',
     shot: '/screens/outputs/xlsx.webp',
-    shotAlt: { zh: '技能库里真实的表格技能:data-report 与 spreadsheets', en: 'Real spreadsheet skills in the library: data-report and spreadsheets' },
+    shotAlt: { zh: '数据周报里的明细数据表:月份 / MAU / 付费 / 流失率', en: 'A finished data table: month / MAU / paying / churn' },
+    sample: '/screens/outputs/samples/xlsx.html',
+    sampleKind: 'html',
   },
   {
     icon: '📄',
     title: { zh: '写方案 / 文档', en: 'Proposals & docs' },
-    /* 对应产品真实的「方案写作模式」:从知识库取材,封面/目录/正文逐步确认,右侧真预览,导出 Word。 */
-    body: { zh: '方案写作从你的知识库取材，封面、目录、正文逐步确认，导出就是能交付的 Word。', en: 'Proposals draw on your knowledge base — cover, outline, body confirmed step by step, exported as a ready-to-send Word file.' },
+    body: { zh: '从素材到排版好的整篇文档,导出就是能交付的 Word。点开翻真成品。', en: 'Material to a fully typeset doc, exported as ready-to-send Word. Open to browse.' },
     ext: '.docx',
     shot: '/screens/outputs/docx.webp',
-    shotAlt: { zh: '方案写作模式:封面→目录→正文,一键导出 Word', en: 'Proposal mode: cover, outline, body — exported to Word' },
+    shotAlt: { zh: '杂志排版风格的整篇文档成品', en: 'A finished magazine-style document' },
+    sample: '/screens/outputs/samples/docx.html',
+    sampleKind: 'html',
   },
   {
     icon: '🖼',
     title: { zh: '生成图片 / 海报', en: 'Images & posters' },
-    body: { zh: '从提示词到成图，海报、封面、社交卡片一步到位。', en: 'Prompt to picture: posters, covers, and social cards in one step.' },
+    body: { zh: '从提示词到成图,海报、封面、社交卡片一步到位。点开看真成品。', en: 'Prompt to picture — posters, covers, social cards. Open to see the real one.' },
     ext: '.png',
     shot: '/screens/outputs/png.webp',
-    shotAlt: { zh: '画布图片模板的成品信息图', en: 'A finished infographic from a built-in image template' },
+    shotAlt: { zh: '海报模板的成品', en: 'A finished poster from a poster template' },
+    sample: '/screens/outputs/samples/poster.html',
+    sampleKind: 'html',
   },
   {
     icon: '🎬',
     title: { zh: '生成视频', en: 'Video' },
-    body: { zh: '从想法到成片，模板化的视频创作流程。', en: 'From idea to final cut with a templated video pipeline.' },
+    body: { zh: '从想法到成片,模板化的视频创作流程。点开直接播真成品。', en: 'Idea to final cut via a templated pipeline. Open to play the real clip.' },
     ext: '.mp4',
     shot: '/screens/outputs/mp4.webp',
-    shotAlt: { zh: '画布视频模板「故障艺术标题帧」成品帧', en: 'A frame from the glitch-title video template' },
+    shotAlt: { zh: '视频模板的成品帧', en: 'A frame from a finished video template' },
+    sample: '/screens/outputs/samples/video.mp4',
+    sampleKind: 'video',
   },
   {
     icon: '📉',
     title: { zh: '数据报告与图表', en: 'Data reports & charts' },
-    body: { zh: '数据进去，可交互的可视化报告出来。', en: 'Data in, an interactive visual report out.' },
+    body: { zh: '数据进去,可交互的可视化报告出来。点开翻真成品。', en: 'Data in, an interactive visual report out. Open to browse the real file.' },
     ext: '.html',
     shot: '/screens/outputs/html.webp',
-    shotAlt: { zh: '画布原型模板生成的数据看板页', en: 'A data dashboard page from a prototype template' },
+    shotAlt: { zh: 'NYT 编辑风格的折线图成品', en: 'A finished NYT-style editorial line chart' },
+    sample: '/screens/outputs/samples/report.html',
+    sampleKind: 'html',
   },
 ]
 
