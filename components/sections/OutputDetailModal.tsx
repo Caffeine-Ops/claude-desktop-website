@@ -53,10 +53,12 @@ export function OutputDetailModal({ card, onClose }: { card: OutputCardT | null;
             if (e.target === e.currentTarget) onClose()
           }}
         >
-          {/* 暗背景 + 桌面壁纸 */}
-          <div className="absolute inset-0 bg-black/70" aria-hidden="true" />
+          {/* 暗背景 + 桌面壁纸。pointer-events-none:让点击穿透到外层容器,
+              否则这两层 absolute inset-0 会拦掉 mousedown,使「点背景关闭」的
+              target===currentTarget 判定永远为 false（点背景关不掉）。 */}
+          <div className="pointer-events-none absolute inset-0 bg-black/70" aria-hidden="true" />
           <div
-            className="absolute inset-0 bg-cover bg-center opacity-40"
+            className="pointer-events-none absolute inset-0 bg-cover bg-center opacity-40"
             style={{ backgroundImage: 'url(/screens/outputs/desktop-bg.png)' }}
             aria-hidden="true"
           />
