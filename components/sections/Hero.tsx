@@ -266,10 +266,18 @@ export function Hero() {
         </div>
       </div>
 
-      <div aria-hidden="true" className="absolute bottom-[26px] left-1/2 z-[3] flex -translate-x-1/2 flex-col items-center gap-2 font-mono text-[11px] tracking-[0.3em] text-dim">
+      <button
+        type="button"
+        onClick={() => {
+          const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+          window.scrollBy({ top: window.innerHeight, behavior: reduce ? 'auto' : 'smooth' })
+        }}
+        aria-label={t({ zh: '向下滚动到下一屏', en: 'Scroll to next section' })}
+        className="absolute bottom-[26px] left-1/2 z-[3] flex -translate-x-1/2 cursor-pointer flex-col items-center gap-2 font-mono text-[11px] tracking-[0.3em] text-dim transition-colors hover:text-brand focus-visible:text-brand focus-visible:outline-none"
+      >
         SCROLL
-        <i className="cue-line block h-[34px] w-px" style={{ background: 'linear-gradient(180deg,var(--brand),transparent)' }} />
-      </div>
+        <i aria-hidden="true" className="cue-line block h-[34px] w-px" style={{ background: 'linear-gradient(180deg,var(--brand),transparent)' }} />
+      </button>
     </section>
   )
 }
