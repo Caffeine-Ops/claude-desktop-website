@@ -100,7 +100,10 @@ export function OutputDetailModal({ card, onClose }: { card: OutputCardT | null;
                   src={card.sample}
                   title={t(card.shotAlt)}
                   loading="lazy"
-                  sandbox="allow-scripts allow-same-origin"
+                  /* 只给 allow-scripts、不给 allow-same-origin:成品页运行时从 CDN 拉第三方 JS
+                     (Tailwind Play / Google Fonts),两者同开会让 iframe 拿到「与父站同源」的特权,
+                     那段不受控 CDN 脚本就能触到主站 DOM。隔离源下 Tailwind CDN 仍能正常渲染。 */
+                  sandbox="allow-scripts"
                   className="h-[78vh] w-full border-0 bg-white"
                 />
               ) : (
@@ -108,6 +111,7 @@ export function OutputDetailModal({ card, onClose }: { card: OutputCardT | null;
                   src={card.sample}
                   controls
                   autoPlay
+                  muted /* 无 muted 时带声 autoPlay 会被浏览器拦成暂停;muted 保证「点开直接播」,用户可用 controls 解除静音 */
                   playsInline
                   className="max-h-[78vh] w-full bg-black"
                   aria-label={t(card.shotAlt)}
