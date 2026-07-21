@@ -298,7 +298,7 @@ export const platform = {
 }
 
 /*
-  真实界面区:四张图全部截自本机运行的产品(v0.0.16 开发版),不是效果图。
+  真实界面区:四段录屏全部截自本机运行的产品(本地开发版),不是效果图。
   截图前做过隐私处理——侧栏会话标题临时替换成了演示文字,画面里没有真实业务数据。
   想重截:启动产品后用 CDP 连渲染进程的 9222 调试口摆拍(细节见项目记忆)。
 */
@@ -306,8 +306,8 @@ export const screens = {
   eyebrow: { zh: '真实界面', en: 'Real screens' },
   title: { zh: '不是效果图，是真实操作。', en: 'Not mockups — real interaction.' },
   note: {
-    zh: '截自本机运行的 v0.0.16 · 悬停右侧场景，主窗口实时播放操作录屏',
-    en: 'Captured from v0.0.16 running locally · hover a scene and the main window plays the recording',
+    zh: '截自本机运行的开发版 · 悬停右侧场景，主窗口实时播放操作录屏',
+    en: 'Captured from a local dev build · hover a scene and the main window plays the recording',
   },
   /* 第一张当主图铺全宽,其余三张一排。
      src 是封面截图(2 倍图),video 是同场景的真实操作录屏(CDP 逐帧录制合成)。
@@ -315,23 +315,25 @@ export const screens = {
      截图与录屏都做过隐私处理:侧栏会话标题替换成演示文字,画面里无真实业务数据。 */
   items: [
     {
-      src: '/screens/canvas.webp', video: '/screens/canvas.mp4', w: 2560, h: 1400,
-      bar: { zh: '工作画布', en: 'Work canvas' },
-      caption: {
-        zh: '工作画布主页：选一种产出、说出需求——原型、幻灯片、图片、视频、动效、音频；往下是社区模板墙。',
-        en: 'The work canvas home: pick an output, describe what you want — prototype, slides, image, video, motion, audio — with the community template wall below.',
-      },
-    },
-    {
-      src: '/screens/chat.webp', video: '/screens/chat.mp4', w: 2560, h: 1400,
+      src: '/screens/chat.webp', video: '/screens/chat.mp4', w: 1920, h: 1050,
       bar: { zh: '智能助手', en: 'Assistant' },
       caption: {
-        zh: '智能助手聊天面：输入框下面就近选模型、挂知识库、切权限模式。',
-        en: 'The assistant chat surface: model picker, knowledge base, and permission mode sit right under the composer.',
+        zh: '智能助手真实问答：提问后 Opus 4.8 流式作答，模型、知识库、权限模式就在输入框旁边。',
+        en: 'A real assistant Q&A: ask, and Opus 4.8 streams the answer — model, knowledge base, and permission mode sit right by the composer.',
       },
     },
     {
-      src: '/screens/skills.webp', video: '/screens/skills.mp4', w: 2560, h: 1400,
+      /* 录屏是知识库「全部文件(1000)」页搜索过滤:输入 prototype,计数从 1000 实时筛到 32。
+         文案只讲画面里真实发生的事(1000 个文件 + 即时筛选 + 先查再答),不夸识别归类那两页(录屏里没展示)。 */
+      src: '/screens/kb.webp', video: '/screens/kb.mp4', w: 1920, h: 1050,
+      bar: { zh: '知识库', en: 'Knowledge base' },
+      caption: {
+        zh: '知识库：把你的资料都喂进来——这里 1000 个文件，输入关键词实时筛选；它回答和写方案前，先来这儿查。',
+        en: 'The knowledge base: everything you feed it lives here — 1,000 files, filtered live as you type; it checks here before answering or drafting.',
+      },
+    },
+    {
+      src: '/screens/skills.webp', video: '/screens/skills.mp4', w: 1920, h: 1050,
       bar: { zh: '设置 · 技能', en: 'Settings · Skills' },
       caption: {
         zh: '技能库：139 项技能即搜即滤，逐个可开关，也能新建自己的。',
@@ -339,7 +341,7 @@ export const screens = {
       },
     },
     {
-      src: '/screens/byok.webp', video: '/screens/byok.mp4', w: 2560, h: 1400,
+      src: '/screens/byok.webp', video: '/screens/byok.mp4', w: 1920, h: 1050,
       bar: { zh: '设置 · 执行模式', en: 'Settings · Execution' },
       caption: {
         zh: '执行模式：本机 CLI 或自带 API key，多家提供方随便挑。',
