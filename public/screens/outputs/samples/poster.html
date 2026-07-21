@@ -2,87 +2,97 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8" />
-<title>HTML Anything 0.1 海报</title>
+<title>5 个让你的 AI 编辑用得更顺手的小习惯</title>
 <script src="https://cdn.tailwindcss.com"></script>
-<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@600;700;800;900&family=Noto+Sans+SC:wght@500;700;900&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700;900&family=Inter:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
-  body { margin:0; background:#0a0a0a; font-family:'Inter Tight','Noto Sans SC',sans-serif; display:grid; place-items:center; padding:24px 0; }
-  .poster { position:relative; width:1080px; max-width:96vw; aspect-ratio:9/16; border-radius:32px; overflow:hidden; color:#fff;
-    background:
-      radial-gradient(ellipse at 80% 0%, rgba(233,185,74,0.55), transparent 55%),
-      radial-gradient(ellipse at 20% 100%, rgba(108,58,166,0.5), transparent 55%),
-      linear-gradient(135deg,#c96442 0%,#15140f 60%,#1a0e2b 100%);
-    display:flex; flex-direction:column; padding:80px 70px;
-    box-shadow:0 40px 120px -20px rgba(0,0,0,0.7);
-  }
-  .grain { position:absolute; inset:0; pointer-events:none; opacity:0.18; background-image:radial-gradient(rgba(255,255,255,0.4) 1px, transparent 1px); background-size:3px 3px; }
-  .label { font-size:13px; font-weight:600; letter-spacing:0.28em; text-transform:uppercase; opacity:0.85; }
-  .glyph { width:120px; height:120px; border-radius:32px; display:grid; place-items:center; background:rgba(255,255,255,0.08); backdrop-filter:blur(12px); border:1px solid rgba(255,255,255,0.18); }
-  h1 { font-family:'Inter Tight',sans-serif; font-weight:900; font-size:148px; line-height:0.95; letter-spacing:-0.04em; margin:0; }
-  .em { font-family:Georgia, 'Noto Serif SC', serif; font-weight:700; font-style:italic; color:#e9b94a; }
-  .feature { display:flex; align-items:flex-start; gap:18px; }
-  .feature .ic { width:42px; height:42px; border-radius:12px; background:rgba(255,255,255,0.12); display:grid; place-items:center; font-size:22px; flex-shrink:0; }
-  .feature .t { font-size:22px; font-weight:600; }
-  .feature .d { font-size:15px; opacity:0.7; line-height:1.55; margin-top:4px; }
-  .qr { width:120px; height:120px; border-radius:14px; background:#fff; padding:12px; }
-  .qr svg { width:100%; height:100%; }
+  body { margin:0; background:#f3eee5; font-family:'Noto Sans SC',sans-serif; padding:36px 0; -webkit-font-smoothing:antialiased; }
+  .deck { display:flex; flex-direction:column; align-items:center; gap:24px; }
+  .card { width:1080px; max-width:96vw; aspect-ratio:3/4; border-radius:32px; overflow:hidden; position:relative; padding:80px 64px; display:flex; flex-direction:column; box-shadow:0 24px 60px -20px rgba(0,0,0,0.18); }
+  .c1 { background:linear-gradient(160deg,#f7d2c2 0%,#f3a98a 100%); color:#3a1d10; }
+  .c2 { background:linear-gradient(160deg,#fff7e6 0%,#ffe4b8 100%); color:#3a2e10; }
+  .c3 { background:linear-gradient(160deg,#e8f0e3 0%,#bcd6b3 100%); color:#1f3a1f; }
+  .c4 { background:linear-gradient(160deg,#e7e8f5 0%,#bec1e8 100%); color:#1d1f4a; }
+  .c5 { background:linear-gradient(160deg,#fce7f0 0%,#f5b3ce 100%); color:#4a1b34; }
+  .c6 { background:linear-gradient(160deg,#fff8e1 0%,#f7c99b 100%); color:#3a2210; }
+  .c7 { background:linear-gradient(160deg,#15140f 0%,#3a2620 100%); color:#fafaf7; }
+  .badge { display:inline-flex; align-items:center; gap:8px; padding:8px 16px; border-radius:999px; background:rgba(255,255,255,0.55); backdrop-filter:blur(8px); font-size:18px; font-weight:600; align-self:flex-start; }
+  .num { font-family:Georgia, serif; font-style:italic; font-size:120px; font-weight:700; line-height:0.9; opacity:0.85; margin-bottom:24px; }
+  h2 { font-size:64px; font-weight:900; line-height:1.1; letter-spacing:-0.01em; margin:0 0 32px; }
+  .body { font-size:30px; font-weight:500; line-height:1.55; opacity:0.85; max-width:24ch; }
+  .watermark { position:absolute; bottom:32px; right:36px; font-size:16px; opacity:0.55; font-weight:500; }
+  .pageno { position:absolute; top:36px; right:44px; font-family:'Inter',sans-serif; font-size:18px; font-weight:600; opacity:0.45; letter-spacing:0.08em; }
+  .hero { font-size:120px; font-weight:900; line-height:1.0; letter-spacing:-0.025em; margin:0; }
 </style>
 </head>
 <body>
-<div class="poster">
-  <div class="grain"></div>
+<div class="deck">
 
-  <div class="flex items-center justify-between">
-    <div class="label">RELEASE · 2026.05</div>
-    <div class="glyph">
-      <div style="font-family:Georgia,serif; font-style:italic; font-size:78px; font-weight:700; color:#fff">H</div>
+  <div class="card c1">
+    <div class="pageno">01 / 07</div>
+    <div class="badge">⚡ 建议收藏 · 干货预警</div>
+    <div style="margin:auto 0">
+      <div style="font-size:24px; font-weight:600; opacity:0.7; margin-bottom:18px">AI 工具党 · 必看</div>
+      <h2 class="hero">5 个让你的<br/>AI 编辑<br/>更顺手的<br/><span style="color:#9c2a25">小习惯</span></h2>
     </div>
+    <div style="font-size:22px; opacity:0.65; font-weight:500">滑动看 →</div>
+    <div class="watermark">@HTMLAnything · 5/11</div>
   </div>
 
-  <div style="margin:auto 0; flex:none">
-    <div class="label" style="margin-bottom:24px">v0.1 · 已发布 / Now Available</div>
-    <h1>HTML<br/><span class="em">Anything</span></h1>
-    <div style="font-size:30px; font-weight:500; opacity:0.92; margin-top:36px; max-width:560px; line-height:1.35">
-      任何文档 → 世界级好看的 HTML,<br/>
-      用你<span class="em" style="color:#e9b94a">本地</span>的 AI agent。
-    </div>
+  <div class="card c2">
+    <div class="pageno">02 / 07</div>
+    <div class="num">01</div>
+    <h2>放弃<br/>完美 prompt</h2>
+    <p class="body">你写的 prompt 不可能一次完美。把它当 <strong>对话</strong>, 不是 SQL。</p>
+    <div class="watermark">@HTMLAnything</div>
   </div>
 
-  <div style="display:grid; grid-template-columns:1fr; gap:18px; margin:48px 0 32px">
-    <div class="feature"><div class="ic">🎨</div><div><div class="t">9 套世界级模板</div><div class="d">PPT · 简历 · 海报 · 小红书 · 数据报告 …</div></div></div>
-    <div class="feature"><div class="ic">🔌</div><div><div class="t">8 个本地 agent 自动检测</div><div class="d">Claude / Cursor / Codex / Gemini / Copilot …</div></div></div>
-    <div class="feature"><div class="ic">🗝️</div><div><div class="t">0 API Key</div><div class="d">复用你已经登录的 CLI session, 0 边际成本</div></div></div>
-    <div class="feature"><div class="ic">📋</div><div><div class="t">一键发布</div><div class="d">公众号 / 推特 / 知乎 / PNG, 直接粘贴</div></div></div>
+  <div class="card c3">
+    <div class="pageno">03 / 07</div>
+    <div class="num">02</div>
+    <h2>让 AI 看见<br/>你的格式</h2>
+    <p class="body">贴 markdown / CSV 之前, 先告诉它 <strong>"我希望输出像 X 风格"</strong>。<br/><br/>给一个具体参考, 比 50 个形容词管用。</p>
+    <div class="watermark">@HTMLAnything</div>
   </div>
 
-  <div style="display:flex; align-items:center; gap:24px; padding-top:24px; border-top:1px solid rgba(255,255,255,0.18)">
-    <div class="qr">
-      <svg viewBox="0 0 33 33" xmlns="http://www.w3.org/2000/svg">
-        <rect width="33" height="33" fill="#fff"/>
-        <g fill="#0a0a0a">
-          <rect x="2" y="2" width="9" height="9" fill="none" stroke="#0a0a0a" stroke-width="2"/>
-          <rect x="5" y="5" width="3" height="3"/>
-          <rect x="22" y="2" width="9" height="9" fill="none" stroke="#0a0a0a" stroke-width="2"/>
-          <rect x="25" y="5" width="3" height="3"/>
-          <rect x="2" y="22" width="9" height="9" fill="none" stroke="#0a0a0a" stroke-width="2"/>
-          <rect x="5" y="25" width="3" height="3"/>
-          <rect x="13" y="2" width="2" height="2"/><rect x="17" y="2" width="2" height="2"/>
-          <rect x="13" y="6" width="2" height="2"/><rect x="15" y="9" width="2" height="2"/>
-          <rect x="2" y="13" width="2" height="2"/><rect x="6" y="13" width="2" height="2"/>
-          <rect x="13" y="13" width="2" height="2"/><rect x="17" y="13" width="2" height="2"/><rect x="21" y="13" width="2" height="2"/>
-          <rect x="13" y="17" width="2" height="2"/><rect x="19" y="15" width="2" height="2"/>
-          <rect x="22" y="17" width="2" height="2"/><rect x="26" y="17" width="2" height="2"/>
-          <rect x="13" y="21" width="2" height="2"/><rect x="17" y="21" width="2" height="2"/>
-          <rect x="22" y="22" width="2" height="2"/><rect x="26" y="26" width="2" height="2"/>
-          <rect x="22" y="29" width="2" height="2"/><rect x="29" y="22" width="2" height="2"/>
-        </g>
-      </svg>
-    </div>
-    <div>
-      <div style="font-family:'JetBrains Mono',monospace; font-size:14px; opacity:0.95">$ pnpm dlx html-anything</div>
-      <div style="font-size:14px; opacity:0.7; margin-top:6px">github.com/your-org/html-anything</div>
-    </div>
+  <div class="card c4">
+    <div class="pageno">04 / 07</div>
+    <div class="num">03</div>
+    <h2>用模板,<br/>别每次重写</h2>
+    <p class="body">把好用的提示词存成模板。HTML Anything 直接选模板就行 ——<br/><br/><strong>9 套世界级设计 system</strong> 现成的。</p>
+    <div class="watermark">@HTMLAnything</div>
   </div>
+
+  <div class="card c5">
+    <div class="pageno">05 / 07</div>
+    <div class="num">04</div>
+    <h2>二次编辑<br/>跑 diff</h2>
+    <p class="body">重新生成不是从 0 开始。改完内容<strong>只发 diff</strong>, 让 AI 在已有 HTML 上微调 ——<br/><br/>省 80% token + 保持设计风格。</p>
+    <div class="watermark">@HTMLAnything</div>
+  </div>
+
+  <div class="card c6">
+    <div class="pageno">06 / 07</div>
+    <div class="num">05</div>
+    <h2>复用<br/>本地 session</h2>
+    <p class="body">不用 API Key, 让本地 Claude / Cursor / Codex 跑。<br/><br/><strong>0 边际成本</strong>, 速度比远程 API 快得多。</p>
+    <div class="watermark">@HTMLAnything</div>
+  </div>
+
+  <div class="card c7">
+    <div class="pageno">07 / 07</div>
+    <div style="margin:auto 0">
+      <div style="font-size:24px; font-weight:600; color:#e9b94a; margin-bottom:24px">看完别走 ✨</div>
+      <h2 class="hero" style="color:#fafaf7">工具不是<br/>越多越好,<br/><span style="color:#e9b94a">流程顺</span><br/>才是真的好用。</h2>
+    </div>
+    <div style="display:flex; gap:14px; font-size:22px; font-weight:600">
+      <span style="padding:10px 22px; background:#e9b94a; color:#15140f; border-radius:999px">关注</span>
+      <span style="padding:10px 22px; background:rgba(255,255,255,0.12); color:#fafaf7; border-radius:999px; border:1px solid rgba(255,255,255,0.2)">收藏</span>
+      <span style="padding:10px 22px; background:rgba(255,255,255,0.12); color:#fafaf7; border-radius:999px; border:1px solid rgba(255,255,255,0.2)">分享</span>
+    </div>
+    <div class="watermark" style="color:rgba(255,255,255,0.5)">@HTMLAnything · 每周 AI workflow 实战</div>
+  </div>
+
 </div>
 </body>
 </html>

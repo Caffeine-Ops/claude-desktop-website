@@ -26,6 +26,10 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
+# 产出素材候选(本地评审用,不提交)
+/showcase-candidates/
+/garden-gpt-image-2/
+
 # vercel
 .vercel
 .superpowers/

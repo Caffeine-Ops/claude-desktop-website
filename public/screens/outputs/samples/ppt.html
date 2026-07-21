@@ -1,117 +1,130 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
 <meta charset="UTF-8" />
-<title>Swiss International · Open Design 2026</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>HTML Anything · 产品介绍</title>
 <script src="https://cdn.tailwindcss.com"></script>
-<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600&family=Noto+Sans+SC:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700;800&family=Noto+Sans+SC:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-  body { font-family: 'Inter Tight','Inter','Noto Sans SC',system-ui,sans-serif; background:#0a0a0a; color:#fafaf8; margin:0; }
-  .slide { width:100%; aspect-ratio:16/9; max-width:1280px; margin:0 auto; position:relative; overflow:hidden; }
-  .ikb { background:#002FA7; color:#fafaf8; }
-  .paper { background:#fafaf8; color:#0a0a0a; }
-  .mono { font-family:'JetBrains Mono', ui-monospace, monospace; }
-  .hairline-b { border-bottom:1px solid currentColor; }
-  .hairline-t { border-top:1px solid currentColor; }
-  /* ASCII dot field */
-  .ascii { font-family:'JetBrains Mono', monospace; font-size:11px; line-height:1; letter-spacing:6px; opacity:0.2; }
-  .bar { width:60px; background:#002FA7; }
-  .deck { display:grid; gap:24px; padding:24px; }
+  body { margin:0; background:#0a0a0a; font-family:'Inter Tight','Noto Sans SC',sans-serif; }
+  .deck { display:flex; flex-direction:column; align-items:center; gap:32px; padding:40px 0; }
+  .slide { position:relative; width:1280px; max-width:96vw; aspect-ratio:16/9; border-radius:18px; overflow:hidden; box-shadow:0 30px 80px -20px rgba(0,0,0,0.7); display:flex; flex-direction:column; padding:64px 80px; color:#0a0a0a; background:#fafaf7; }
+  .slide.dark { background:#15140f; color:#fafaf7; }
+  .slide.brand { background:linear-gradient(135deg,#c96442 0%,#e9b94a 100%); color:#fff; }
+  .slide .num { position:absolute; top:24px; right:32px; font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:0.18em; opacity:0.55; }
+  .slide .eyebrow { font-size:12px; font-weight:600; letter-spacing:0.22em; text-transform:uppercase; opacity:0.65; margin-bottom:20px; }
+  .slide h1 { font-size:84px; font-weight:800; line-height:1.05; letter-spacing:-0.025em; margin:0; }
+  .slide h2 { font-size:64px; font-weight:700; line-height:1.1; letter-spacing:-0.02em; margin:0 0 24px; }
+  .slide p { font-size:24px; line-height:1.5; opacity:0.78; max-width:65ch; }
+  .grid3 { display:grid; grid-template-columns:repeat(3,1fr); gap:24px; margin-top:auto; }
+  .card { padding:28px; border-radius:14px; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.08); }
+  .card .k { font-size:48px; font-weight:700; letter-spacing:-0.02em; margin-bottom:8px; }
+  .card .l { font-size:14px; opacity:0.65; }
 </style>
 </head>
 <body>
 <div class="deck">
 
-  <!-- S01 Cover · Full IKB -->
-  <section class="slide ikb">
-    <div class="absolute inset-0 p-12 flex flex-col justify-between">
-      <header class="flex items-baseline justify-between mono text-[11px] uppercase tracking-[0.18em]">
-        <span>OPEN DESIGN — 2026 ROADMAP</span>
-        <span>S01 / 22</span>
-        <span>2026.05.11</span>
-      </header>
-      <!-- ascii dot matrix top-right -->
-      <pre class="absolute top-20 right-12 ascii">▒▓█▓▒░░▒▓█▓▒
-▒▒▓█▓▒░░▒▓█▓▒
-░▒▓█▓▒░░▒▓█▓▒
-░░▒▓█▓▒░░▒▓█▓
-▒░░▒▓█▓▒░░▒▓
-▒▒░░▒▓█▓▒░░▒</pre>
-      <div>
-        <div class="mono text-[12px] uppercase tracking-[0.18em] opacity-80">№01 · A LANDMARK</div>
-        <h1 class="mt-3 font-black leading-[0.95] tracking-[-0.02em]" style="font-size:clamp(48px,7.5vw,124px)">
-          Designing<br/>intelligence<br/>on warm paper.
-        </h1>
-        <p class="mt-5 max-w-[640px] text-[15px] opacity-90 leading-snug">
-          75 个世界级 HTML 模板 · 17 个本地 AI agent 适配 · 0 API 成本 · 一键发布到任何平台。
-        </p>
-      </div>
-      <footer class="flex items-baseline justify-between mono text-[11px] uppercase tracking-[0.18em] opacity-70 hairline-t pt-3">
-        <span>OPEN-DESIGN.STUDIO</span>
-        <span>BERLIN · 52.5200° N · 13.4050° E</span>
-        <span>VOL. 01</span>
-      </footer>
+  <section class="slide brand">
+    <span class="num">01 / 07</span>
+    <div class="eyebrow">Product · 2026</div>
+    <h1 style="margin-top:auto">HTML <em style="font-family:Georgia,serif;font-style:italic;font-weight:400">Anything</em></h1>
+    <p style="font-size:28px; opacity:0.95; margin-top:24px">把任何文档、数据, 用本地 AI agent, 一键转成世界级好看的 HTML。</p>
+    <div style="margin-top:auto; display:flex; align-items:center; gap:16px; font-size:14px; opacity:0.85">
+      <div style="width:32px;height:32px;border-radius:999px;background:rgba(255,255,255,0.25);display:grid;place-items:center;font-family:Georgia,serif;font-style:italic;font-weight:600">H</div>
+      <span>Tom Pan · 5 月 11 日</span>
     </div>
   </section>
 
-  <!-- S06 KPI Tower · paper bg, 4 IKB bars -->
-  <section class="slide paper">
-    <div class="absolute inset-0 p-12 flex flex-col justify-between">
-      <header class="flex items-baseline justify-between mono text-[11px] uppercase tracking-[0.18em]">
-        <span>KPI TOWER — Q1-Q4 OUTLOOK</span>
-        <span>S06 / 22</span>
-        <span>FY 2026</span>
-      </header>
+  <section class="slide">
+    <span class="num">02 / 07</span>
+    <div class="eyebrow" style="color:#c96442">问题</div>
+    <h2>Markdown 易写,<br/>但<span style="color:#c96442">发出去就丑</span>。</h2>
+    <ul style="font-size:24px; line-height:2; opacity:0.78; list-style:none; padding:0">
+      <li>· 截图发推, 默认是 14px 宋体压缩 jpg</li>
+      <li>· 复制到公众号, 排版被微信彻底重写</li>
+      <li>· 知乎、小红书、Notion 各家规则不一</li>
+    </ul>
+  </section>
+
+  <section class="slide dark">
+    <span class="num">03 / 07</span>
+    <div class="eyebrow" style="color:#e9b94a">方案</div>
+    <h2 style="font-size:96px; margin-top:auto; margin-bottom:auto">
+      任何输入 →<br/>
+      <span style="font-family:Georgia,serif;font-style:italic;font-weight:600;color:#e9b94a">世界级 HTML</span>
+    </h2>
+    <p style="font-size:22px;opacity:0.6">用你本地已经登录的 Claude / Cursor / Codex, 0 API Key 边际成本。</p>
+  </section>
+
+  <section class="slide">
+    <span class="num">04 / 07</span>
+    <div class="eyebrow">三个核心</div>
+    <h2>三件让它好用的事</h2>
+    <div class="grid3" style="grid-template-columns:repeat(3,1fr); gap:20px">
+      <div class="card" style="background:#f4f1ec; border-color:#e7e5e0; color:#15140f">
+        <div style="font-size:36px; margin-bottom:14px">🔌</div>
+        <div style="font-weight:600; font-size:18px; margin-bottom:6px">本地 Agent</div>
+        <div style="font-size:14px; opacity:0.7; line-height:1.6">复用你已经登录的 CLI session, 不要求 API Key</div>
+      </div>
+      <div class="card" style="background:#f4f1ec; border-color:#e7e5e0; color:#15140f">
+        <div style="font-size:36px; margin-bottom:14px">🎨</div>
+        <div style="font-weight:600; font-size:18px; margin-bottom:6px">9 套模板</div>
+        <div style="font-size:14px; opacity:0.7; line-height:1.6">PPT · 简历 · 海报 · 小红书 · 数据报告 ...</div>
+      </div>
+      <div class="card" style="background:#f4f1ec; border-color:#e7e5e0; color:#15140f">
+        <div style="font-size:36px; margin-bottom:14px">📋</div>
+        <div style="font-weight:600; font-size:18px; margin-bottom:6px">一键发布</div>
+        <div style="font-size:14px; opacity:0.7; line-height:1.6">公众号 / 推特 / 知乎 / PNG, 直接粘贴</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide dark">
+    <span class="num">05 / 07</span>
+    <div class="eyebrow" style="color:#e9b94a">数据</div>
+    <h2>已经在跑</h2>
+    <div class="grid3">
+      <div class="card"><div class="k" style="color:#e9b94a">80<span style="font-size:24px">s</span></div><div class="l">生成 31KB 可交付文章</div></div>
+      <div class="card"><div class="k" style="color:#e9b94a">9</div><div class="l">套世界级模板</div></div>
+      <div class="card"><div class="k" style="color:#e9b94a">8</div><div class="l">个本地 agent 适配</div></div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <span class="num">06 / 07</span>
+    <div class="eyebrow" style="color:#c96442">为什么是现在</div>
+    <h2 style="font-size:56px; margin-top:auto; margin-bottom:auto">
+      Claude 团队不再用 markdown,<br/>
+      <span style="font-family:Georgia,serif;font-style:italic;font-weight:600;color:#c96442">全换成了 HTML。</span>
+    </h2>
+    <p>HTML 是面向读者的最终形态, AI 让"啰嗦"不再是问题。</p>
+  </section>
+
+  <section class="slide brand">
+    <span class="num">07 / 07</span>
+    <h1 style="margin:auto 0; font-size:120px">Thanks.</h1>
+    <div style="display:flex; align-items:flex-end; justify-content:space-between; font-size:18px">
       <div>
-        <div class="mono text-[12px] uppercase tracking-[0.18em]" style="color:#002FA7">№06 · GROWTH METRICS</div>
-        <h2 class="mt-2 font-black leading-[1] tracking-[-0.02em]" style="font-size:clamp(36px,4.8vw,80px)">
-          四根柱子, 一个目标 ——<br/>
-          做<span style="color:#002FA7">最被信任</span>的 HTML 生产线。
-        </h2>
+        <div style="font-family:'JetBrains Mono',monospace; font-size:16px; opacity:0.85">$ pnpm dev</div>
+        <div style="opacity:0.85; margin-top:6px">→ http://localhost:3000 → ⌘+Enter</div>
       </div>
-      <!-- bars -->
-      <div class="grid grid-cols-4 gap-10 items-end mt-6">
-        <div class="text-center">
-          <div class="mb-3 mx-auto" style="height:32px">
-            <svg viewBox="0 0 24 24" class="w-7 h-7 mx-auto" fill="#002FA7"><rect x="4" y="4" width="4" height="16"/><rect x="10" y="8" width="4" height="12"/><rect x="16" y="2" width="4" height="18"/></svg>
-          </div>
-          <div class="bar mx-auto" style="height:60px"></div>
-          <div class="mt-3 mono text-[32px] font-bold" style="color:#002FA7">75</div>
-          <div class="hairline-t mt-1 pt-1 text-[11px] uppercase tracking-[0.16em] opacity-70">模板 · 现在</div>
-        </div>
-        <div class="text-center">
-          <div class="mb-3 mx-auto" style="height:32px">
-            <svg viewBox="0 0 24 24" class="w-7 h-7 mx-auto" fill="#002FA7"><circle cx="12" cy="12" r="9" fill="none" stroke="#002FA7" stroke-width="2"/><circle cx="12" cy="12" r="3"/></svg>
-          </div>
-          <div class="bar mx-auto" style="height:140px"></div>
-          <div class="mt-3 mono text-[32px] font-bold" style="color:#002FA7">200</div>
-          <div class="hairline-t mt-1 pt-1 text-[11px] uppercase tracking-[0.16em] opacity-70">模板 · Q4 目标</div>
-        </div>
-        <div class="text-center">
-          <div class="mb-3 mx-auto" style="height:32px">
-            <svg viewBox="0 0 24 24" class="w-7 h-7 mx-auto" fill="#002FA7"><path d="M12 2l3 7h7l-5.5 4.5 2 7L12 16l-6.5 4.5 2-7L2 9h7z"/></svg>
-          </div>
-          <div class="bar mx-auto" style="height:230px"></div>
-          <div class="mt-3 mono text-[32px] font-bold" style="color:#002FA7">25K</div>
-          <div class="hairline-t mt-1 pt-1 text-[11px] uppercase tracking-[0.16em] opacity-70">GH Stars · 目标</div>
-        </div>
-        <div class="text-center">
-          <div class="mb-3 mx-auto" style="height:32px">
-            <svg viewBox="0 0 24 24" class="w-7 h-7 mx-auto" fill="#002FA7"><path d="M5 3l10 9-10 9z"/></svg>
-          </div>
-          <div class="bar mx-auto" style="height:280px"></div>
-          <div class="mt-3 mono text-[32px] font-bold" style="color:#002FA7">80K</div>
-          <div class="hairline-t mt-1 pt-1 text-[11px] uppercase tracking-[0.16em] opacity-70">WAU · 目标</div>
-        </div>
-      </div>
-      <footer class="flex items-baseline justify-between mono text-[11px] uppercase tracking-[0.18em] opacity-60 hairline-t pt-3 mt-4">
-        <span>SOURCE — INTERNAL ANALYTICS / 2026-04</span>
-        <span>OPEN-DESIGN.STUDIO</span>
-        <span>№06 / 22</span>
-      </footer>
+      <div style="opacity:0.7">github.com/your-org/html-anything</div>
     </div>
   </section>
 
 </div>
+<script>
+  // ←/→ scroll between slides; current implementation just smooth-scrolls
+  const slides=document.querySelectorAll('.slide');
+  let i=0;
+  document.addEventListener('keydown', e=>{
+    if(e.key==='ArrowRight') i=Math.min(i+1, slides.length-1);
+    else if(e.key==='ArrowLeft') i=Math.max(i-1,0);
+    else return;
+    slides[i].scrollIntoView({behavior:'smooth', block:'center'});
+  });
+</script>
 </body>
 </html>
