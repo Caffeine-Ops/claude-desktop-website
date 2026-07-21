@@ -22,6 +22,7 @@ import { outputCards, outputsSection } from '@/lib/content'
 import { usePrefs } from '@/lib/prefs'
 import { Reveal, RevealGrid, RevealGridItem } from '../fx/Reveal'
 import { SectionHead } from '../SectionHead'
+import { OutputDetailModal } from './OutputDetailModal'
 
 function Counter() {
   const reduced = useReducedMotion()
@@ -49,27 +50,29 @@ function Counter() {
 
 const SPRING = { stiffness: 150, damping: 18 }
 
-function OutputCard({ card }: { card: (typeof outputCards)[number] }) {
+function OutputCard({ card, onOpen }: { card: (typeof outputCards)[number]; onOpen: () => void }) {
   const { t } = usePrefs()
   const reduced = useReducedMotion()
 
-  // 指针在卡内的归一化位置（0..1），中心 0.5——事件驱动，不用全局指针流
   const px = useMotionValue(0.5)
   const py = useMotionValue(0.5)
   const [lit, setLit] = useState(false)
+  const [touch, setTouch] = useState(false) // 触屏:无 hover,可点信号常驻
 
   const rotateX = useSpring(useTransform(py, (v) => (v - 0.5) * -8), SPRING)
   const rotateY = useSpring(useTransform(px, (v) => (v - 0.5) * 8), SPRING)
-  // 截图反向视差：与倾斜反号,幅度按图窗尺寸给像素值
   const shotX = useSpring(useTransform(px, (v) => (v - 0.5) * -12), SPRING)
   const shotY = useSpring(useTransform(py, (v) => (v - 0.5) * -10), SPRING)
-  // 光斑跟指针（模板字符串驱动 background，不参与 transform）
   const glow = useTransform([px, py], ([x, y]: number[]) =>
     `radial-gradient(280px circle at ${x * 100}% ${y * 100}%, rgba(255,255,255,.10), transparent 65%)`,
   )
 
   const onMove = (e: React.PointerEvent<HTMLDivElement>) => {
-    if (reduced || e.pointerType !== 'mouse') return
+    if (e.pointerType !== 'mouse') {
+      setTouch(true)
+      return
+    }
+    if (reduced) return
     const r = e.currentTarget.getBoundingClientRect()
     px.set((e.clientX - r.left) / r.width)
     py.set((e.clientY - r.top) / r.height)
@@ -81,19 +84,34 @@ function OutputCard({ card }: { card: (typeof outputCards)[number] }) {
     setLit(false)
   }
 
+  // 可点信号常显条件:触屏 或 开了减少动态效果
+  const cueAlways = touch || reduced
+
   return (
-    <div style={{ perspective: 900 }}>
+    <div style={{ perspective: 900 }} className="h-full">
       <motion.div
+        role="button"
+        tabIndex={0}
+        aria-label={t({ zh: '查看成品:', en: 'View output: ' }) + t(card.title)}
+        onClick={onOpen}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault()
+            onOpen()
+          }
+        }}
         onPointerMove={onMove}
         onPointerLeave={onLeave}
-        className="relative overflow-hidden rounded-2xl border border-edge bg-panel transition-[border-color] duration-300 hover:border-edge-brand"
+        className="group relative flex h-full cursor-pointer flex-col overflow-hidden rounded-2xl border border-edge bg-panel outline-none transition-[border-color] duration-300 hover:border-edge-brand focus-visible:border-edge-brand"
         style={{
           transformStyle: 'preserve-3d',
           rotateX: reduced ? 0 : rotateX,
           rotateY: reduced ? 0 : rotateY,
         }}
+        whileHover={reduced ? undefined : { y: -4 }}
+        transition={{ type: 'spring', stiffness: 200, damping: 22 }}
       >
-        {/* ── 迷你产品窗：三点栏 + 真实截图（chrome 与 Screens 区同语言）── */}
+        {/* 迷你产品窗 */}
         <div className="border-b border-edge">
           <div className="flex items-center gap-[6px] px-3.5 py-[9px]">
             <i className="size-2 rounded-full bg-white/13" />
@@ -101,7 +119,6 @@ function OutputCard({ card }: { card: (typeof outputCards)[number] }) {
             <i className="size-2 rounded-full bg-white/13" />
             <span className="ml-2 font-mono text-[10.5px] text-dim">{card.ext.slice(1)}</span>
           </div>
-          {/* 图窗 16:9 = 六张素材的统一裁剪比;换素材时保持这个比率,否则 object-cover 会裁字 */}
           <div className="relative aspect-video overflow-hidden">
             <motion.img
               src={card.shot}
@@ -118,13 +135,13 @@ function OutputCard({ card }: { card: (typeof outputCards)[number] }) {
             <span className="text-[19px]" aria-hidden="true">
               {card.icon}
             </span>
-            <h3 className="text-[16px] font-bold">{t(card.title)}</h3>
-            <span className="ml-auto font-mono text-[11.5px] text-brand">{card.ext}</span>
+            <h3 className="min-w-0 truncate text-[16px] font-bold">{t(card.title)}</h3>
+            <span className="ml-auto shrink-0 font-mono text-[11.5px] text-brand">{card.ext}</span>
           </div>
-          <p className="mt-[7px] text-[13px] leading-[1.65] text-dim">{t(card.body)}</p>
+          <p className="mt-[7px] line-clamp-2 min-h-[2lh] text-[13px] leading-[1.65] text-dim">{t(card.body)}</p>
         </div>
 
-        {/* 跟随指针的柔光；pointer-events-none 别挡住卡自己的指针事件 */}
+        {/* 跟随指针的柔光 */}
         {!reduced && (
           <motion.div
             aria-hidden="true"
@@ -132,6 +149,18 @@ function OutputCard({ card }: { card: (typeof outputCards)[number] }) {
             style={{ background: glow, opacity: lit ? 1 : 0 }}
           />
         )}
+
+        {/* 可点信号:「查看成品 →」标签。hover/聚焦淡入上移;触屏或 reduced 常显 */}
+        <span
+          aria-hidden="true"
+          className={`pointer-events-none absolute right-3.5 bottom-3.5 inline-flex items-center gap-1 rounded-full border border-edge-brand bg-panel/80 px-2.5 py-1 font-mono text-[11px] text-brand backdrop-blur transition-all duration-300 ${
+            cueAlways
+              ? 'translate-y-0 opacity-100'
+              : 'translate-y-1.5 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 group-focus-visible:translate-y-0 group-focus-visible:opacity-100'
+          }`}
+        >
+          {t({ zh: '查看成品', en: 'View file' })} →
+        </span>
       </motion.div>
     </div>
   )
@@ -139,6 +168,15 @@ function OutputCard({ card }: { card: (typeof outputCards)[number] }) {
 
 export function Outputs() {
   const { t } = usePrefs()
+  const [activeCard, setActiveCard] = useState<(typeof outputCards)[number] | null>(null)
+  const lastTrigger = useRef<HTMLElement | null>(null)
+
+  const close = () => {
+    setActiveCard(null)
+    // 焦点归还触发卡片
+    lastTrigger.current?.focus()
+    lastTrigger.current = null
+  }
 
   return (
     <section id="outputs" className="relative z-[1] mx-auto max-w-[1180px] px-8 py-[90px]">
@@ -152,10 +190,18 @@ export function Outputs() {
       <RevealGrid className="mt-11 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {outputCards.map((card) => (
           <RevealGridItem key={card.ext + card.title.en}>
-            <OutputCard card={card} />
+            <OutputCard
+              card={card}
+              onOpen={() => {
+                lastTrigger.current = document.activeElement as HTMLElement
+                setActiveCard(card)
+              }}
+            />
           </RevealGridItem>
         ))}
       </RevealGrid>
+
+      <OutputDetailModal card={activeCard} onClose={close} />
     </section>
   )
 }
