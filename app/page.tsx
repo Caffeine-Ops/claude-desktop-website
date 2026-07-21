@@ -4,6 +4,7 @@ import { Intro } from '@/components/fx/Intro'
 import { Dust, Glow, ProgressBar } from '@/components/fx/Ambient'
 import { Hero } from '@/components/sections/Hero'
 import { Terminal } from '@/components/Terminal'
+import { Reveal } from '@/components/fx/Reveal'
 import { Conveyor } from '@/components/sections/Conveyor'
 import { Outputs } from '@/components/sections/Outputs'
 import { Platform } from '@/components/sections/Platform'
@@ -42,8 +43,13 @@ export default function Home() {
       <Nav />
       <main>
         <Hero />
+        {/* 从第一屏滚下来看到的「下一页」。用全站统一的 Reveal（whileInView：
+            进入视口时淡入 + 轻微上滑，只播一次）给它一个入场——这就是首屏
+            滚到这里时的过渡动画。终端自带的逐字循环/鼠标倾斜互不干扰。 */}
         <section className="relative z-[1] mx-auto max-w-[1180px] px-8 py-24">
-          <Terminal />
+          <Reveal>
+            <Terminal />
+          </Reveal>
         </section>
         <Conveyor />
         <Outputs />

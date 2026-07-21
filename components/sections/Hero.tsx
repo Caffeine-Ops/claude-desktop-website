@@ -9,7 +9,7 @@
 */
 
 import { useEffect, useState } from 'react'
-import { motion, useReducedMotion } from 'motion/react'
+import { motion, useReducedMotion, useScroll, useTransform } from 'motion/react'
 import { download, hero, ui } from '@/lib/content'
 import { usePrefs } from '@/lib/prefs'
 import { useRelease } from '@/lib/useRelease'
@@ -78,6 +78,32 @@ export function Hero() {
 
   // 猜系统必须等到浏览器里才做：服务器上没有 navigator。
   useEffect(() => setPlatform(guessPlatform()), [])
+
+  /*
+    首屏退场动画（scroll-linked）：往下滚时文字栏在身后慢慢淡出 + 微微缩小
+    后退，页面照常滚（不加跑道、不钉背景）。
+    ─────────────────────────────────────────────────────────────
+    为什么吃 window 的像素 scrollY，而不用 useScroll({ target, offset })：
+    target 版的 scrollYProgress 在映射区间之外对 **opacity** 的钳制不可靠——
+    进度超过范围后 opacity 会「反弹」（实测：y/scale 正确停在钳制值，唯独
+    opacity 从 0 弹回，导致淡掉的内容滚出顶部时又鬼影般冒出来）。window 的
+    scrollY 是最朴素的像素值、绝对单调，配 useTransform 默认 clamp，「淡尽后
+    保持淡尽」稳如老狗。
+    淡出行程 = 半屏（vhPx*0.5）：滚过半屏文字就干净了，给下面终端揭示让位。
+    vhPx=0（挂载前）兜底成 1，避免 [0,0] 退化区间；那会儿也还没往下滚。
+  */
+  const [vhPx, setVhPx] = useState(0)
+  useEffect(() => {
+    const sync = () => setVhPx(window.innerHeight)
+    sync()
+    window.addEventListener('resize', sync)
+    return () => window.removeEventListener('resize', sync)
+  }, [])
+  const { scrollY } = useScroll()
+  const fade = Math.max(1, vhPx * 0.5)
+  const exitOpacity = useTransform(scrollY, [0, fade], [1, 0])
+  const exitScale = useTransform(scrollY, [0, fade], [1, 0.94])
+  const exitY = useTransform(scrollY, [0, fade], [0, -60])
 
   const lines = hero.headline[lang]
 
@@ -150,7 +176,12 @@ export function Hero() {
         }}
       />
 
-      <div className="relative z-[3] mx-auto grid min-h-screen max-w-[1180px] content-center px-8 pt-[120px] pb-10">
+      <motion.div
+        // 退场变换绑在文字栏这一层：子元素的入场/逐字动画照常在里面各跑各的，
+        // 父层的 opacity/scale/y 与它们叠加，进度 0 时是恒等变换、不影响入场。
+        style={reduced ? undefined : { opacity: exitOpacity, scale: exitScale, y: exitY }}
+        className="relative z-[3] mx-auto grid min-h-screen max-w-[1180px] content-center px-8 pt-[120px] pb-10"
+      >
         <div>
           <motion.span
             {...rise(0)}
@@ -264,7 +295,7 @@ export function Hero() {
             {t(hero.trust)}
           </motion.p>
         </div>
-      </div>
+      </motion.div>
 
       <button
         type="button"
