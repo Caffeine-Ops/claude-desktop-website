@@ -25,9 +25,10 @@ export type Copy = { zh: string; en: string }
 export const site = {
   name: 'Claude Desktop',
   repoUrl: 'https://github.com/Caffeine-Ops/claude-desktop',
-  releasesUrl: 'https://github.com/Caffeine-Ops/claude-desktop/releases',
+  /* 安装包与发布历史都在专门的发布仓库 claude-desktop-releases（源码仓库不放构建产物）。 */
+  releasesUrl: 'https://github.com/Caffeine-Ops/claude-desktop-releases/releases',
   /** 「永远是最新版」的兜底地址：GitHub API 挂了/被限流时，按钮退到这里，用户照样下得到。 */
-  latestReleaseUrl: 'https://github.com/Caffeine-Ops/claude-desktop/releases/latest',
+  latestReleaseUrl: 'https://github.com/Caffeine-Ops/claude-desktop-releases/releases/latest',
   issuesUrl: 'https://github.com/Caffeine-Ops/claude-desktop/issues',
   readmeUrl: 'https://github.com/Caffeine-Ops/claude-desktop#readme',
   /* 仓库根本没有 LICENSE 文件(点过去是 404),许可情况写在 README 的 License 一节里——指到那儿。 */
@@ -453,12 +454,12 @@ export const download = {
       req: { zh: 'x86_64 · AppImage', en: 'x86_64 · AppImage' },
     },
   } satisfies Record<PlatformKey, { name: Copy; req: Copy }>,
-  /* 目前 Releases 只产出 mac(arm64) 与 Windows 两种安装包（对照 v0.0.16 的实际资产）。
-     不摆 Intel/Linux 的空卡：给用户看点不了的按钮是骗人。
-     等 electron-builder 真的产出了对应资产，getPlatformCards() 会自动把卡片多出来。 */
+  /* 目前 Releases 产出 mac(arm64)、mac(x64)、Windows 三种安装包（对照 v0.0.37 的实际资产）。
+     Linux 还没打包，就不摆它的空卡：给用户看点不了的按钮是骗人。
+     等 electron-builder 真的产出了 Linux 资产，getPlatformCards() 会自动把卡片多出来。 */
   missingPlatforms: {
-    zh: 'Intel 芯片 Mac 与 Linux 的安装包还没有。有进展会先出现在 Releases 页面。',
-    en: 'There is no build for Intel Macs or Linux yet. When there is, it shows up on the Releases page first.',
+    zh: 'Linux 的安装包还没有。有进展会先出现在 Releases 页面。',
+    en: 'There is no build for Linux yet. When there is, it shows up on the Releases page first.',
   },
 }
 

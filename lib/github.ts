@@ -19,9 +19,12 @@
 
 import { site } from './content'
 
-const API = 'https://api.github.com/repos/Caffeine-Ops/claude-desktop/releases/latest'
+const API = 'https://api.github.com/repos/Caffeine-Ops/claude-desktop-releases/releases/latest'
 const TIMEOUT_MS = 5_000
-const CACHE_KEY = 'cd-latest-release'
+// 换过发布仓库（claude-desktop → claude-desktop-releases）后把 key 加了 -v2：
+// 老 key 存的是旧仓库 v0.0.16 的数据，先读缓存的逻辑会一直拿它挡住新版本。
+// 改名 = 所有旧缓存当场作废，每个访客下次打开都重新抓新仓库的最新版。
+const CACHE_KEY = 'cd-latest-release-v2'
 const CACHE_TTL_MS = 60 * 60 * 1000 // 1 小时
 
 /** GitHub 返回的一个安装包资产。字段名跟着 GitHub 的 JSON 走。 */
@@ -54,10 +57,11 @@ export type PlatformCard = {
 }
 
 /*
-  资产文件名匹配规则。以 v0.0.16 的真实产物对照过：
-    Claude-Desktop-0.0.16-arm64-mac.dmg      ← mac Apple 芯片
-    Claude.Desktop.Setup.0.0.16.exe          ← Windows
-  注意排除 .blockmap 和 latest*.yml——那是 electron 自动更新用的，不是给人下的。
+  资产文件名匹配规则。以 v0.0.37 的真实产物对照过（仓库 claude-desktop-releases）：
+    Claude-Desktop-0.0.37-arm64-mac.dmg      ← mac Apple 芯片
+    Claude-Desktop-0.0.37-x64-mac.dmg        ← mac Intel 芯片
+    Claude-Desktop-0.0.37-x64.exe            ← Windows
+  注意排除 .blockmap、*.zip 和 latest*.yml——那是 electron 自动更新用的，不是给人下的。
   Intel Mac / Linux 的规则先写着：哪天真打出这些包，官网自动多出卡片，不用改代码。
 
   这里只管「怎么认出安装包」，不管「界面上叫什么」——平台的显示名是文案，
