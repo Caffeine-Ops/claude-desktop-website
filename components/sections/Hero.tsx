@@ -10,7 +10,7 @@
 
 import { useEffect, useState } from 'react'
 import { motion, useReducedMotion, useScroll, useTransform } from 'motion/react'
-import { download, hero, ui } from '@/lib/content'
+import { hero, site } from '@/lib/content'
 import { usePrefs } from '@/lib/prefs'
 import { useRelease } from '@/lib/useRelease'
 import { getPlatformCards, guessPlatform, FALLBACK_HREF } from '@/lib/github'
@@ -111,9 +111,9 @@ export function Hero() {
   const cards = getPlatformCards(state.release)
   const match = platform ? cards.find((c) => c.key === platform) : undefined
   const primaryHref = match?.href ?? FALLBACK_HREF
-  const primaryLabel = match
-    ? `${t(ui.downloadFor)} ${t(download.platforms[match.key].name)}`
-    : t({ zh: '下载最新版', en: 'Download the latest' })
+  // 主按钮固定带产品名（下载 Cowork）。平台仍自动探测，只是不再拼进按钮文字，
+  // 而是用于 primaryHref 选对安装包；版本/体积由下方信任条呈现。
+  const primaryLabel = t({ zh: `下载 ${site.name}`, en: `Download ${site.name}` })
 
   /* 非标题元素的错峰入场（标题的逐字动画单独编排） */
   const rise = (order: number) =>
