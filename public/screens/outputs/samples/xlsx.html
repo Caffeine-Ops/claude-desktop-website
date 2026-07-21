@@ -1,44 +1,175 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="zh-CN">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Digits Fintech Swiss Example</title>
-  <style>
-    :root { --paper:#f2f2ed; --ink:#0a0a0a; --lime:#e2ff41; --line:rgba(10,10,10,.12); }
-    * { box-sizing: border-box; } body { margin:0; background:var(--paper); color:var(--ink); font-family:Inter,Arial,sans-serif; min-height:100vh; }
-    .deck { width:min(1400px,96vw); min-height:860px; margin:24px auto; border:1px solid var(--line); background:var(--paper); position:relative; overflow:hidden; }
-    .toolbar { display:flex; justify-content:space-between; align-items:center; padding:14px 20px; border-bottom:1px solid var(--line); font-size:12px; letter-spacing:.16em; text-transform:uppercase; }
-    .btns { display:flex; gap:8px; } button { border:1px solid var(--line); background:transparent; height:30px; padding:0 12px; border-radius:999px; cursor:pointer; }
-    .slides { position:relative; height:760px; } .slide { position:absolute; inset:0; opacity:0; transform:translateX(20px); transition:.35s ease; pointer-events:none; padding:32px; } .slide.active { opacity:1; transform:none; pointer-events:auto; }
-    .s1 { display:grid; grid-template-columns:120px 1fr 320px; grid-template-rows:1fr 180px; gap:14px; } .dark { background:radial-gradient(circle at 50% 38%, #202020 0%, #000 65%); position:relative; } .meta { position:absolute; left:14px; bottom:14px; font-size:10px; letter-spacing:.18em; text-transform:uppercase; color:rgba(255,255,255,.75); } .lime { background:var(--lime); } .headline { display:flex; align-items:center; padding:0 30px; background:var(--lime); font-size:56px; font-weight:900; line-height:1.02; letter-spacing:-.03em; text-transform:uppercase; } .copyright { border:1px solid var(--line); display:flex; align-items:flex-end; padding:18px 20px; font-size:12px; letter-spacing:.06em; }
-    .s2 { display:grid; grid-template-columns:160px 1fr 1fr; gap:0; height:100%; } .rail { background:var(--lime); padding:24px 18px; display:flex; flex-direction:column; justify-content:space-between; } .rail .big { font-size:56px; font-weight:900; letter-spacing:-.04em; } .rail .lbl { font-size:10px; letter-spacing:.16em; text-transform:uppercase; line-height:1.5; } .main { border-right:1px solid var(--line); padding:28px 34px; } .kicker { font-size:11px; letter-spacing:.22em; text-transform:uppercase; opacity:.65; } .title { font-size:86px; line-height:.92; letter-spacing:-.04em; text-transform:uppercase; margin:16px 0 18px; } .body { font-size:20px; line-height:1.42; max-width:560px; opacity:.85; } .cards { padding:24px 32px 36px 0; display:flex; flex-direction:column; gap:12px; } .row { display:flex; gap:12px; } .card { flex:1; border:1px solid var(--line); background:#fff; min-height:120px; padding:16px 18px; display:flex; flex-direction:column; justify-content:space-between; } .hero { background:var(--lime); min-height:190px; } .num { font-size:42px; font-weight:900; letter-spacing:-.03em; } .hero .num { font-size:72px; } .tag { font-size:10px; letter-spacing:.14em; text-transform:uppercase; opacity:.75; }
-    .s3 { display:grid; grid-template-columns:1fr 320px; grid-template-rows:1fr 1fr; gap:14px; height:100%; } .next { background:var(--lime); padding:30px 36px; display:flex; flex-direction:column; justify-content:center; gap:10px; } .next .sub { font-size:12px; letter-spacing:.2em; text-transform:uppercase; } .next .mega { font-size:122px; line-height:.9; font-weight:900; letter-spacing:-.04em; text-transform:uppercase; } .art { background:var(--ink); display:grid; grid-template-columns:repeat(5,1fr); grid-template-rows:repeat(5,1fr); gap:6px; padding:18px; } .art span { background:var(--lime); } .art span.off { background:transparent; } .cols { grid-column:1/-1; display:grid; grid-template-columns:1fr 1fr 1fr; gap:14px; } .col { border:1px solid var(--line); background:#fafaf7; padding:22px 24px; display:flex; flex-direction:column; gap:12px; } .col.dark { background:var(--ink); color:#fff; border-color:#222; } .col h3 { margin:0; font-size:26px; line-height:1.05; text-transform:uppercase; } .col p { margin:0; font-size:16px; line-height:1.4; opacity:.9; flex:1; }
-    .dots { position:absolute; left:50%; bottom:14px; transform:translateX(-50%); display:flex; gap:10px; } .dot { width:10px; height:10px; border-radius:50%; border:1px solid var(--ink); background:transparent; } .dot.active { background:var(--ink); transform:scale(1.25); } .hover { transition:transform .2s ease; } .hover:hover { transform:translateY(-2px); }
-  </style>
+<meta charset="UTF-8" />
+<title>数据周报 · 2025 年 5 月</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+SC:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  body { background:#fafaf7; font-family:'Inter','Noto Sans SC',sans-serif; color:#15140f; -webkit-font-smoothing:antialiased; }
+  .num { font-family:'Inter',sans-serif; font-feature-settings:'tnum' on; letter-spacing:-0.02em; }
+  .section h2 { font-size:11px; font-weight:700; letter-spacing:0.18em; text-transform:uppercase; color:#5a564e; margin:0 0 16px; }
+  table { border-collapse:collapse; width:100%; font-size:13px; }
+  thead th { background:#f4f1ec; text-align:left; padding:10px 14px; font-size:11px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:#5a564e; position:sticky; top:0; }
+  tbody td { padding:10px 14px; border-bottom:1px solid #e7e5e0; }
+  tbody tr:nth-child(even) { background:#fbfaf7; }
+  tbody tr:hover { background:#f4f1ec; }
+  .delta-up { color:#1f7a3a; font-weight:600; }
+  .delta-down { color:#9c2a25; font-weight:600; }
+</style>
 </head>
 <body>
-  <main class="deck">
-    <header class="toolbar"><span>Digits / Strategy Deck</span><div class="btns"><button id="prevBtn" type="button">Prev</button><button id="nextBtn" type="button">Next</button></div></header>
-    <section class="slides">
-      <article class="slide s1 active" data-slide="0"><div class="dark"><div class="meta">Portrait / B&W</div></div><div class="lime"></div><div class="dark"><div class="meta">Portrait / B&W</div></div><div class="headline">The Future of Data-Driven Finance</div><div class="copyright">©2026 DIGITS · All rights reserved.</div></article>
-      <article class="slide s2" data-slide="1"><aside class="rail"><div class="big">+98.7%</div><div class="lbl">Market<br />penetration</div></aside><section class="main"><div class="kicker">Operating readout</div><div class="title">Digits in Numbers</div><p class="body">With 10M+ users and 75M analyzed datapoints, the platform reshapes real-time financial decision loops.</p></section><section class="cards"><div class="row"><div class="card hover"><div class="num">12.8M</div><div class="tag">Transactions processed</div></div><div class="card hover"><div class="num">41M</div><div class="tag">Total revenue impacted ($)</div></div></div><div class="row"><div class="card hover"><div class="num">15.4M</div><div class="tag">Users engaged</div></div></div><div class="row"><div class="card hero hover"><div class="tag">Data points analyzed</div><div class="num">85.6M</div></div></div></section></article>
-      <article class="slide s3" data-slide="2"><section class="next"><div class="sub">Take three things away</div><div class="mega">Next Steps</div></section><section class="art"><span class="off"></span><span></span><span class="off"></span><span></span><span class="off"></span><span></span><span class="off"></span><span></span><span class="off"></span><span></span><span class="off"></span><span></span><span class="off"></span><span></span><span class="off"></span><span></span><span class="off"></span><span></span><span class="off"></span><span></span><span class="off"></span><span></span><span class="off"></span><span></span><span class="off"></span></section><section class="cols"><article class="col hover"><div class="tag">01 · Today</div><h3>Pilot one workflow</h3><p>Wire a single weekly decision through the platform and benchmark against baseline.</p><div class="tag">= 2 weeks</div></article><article class="col hover"><div class="tag">02 · Next month</div><h3>Scale the wedge</h3><p>Expand into adjacent workflows and package reusable instrumentation patterns.</p><div class="tag">= 6 weeks</div></article><article class="col dark hover"><div class="tag">03 · This quarter</div><h3>Make it the default</h3><p>Move budget from legacy tooling and adopt this stack as the default operating layer.</p><div class="tag">→</div></article></section></article>
-    </section>
-    <nav class="dots" aria-label="Slide navigation"><button class="dot active" type="button" data-dot="0"></button><button class="dot" type="button" data-dot="1"></button><button class="dot" type="button" data-dot="2"></button></nav>
-  </main>
-  <script>
-    (function () {
-      const slides = Array.from(document.querySelectorAll(".slide"));
-      const dots = Array.from(document.querySelectorAll(".dot"));
-      let idx = 0;
-      const max = slides.length - 1;
-      function show(next) { idx = Math.max(0, Math.min(max, next)); slides.forEach((el, i) => el.classList.toggle("active", i === idx)); dots.forEach((el, i) => el.classList.toggle("active", i === idx)); }
-      document.getElementById("prevBtn").addEventListener("click", () => show(idx - 1));
-      document.getElementById("nextBtn").addEventListener("click", () => show(idx + 1));
-      dots.forEach((dot, i) => dot.addEventListener("click", () => show(i)));
-      document.addEventListener("keydown", (event) => { if (event.key === "ArrowLeft") show(idx - 1); if (event.key === "ArrowRight") show(idx + 1); });
-    })();
-  </script>
+
+<div class="max-w-6xl mx-auto px-8 py-12">
+
+  <header class="pb-7 mb-8 border-b border-[#e7e5e0]">
+    <div class="flex items-baseline justify-between flex-wrap gap-3">
+      <div>
+        <div class="text-[11px] font-semibold tracking-[0.22em] uppercase text-[#c96442] mb-2">Weekly Report · Week 19</div>
+        <h1 class="text-4xl font-extrabold tracking-tight">数据周报 · 2025 年 5 月</h1>
+      </div>
+      <div class="text-xs text-[#5a564e] text-right">
+        <div>来源: <span class="font-semibold text-[#15140f]">内部 BI</span></div>
+        <div>截止 <span class="font-mono text-[#15140f]">2025-05-11</span></div>
+      </div>
+    </div>
+    <p class="mt-3 text-sm text-[#5a564e] max-w-2xl leading-relaxed">本周关键指标全部向好。MAU 同比增长 184%, 付费转化与流失双双改善。</p>
+  </header>
+
+  <section class="section mb-10">
+    <h2>核心指标 · KPI</h2>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div class="rounded-2xl bg-white p-5 border border-[#e7e5e0] shadow-[0_1px_0_#f0ece5]">
+        <div class="text-[11px] font-semibold uppercase tracking-wider text-[#5a564e] mb-2">月活用户 · MAU</div>
+        <div class="text-3xl font-extrabold num">23,950</div>
+        <div class="text-xs mt-2"><span class="delta-up">▲ 16.0%</span> <span class="text-[#5a564e]">vs 上月</span></div>
+        <div class="mt-3" style="position:relative;height:40px"><canvas id="kpi1"></canvas></div>
+      </div>
+      <div class="rounded-2xl bg-white p-5 border border-[#e7e5e0] shadow-[0_1px_0_#f0ece5]">
+        <div class="text-[11px] font-semibold uppercase tracking-wider text-[#5a564e] mb-2">新增 · Signups</div>
+        <div class="text-3xl font-extrabold num">4,250</div>
+        <div class="text-xs mt-2"><span class="delta-up">▲ 15.5%</span> <span class="text-[#5a564e]">vs 上月</span></div>
+        <div class="mt-3" style="position:relative;height:40px"><canvas id="kpi2"></canvas></div>
+      </div>
+      <div class="rounded-2xl bg-white p-5 border border-[#e7e5e0] shadow-[0_1px_0_#f0ece5]">
+        <div class="text-[11px] font-semibold uppercase tracking-wider text-[#5a564e] mb-2">付费 · Paying</div>
+        <div class="text-3xl font-extrabold num">2,418 <span class="text-base text-[#5a564e]">/ 10.1%</span></div>
+        <div class="text-xs mt-2"><span class="delta-up">▲ 18.5%</span> <span class="text-[#5a564e]">vs 上月</span></div>
+        <div class="mt-3" style="position:relative;height:40px"><canvas id="kpi3"></canvas></div>
+      </div>
+      <div class="rounded-2xl bg-white p-5 border border-[#e7e5e0] shadow-[0_1px_0_#f0ece5]">
+        <div class="text-[11px] font-semibold uppercase tracking-wider text-[#5a564e] mb-2">流失 · Churn</div>
+        <div class="text-3xl font-extrabold num">1.8%</div>
+        <div class="text-xs mt-2"><span class="delta-up">▼ 0.1pp</span> <span class="text-[#5a564e]">vs 上月</span></div>
+        <div class="mt-3" style="position:relative;height:40px"><canvas id="kpi4"></canvas></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section mb-10">
+    <h2>趋势 · Growth</h2>
+    <div class="grid lg:grid-cols-3 gap-4">
+      <div class="lg:col-span-2 rounded-2xl bg-white p-5 border border-[#e7e5e0]">
+        <div class="text-sm font-semibold mb-3">MAU & 付费用户增长</div>
+        <div style="position:relative;height:260px"><canvas id="chart-main"></canvas></div>
+      </div>
+      <div class="rounded-2xl bg-white p-5 border border-[#e7e5e0]">
+        <div class="text-sm font-semibold mb-3">流失率 · 月度</div>
+        <div style="position:relative;height:260px"><canvas id="chart-churn"></canvas></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section mb-10">
+    <h2>明细 · Raw data</h2>
+    <div class="rounded-2xl border border-[#e7e5e0] overflow-hidden bg-white">
+      <table>
+        <thead><tr><th>月份</th><th class="text-right">MAU</th><th class="text-right">新增</th><th class="text-right">付费</th><th class="text-right">流失率</th></tr></thead>
+        <tbody id="rows"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="section mb-10">
+    <h2>洞察 · Insights</h2>
+    <div class="grid md:grid-cols-3 gap-4">
+      <div class="rounded-2xl bg-white p-5 border border-[#e7e5e0]">
+        <div class="text-3xl mb-2">📈</div>
+        <div class="font-semibold mb-1.5">MAU 半年增长 184%</div>
+        <div class="text-sm text-[#5a564e] leading-relaxed">主要来自小红书自然流量, 单条爆款笔记带来 8k+ 新增。</div>
+      </div>
+      <div class="rounded-2xl bg-white p-5 border border-[#e7e5e0]">
+        <div class="text-3xl mb-2">💰</div>
+        <div class="font-semibold mb-1.5">付费转化 7.3% → 10.1%</div>
+        <div class="text-sm text-[#5a564e] leading-relaxed">团队 Pro 套餐贡献最大。新引导流程 + 30 天试用是关键。</div>
+      </div>
+      <div class="rounded-2xl bg-white p-5 border border-[#e7e5e0]">
+        <div class="text-3xl mb-2">🎯</div>
+        <div class="font-semibold mb-1.5">月流失 3.4% → 1.8%</div>
+        <div class="text-sm text-[#5a564e] leading-relaxed">AI 起草功能上线后, 沉默用户激活率翻倍。</div>
+      </div>
+    </div>
+  </section>
+
+  <details class="mt-12 rounded-xl border border-[#e7e5e0] bg-white p-5">
+    <summary class="cursor-pointer text-sm font-semibold text-[#5a564e] flex items-center justify-between">
+      方法论 · Methodology <span class="text-[#5a564e]">▾</span>
+    </summary>
+    <div class="text-xs text-[#5a564e] leading-relaxed mt-3 max-w-3xl">
+      MAU = 30 天内至少打开一次产品的去重用户。付费 = 当月有效付费订阅。流失率 = 上月付费但本月未续的比例。数据来自内部 BI, 已剔除测试账号与 bot。
+    </div>
+  </details>
+
+</div>
+
+<script>
+const data = [
+  {month:'2024-09', mau:8420,  signups:1240, paying:612,  churn:0.034},
+  {month:'2024-10', mau:9180,  signups:1380, paying:701,  churn:0.031},
+  {month:'2024-11', mau:10240, signups:1610, paying:840,  churn:0.028},
+  {month:'2024-12', mau:11800, signups:1890, paying:1012, churn:0.025},
+  {month:'2025-01', mau:13620, signups:2240, paying:1218, churn:0.023},
+  {month:'2025-02', mau:15440, signups:2680, paying:1455, churn:0.021},
+  {month:'2025-03', mau:17890, signups:3120, paying:1722, churn:0.020},
+  {month:'2025-04', mau:20640, signups:3680, paying:2041, churn:0.019},
+  {month:'2025-05', mau:23950, signups:4250, paying:2418, churn:0.018},
+];
+
+document.getElementById('rows').innerHTML = data.map(d => `
+  <tr>
+    <td class="font-mono text-xs">${d.month}</td>
+    <td class="text-right num">${d.mau.toLocaleString()}</td>
+    <td class="text-right num">${d.signups.toLocaleString()}</td>
+    <td class="text-right num">${d.paying.toLocaleString()}</td>
+    <td class="text-right num">${(d.churn*100).toFixed(1)}%</td>
+  </tr>
+`).join('');
+
+const sparkOpts = { responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false},tooltip:{enabled:false}}, scales:{x:{display:false},y:{display:false}}, elements:{point:{radius:0},line:{tension:0.4,borderWidth:2}} };
+new Chart(document.getElementById('kpi1'), { type:'line', data:{labels:data.map(d=>d.month), datasets:[{data:data.map(d=>d.mau), borderColor:'#c96442', fill:false}]}, options:sparkOpts });
+new Chart(document.getElementById('kpi2'), { type:'line', data:{labels:data.map(d=>d.month), datasets:[{data:data.map(d=>d.signups), borderColor:'#e9b94a', fill:false}]}, options:sparkOpts });
+new Chart(document.getElementById('kpi3'), { type:'line', data:{labels:data.map(d=>d.month), datasets:[{data:data.map(d=>d.paying), borderColor:'#1f7a3a', fill:false}]}, options:sparkOpts });
+new Chart(document.getElementById('kpi4'), { type:'line', data:{labels:data.map(d=>d.month), datasets:[{data:data.map(d=>d.churn*100), borderColor:'#2348b8', fill:false}]}, options:sparkOpts });
+
+new Chart(document.getElementById('chart-main'), {
+  type:'bar',
+  data:{
+    labels:data.map(d=>d.month),
+    datasets:[
+      {label:'MAU', data:data.map(d=>d.mau), backgroundColor:'rgba(201,100,66,0.18)', borderColor:'#c96442', borderWidth:1.5, borderRadius:4, yAxisID:'y'},
+      {label:'付费', type:'line', data:data.map(d=>d.paying), borderColor:'#1f7a3a', backgroundColor:'#1f7a3a', tension:0.35, borderWidth:2.5, pointRadius:3, yAxisID:'y'},
+    ]
+  },
+  options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{position:'bottom',labels:{usePointStyle:true,boxWidth:8}}}, scales:{x:{grid:{display:false}},y:{grid:{color:'#f0ece5'}, ticks:{callback:v=>v.toLocaleString()}}} }
+});
+
+new Chart(document.getElementById('chart-churn'), {
+  type:'line',
+  data:{ labels:data.map(d=>d.month), datasets:[{label:'流失率 %', data:data.map(d=>(d.churn*100).toFixed(2)), borderColor:'#9c2a25', backgroundColor:'rgba(156,42,37,0.08)', tension:0.4, borderWidth:2.5, fill:true, pointRadius:3}] },
+  options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}}, scales:{x:{grid:{display:false}},y:{grid:{color:'#f0ece5'}, ticks:{callback:v=>v+'%'}, beginAtZero:true}} }
+});
+</script>
+
 </body>
 </html>
