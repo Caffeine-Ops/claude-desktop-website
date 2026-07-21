@@ -327,8 +327,8 @@ export const screens = {
   eyebrow: { zh: '真实界面', en: 'Real screens' },
   title: { zh: '不是效果图，是真实操作。', en: 'Not mockups — real interaction.' },
   note: {
-    zh: '截自本机运行的开发版 · 同一个智能助手做四件真实活，悬停右侧场景切换录屏',
-    en: 'Captured from a local dev build · one assistant, four real jobs — hover a scene to switch the recording',
+    zh: '取自产品真实运行的操作录屏 · 点主窗口放大观看，悬停右侧切换场景',
+    en: 'Real operating footage from the product · click the main window to watch full-size, hover a scene to switch',
   },
   /* 第一张当主图铺全宽,其余三张一排。
      src 是封面截图(2 倍图),video 是同场景的真实操作录屏(CDP 定时截图逐帧合成,~15s 循环)。
