@@ -69,10 +69,10 @@ export const hero = {
   },
   /** 标题里要染成品牌渐变的那一行（索引）。强调落在「产出」上，不是落在「AI」上。 */
   accentLine: 1,
-  /* 「智能助手」「工作画布」是产品里两个面的真实叫法(左侧栏原文),别改成别的词。 */
+  /* 「智能助手」「插件」是产品里两个面的真实叫法(左侧栏原文),别改成别的词。 */
   subline: {
-    zh: '桌面端的 Claude。智能助手加工作画布，139 项内置创作技能和你自己的知识库——聊天，然后收文件。',
-    en: 'Claude on your desktop. An assistant plus a work canvas, 139 built-in creation skills, and a knowledge base of your own. Chat, then collect the files.',
+    zh: '桌面端的 Claude。智能助手加插件，139 项内置创作技能和你自己的知识库——聊天，然后收文件。',
+    en: 'Claude on your desktop. An assistant plus plugins, 139 built-in creation skills, and a knowledge base of your own. Chat, then collect the files.',
   },
   // 这个按钮也指向「产出」那一段，所以用同一个词（见 nav 的注释第 2 条）。
   secondaryCta: { zh: '看看能产出什么', en: 'See the output' },
@@ -283,14 +283,14 @@ export const platform = {
   // 和导航项「功能」同名（一物一名，见 nav 注释第 2 条）。
   eyebrow: { zh: '功能', en: 'Features' },
   title: { zh: '撑起这些产出的四样东西。', en: 'The four things holding it all up.' },
-  /* 四个块全部对着产品真实界面写:名字用产品里的原文(工作画布 / 知识库…),
+  /* 四个块全部对着产品真实界面写:名字用产品里的原文(插件 / 知识库…),
      列举的子能力(原型/幻灯片/HyperFrames…、文档识别/图片识别/分类管理)都是界面上真实存在的入口。 */
   blocks: [
     {
-      name: { zh: '工作画布', en: 'Work canvas' },
+      name: { zh: '插件', en: 'Plugins' },
       body: {
-        zh: '说出需求，画布直接产出原型、幻灯片、图片、视频、动效和音频，还有几百个社区模板和插件市场可以直接翻用。不用在聊天窗和设计软件之间来回倒腾。',
-        en: 'Describe what you want and the canvas produces prototypes, slides, images, video, motion frames, and audio — with hundreds of community templates and a plugin marketplace to draw from. No shuttling between a chat window and a design tool.',
+        zh: '插件市场装新本事，几百个社区插件和模板点一下就用上——出原型、幻灯片、图片、视频这些活，能力都能往上加，不是出厂就封死。',
+        en: 'Install new abilities from the plugin marketplace — hundreds of community plugins and templates, one click away, extending what it can make from prototypes and slides to images and video. The capability set grows; it is not sealed at the factory.',
       },
     },
     {
@@ -308,10 +308,10 @@ export const platform = {
       },
     },
     {
-      name: { zh: '插件与连接器', en: 'Plugins & connectors' },
+      name: { zh: '连接器', en: 'Connectors' },
       body: {
-        zh: '插件市场装新本事，外部 MCP 接你在用的系统，连接器还能把这里的项目喂给 Claude Code、Cursor 这类编码助手。能力是可以往上加的，不是出厂就封死。',
-        en: 'Install new abilities from the plugin marketplace, hook up your systems over MCP, and connectors feed your projects to coding assistants like Claude Code and Cursor. The capability set grows; it is not sealed at the factory.',
+        zh: '外部 MCP 把你在用的系统接进来，连接器还能把这里的项目喂给 Claude Code、Cursor 这类编码助手。让它接上你真实的工作流，而不是孤零零一个窗口。',
+        en: 'Hook up your systems over MCP, and connectors feed your projects to coding assistants like Claude Code and Cursor. It plugs into your real workflow instead of standing alone in one window.',
       },
     },
   ],
