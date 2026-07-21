@@ -9,7 +9,7 @@
   - 减少动态效果:去掉弹出缩放/淡入,直接显隐。
 */
 
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
 import { outputCards } from '@/lib/content'
 import { usePrefs } from '@/lib/prefs'
@@ -20,6 +20,10 @@ export function OutputDetailModal({ card, onClose }: { card: OutputCardT | null;
   const { t } = usePrefs()
   const reduced = useReducedMotion()
   const closeRef = useRef<HTMLButtonElement>(null)
+  /* iframe 成品页加载完成前先盖一层深色占位,加载好再淡入——
+     否则打开瞬间会露出 iframe 的白底,闪一道白屏。换成品(card.sample 变)就重置。 */
+  const [loaded, setLoaded] = useState(false)
+  useEffect(() => setLoaded(false), [card?.sample])
 
   // Esc 关闭 + 锁滚动 + 打开时焦点进关闭按钮
   useEffect(() => {
@@ -94,18 +98,31 @@ export function OutputDetailModal({ card, onClose }: { card: OutputCardT | null;
             </div>
 
             {/* 成品内容:html → iframe;video → 播放器 */}
-            <div className="min-h-0 flex-1 overflow-auto bg-black/20">
+            <div className="relative min-h-0 flex-1 overflow-auto bg-panel">
               {card.sampleKind === 'html' ? (
-                <iframe
-                  src={card.sample}
-                  title={t(card.shotAlt)}
-                  loading="lazy"
-                  /* 只给 allow-scripts、不给 allow-same-origin:成品页运行时从 CDN 拉第三方 JS
-                     (Tailwind Play / Google Fonts),两者同开会让 iframe 拿到「与父站同源」的特权,
-                     那段不受控 CDN 脚本就能触到主站 DOM。隔离源下 Tailwind CDN 仍能正常渲染。 */
-                  sandbox="allow-scripts"
-                  className="h-[78vh] w-full border-0 bg-white"
-                />
+                <>
+                  {/* 加载中占位:深色底 + 提示,盖住 iframe 未就绪时的白底 */}
+                  {!loaded && (
+                    <div
+                      className="absolute inset-0 z-[1] grid place-items-center bg-panel font-mono text-[12px] text-dim"
+                      aria-hidden="true"
+                    >
+                      {t({ zh: '成品加载中…', en: 'Loading…' })}
+                    </div>
+                  )}
+                  <iframe
+                    src={card.sample}
+                    title={t(card.shotAlt)}
+                    onLoad={() => setLoaded(true)}
+                    /* 只给 allow-scripts、不给 allow-same-origin:成品页运行时从 CDN 拉第三方 JS
+                       (Tailwind Play / Google Fonts),两者同开会让 iframe 拿到「与父站同源」的特权,
+                       那段不受控 CDN 脚本就能触到主站 DOM。隔离源下 Tailwind CDN 仍能正常渲染。 */
+                    sandbox="allow-scripts"
+                    className={`h-[78vh] w-full border-0 bg-white transition-opacity duration-300 ${
+                      loaded ? 'opacity-100' : 'opacity-0'
+                    }`}
+                  />
+                </>
               ) : (
                 <video
                   src={card.sample}
