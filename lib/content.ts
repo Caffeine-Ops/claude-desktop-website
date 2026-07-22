@@ -154,25 +154,26 @@ export const terminal = {
   ],
 }
 
-/** 文件传送带（滚动驱动）。A 带是产出文件，B 带是真实技能名（不翻译）。 */
+/** 文件传送带（滚动驱动）。上带 A = 功能名称，下带 B = 对应文件后缀（都取自 filesBelt）。 */
 export const conveyor = {
   title: { zh: '说一句，收一堆。', en: 'Say one thing. Collect a pile.' },
-  /* 这句要讲产品,不讲网页效果(原来写的是"传送带跟着你的滚动走"——那是在介绍动画,不是产品)。
-     现在解释两条带子各是什么:上带 = 交付的文件,下带 = 干活的技能,且都真实存在。 */
+  /* 这句要讲产品,不讲网页效果。上带 = 它能交出的成品(功能名称),
+     下带 = 对应的文件格式(后缀),两条对着看就是「干什么 → 出什么文件」。 */
   hint: {
-    zh: '上面一条是它交回来的文件，下面一条是干活的技能——每个名字都真实装在产品里。',
-    en: 'The top belt is the files it hands back; the bottom, the skills doing the work — every name ships in the product.',
+    zh: '上面一条是它能交出的成品，下面一条是对应的文件格式——聊完就有文件落到你手里。',
+    en: 'The top belt is what it can hand back; the bottom, the matching file formats — finish the chat and the files land on your side.',
   },
+  /* 每张卡两层信息(避免太空):name = 成品名(上带用)，desc = 一句能力点(上带用)，
+     ext = 后缀 + sample = 文件名例子(下带用)。sample 沿用早先那批有画面感的真实文件名。 */
   filesBelt: [
-    { icon: 'pptx', ext: '.pptx', name: { zh: 'Q3-复盘.pptx', en: 'Q3-review.pptx' } },
-    { icon: 'xlsx', ext: '.xlsx', name: { zh: '年度预算表.xlsx', en: 'annual-budget.xlsx' } },
-    { icon: 'docx', ext: '.docx', name: { zh: '投标方案.docx', en: 'proposal.docx' } },
-    { icon: 'pdf', ext: '.pdf', name: { zh: '简历-2026.pdf', en: 'resume-2026.pdf' } },
-    { icon: 'png', ext: '.png', name: { zh: '发布海报.png', en: 'launch-poster.png' } },
-    { icon: 'mp4', ext: '.mp4', name: { zh: '产品演示.mp4', en: 'product-demo.mp4' } },
-    { icon: 'html', ext: '.html', name: { zh: '数据看板.html', en: 'dashboard.html' } },
+    { icon: 'pptx', ext: '.pptx', name: { zh: '演示文稿', en: 'Slides' }, desc: { zh: '逐页手绘', en: 'page by page' }, sample: { zh: 'Q3-复盘', en: 'Q3-review' } },
+    { icon: 'xlsx', ext: '.xlsx', name: { zh: '电子表格', en: 'Spreadsheet' }, desc: { zh: '公式自动', en: 'auto formulas' }, sample: { zh: '年度预算表', en: 'annual-budget' } },
+    { icon: 'docx', ext: '.docx', name: { zh: '文档方案', en: 'Document' }, desc: { zh: '分段成稿', en: 'sectioned' }, sample: { zh: '投标方案', en: 'proposal' } },
+    { icon: 'pdf', ext: '.pdf', name: { zh: 'PDF 文件', en: 'PDF' }, desc: { zh: '一键导出', en: 'one-click' }, sample: { zh: '简历-2026', en: 'resume-2026' } },
+    { icon: 'png', ext: '.png', name: { zh: '图片海报', en: 'Poster' }, desc: { zh: '出图即用', en: 'ready to use' }, sample: { zh: '发布海报', en: 'launch-poster' } },
+    { icon: 'mp4', ext: '.mp4', name: { zh: '演示视频', en: 'Video' }, desc: { zh: '脚本成片', en: 'scripted' }, sample: { zh: '产品演示', en: 'product-demo' } },
+    { icon: 'html', ext: '.html', name: { zh: '网页看板', en: 'Dashboard' }, desc: { zh: '实时渲染', en: 'live render' }, sample: { zh: '数据看板', en: 'dashboard' } },
   ],
-  skillsBelt: ['ppt-master', 'spreadsheets', 'proposal-writer', 'imagegen', 'sora', 'd3-visualization', 'resume-modern', 'poster-hero', 'remotion'],
 }
 
 /*

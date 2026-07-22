@@ -39,9 +39,12 @@ export function Conveyor() {
   const chipCls =
     'flex items-center gap-2.5 rounded-xl border border-edge bg-panel px-5 py-[13px] text-[13px] whitespace-nowrap text-dim transition-colors hover:border-edge-brand'
 
-  /* 每条带子内容渲染两遍（A+A）：位移到 -18% 时右侧不露底。 */
-  const filesRow = [...conveyor.filesBelt, ...conveyor.filesBelt]
-  const skillsRow = [...conveyor.skillsBelt, ...conveyor.skillsBelt]
+  /* 内容重复铺满：字变短后单份不够宽，位移时右侧会露白，所以整份重复 REPEAT 遍，
+     保证滚到任何位置都撑满视口、无空隙。上带 = 功能名称，下带 = 对应后缀，同取自 filesBelt。
+     （宽屏若仍偶见缝隙，调大 REPEAT 即可。） */
+  const REPEAT = 5
+  const filesRow = Array.from({ length: REPEAT }, () => conveyor.filesBelt).flat()
+  const extRow = filesRow
 
   return (
     <section ref={ref} className="relative z-[1] overflow-hidden py-[110px] pb-[30px]">
@@ -56,7 +59,9 @@ export function Conveyor() {
         <motion.div style={still ? undefined : { x: xA }} className="flex w-max gap-3.5 py-2 font-mono will-change-transform">
           {filesRow.map((f, i) => (
             <span key={i} className={chipCls} style={{ boxShadow: 'var(--shadow-card)' }}>
-              <FileIcon name={f.icon} /> <b className="font-medium text-brand">{f.ext}</b> {t(f.name)}
+              <FileIcon name={f.icon} />
+              <b className="font-medium text-ink">{t(f.name)}</b>
+              <span className="text-[11.5px] text-dim">{t(f.desc)}</span>
             </span>
           ))}
         </motion.div>
@@ -64,9 +69,10 @@ export function Conveyor() {
 
       <motion.div style={still ? undefined : { skewX: skewNeg }} className="mt-3.5 will-change-transform">
         <motion.div style={still ? undefined : { x: xB }} className="flex w-max gap-3.5 py-2 font-mono will-change-transform">
-          {skillsRow.map((s, i) => (
+          {extRow.map((f, i) => (
             <span key={i} className={chipCls} style={{ boxShadow: 'var(--shadow-card)' }}>
-              <b className="font-medium text-brand">{s}</b>
+              <b className="font-medium text-brand">{f.ext}</b>
+              <span className="text-dim">{t(f.sample)}</span>
             </span>
           ))}
         </motion.div>
