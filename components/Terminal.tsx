@@ -12,6 +12,7 @@
 
 import { useEffect, useRef, useState } from 'react'
 import { motion, useReducedMotion, useSpring, useTransform } from 'motion/react'
+import { FileIcon } from '@/components/FileIcon'
 import { ensurePointerTracking, pointerX, pointerY } from './fx/pointer'
 import { terminal } from '@/lib/content'
 import { usePrefs } from '@/lib/prefs'
@@ -119,7 +120,7 @@ export function Terminal() {
                 animate={stage.files > i ? { opacity: 1, y: 0, scale: 1 } : { opacity: 0, y: 14, scale: 0.92 }}
                 transition={{ type: 'spring', stiffness: 260, damping: 20 }}
               >
-                {f.icon} {t(f.name)} <span className="text-[#4ade80]">{f.size}</span>
+                <FileIcon name={f.icon} /> {t(f.name)} <span className="text-[#4ade80]">{f.size}</span>
               </motion.span>
             ))}
           </div>

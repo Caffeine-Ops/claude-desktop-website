@@ -9,7 +9,7 @@ import { Conveyor } from '@/components/sections/Conveyor'
 import { Outputs } from '@/components/sections/Outputs'
 import { Platform } from '@/components/sections/Platform'
 import { Screens } from '@/components/sections/Screens'
-import { Developers } from '@/components/sections/Developers'
+import { Privacy } from '@/components/sections/Privacy'
 import { Download } from '@/components/sections/Download'
 import { Footer } from '@/components/sections/Footer'
 
@@ -25,7 +25,7 @@ import { Footer } from '@/components/sections/Footer'
     Outputs   ← 签名段落：139 计数器 + 六张产出卡
     Platform  撑起产出的四样底座（术语从这里才允许出现）
     Screens   真实产品截图（浅色应用窗口浮在深色页面上）
-    Developers 给技术用户的深度
+    Privacy   收尾前的信任块：数据本地 / 逐步授权 / 自带 Key / 可审计
     Download  结尾大字 + 真实下载卡（GitHub 数据三态：加载/直链/降级）
     Footer
 
@@ -55,7 +55,7 @@ export default function Home() {
         <Outputs />
         <Platform />
         <Screens />
-        <Developers />
+        <Privacy />
         <Download />
       </main>
       <Footer />

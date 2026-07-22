@@ -11,6 +11,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { motion, useReducedMotion, useScroll, useSpring, useTransform, useVelocity } from 'motion/react'
 import { conveyor } from '@/lib/content'
+import { FileIcon } from '@/components/FileIcon'
 import { usePrefs } from '@/lib/prefs'
 import { Reveal } from '../fx/Reveal'
 
@@ -55,7 +56,7 @@ export function Conveyor() {
         <motion.div style={still ? undefined : { x: xA }} className="flex w-max gap-3.5 py-2 font-mono will-change-transform">
           {filesRow.map((f, i) => (
             <span key={i} className={chipCls} style={{ boxShadow: 'var(--shadow-card)' }}>
-              {f.icon} <b className="font-medium text-brand">{f.ext}</b> {t(f.name)}
+              <FileIcon name={f.icon} /> <b className="font-medium text-brand">{f.ext}</b> {t(f.name)}
             </span>
           ))}
         </motion.div>

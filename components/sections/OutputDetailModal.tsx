@@ -12,6 +12,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
 import { outputCards } from '@/lib/content'
+import { FileIcon } from '@/components/FileIcon'
 import { usePrefs } from '@/lib/prefs'
 
 type OutputCardT = (typeof outputCards)[number]
@@ -82,7 +83,7 @@ export function OutputDetailModal({ card, onClose }: { card: OutputCardT | null;
               <i className="size-2.5 rounded-full bg-white/13" />
               <i className="size-2.5 rounded-full bg-white/13" />
               <span className="ml-2.5 flex items-center gap-2 font-mono text-[11px] text-dim">
-                <span aria-hidden="true">{card.icon}</span>
+                <FileIcon name={card.icon} />
                 {t(card.title)}
                 <span className="text-brand">{card.ext}</span>
               </span>

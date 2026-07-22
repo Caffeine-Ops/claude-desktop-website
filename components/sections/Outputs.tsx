@@ -19,6 +19,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { animate, motion, useInView, useMotionValue, useReducedMotion, useSpring, useTransform } from 'motion/react'
 import { outputCards, outputsSection } from '@/lib/content'
+import { FileIcon } from '@/components/FileIcon'
 import { usePrefs } from '@/lib/prefs'
 import { Reveal, RevealGrid, RevealGridItem } from '../fx/Reveal'
 import { SectionHead } from '../SectionHead'
@@ -132,9 +133,7 @@ function OutputCard({ card, onOpen }: { card: (typeof outputCards)[number]; onOp
 
         <div className="p-[22px]">
           <div className="flex items-center gap-2.5">
-            <span className="text-[19px]" aria-hidden="true">
-              {card.icon}
-            </span>
+            <FileIcon name={card.icon} size={19} />
             <h3 className="min-w-0 truncate text-[16px] font-bold">{t(card.title)}</h3>
             <span className="ml-auto shrink-0 font-mono text-[11.5px] text-brand">{card.ext}</span>
           </div>

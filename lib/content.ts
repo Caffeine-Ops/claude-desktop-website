@@ -51,7 +51,7 @@ export const site = {
 export const nav: { href: string; label: Copy }[] = [
   { href: '#outputs', label: { zh: '产出', en: 'Output' } },
   { href: '#platform', label: { zh: '功能', en: 'Features' } },
-  { href: '#developers', label: { zh: '开发者', en: 'Developers' } },
+  { href: '#privacy', label: { zh: '安全', en: 'Privacy' } },
   { href: '#download', label: { zh: '下载', en: 'Download' } },
 ]
 
@@ -159,9 +159,9 @@ export const terminal = {
     { zh: '生成 24 页 · 套用品牌模板 · 嵌入图表', en: '24 slides · brand template · charts embedded' },
   ],
   files: [
-    { icon: '📊', name: { zh: 'Q3-复盘.pptx', en: 'Q3-review.pptx' }, size: '4.2 MB' },
-    { icon: '📈', name: { zh: '数据附录.xlsx', en: 'data-appendix.xlsx' }, size: '890 KB' },
-    { icon: '🖼', name: { zh: '封面备选.png', en: 'cover-options.png' }, size: '1.1 MB' },
+    { icon: 'pptx', name: { zh: 'Q3-复盘.pptx', en: 'Q3-review.pptx' }, size: '4.2 MB' },
+    { icon: 'xlsx', name: { zh: '数据附录.xlsx', en: 'data-appendix.xlsx' }, size: '890 KB' },
+    { icon: 'png', name: { zh: '封面备选.png', en: 'cover-options.png' }, size: '1.1 MB' },
   ],
 }
 
@@ -175,13 +175,13 @@ export const conveyor = {
     en: 'The top belt is the files it hands back; the bottom, the skills doing the work — every name ships in the product.',
   },
   filesBelt: [
-    { icon: '📊', ext: '.pptx', name: { zh: 'Q3-复盘.pptx', en: 'Q3-review.pptx' } },
-    { icon: '📈', ext: '.xlsx', name: { zh: '年度预算表.xlsx', en: 'annual-budget.xlsx' } },
-    { icon: '📄', ext: '.docx', name: { zh: '投标方案.docx', en: 'proposal.docx' } },
-    { icon: '🧾', ext: '.pdf', name: { zh: '简历-2026.pdf', en: 'resume-2026.pdf' } },
-    { icon: '🖼', ext: '.png', name: { zh: '发布海报.png', en: 'launch-poster.png' } },
-    { icon: '🎬', ext: '.mp4', name: { zh: '产品演示.mp4', en: 'product-demo.mp4' } },
-    { icon: '📉', ext: '.html', name: { zh: '数据看板.html', en: 'dashboard.html' } },
+    { icon: 'pptx', ext: '.pptx', name: { zh: 'Q3-复盘.pptx', en: 'Q3-review.pptx' } },
+    { icon: 'xlsx', ext: '.xlsx', name: { zh: '年度预算表.xlsx', en: 'annual-budget.xlsx' } },
+    { icon: 'docx', ext: '.docx', name: { zh: '投标方案.docx', en: 'proposal.docx' } },
+    { icon: 'pdf', ext: '.pdf', name: { zh: '简历-2026.pdf', en: 'resume-2026.pdf' } },
+    { icon: 'png', ext: '.png', name: { zh: '发布海报.png', en: 'launch-poster.png' } },
+    { icon: 'mp4', ext: '.mp4', name: { zh: '产品演示.mp4', en: 'product-demo.mp4' } },
+    { icon: 'html', ext: '.html', name: { zh: '数据看板.html', en: 'dashboard.html' } },
   ],
   skillsBelt: ['ppt-master', 'spreadsheets', 'proposal-writer', 'imagegen', 'sora', 'd3-visualization', 'resume-modern', 'poster-hero', 'remotion'],
 }
@@ -219,7 +219,7 @@ export const outputCards: {
   sampleKind: 'html' | 'video'
 }[] = [
   {
-    icon: '📊',
+    icon: 'pptx',
     title: { zh: '做 PPT / 演示', en: 'Slides & decks' },
     body: { zh: '一句话生成整套演示:套模板、配图表、写讲稿。点开翻真成品。', en: 'One prompt, a whole deck — template, charts, notes. Open to browse the real file.' },
     ext: '.pptx',
@@ -229,7 +229,7 @@ export const outputCards: {
     sampleKind: 'html',
   },
   {
-    icon: '📈',
+    icon: 'xlsx',
     title: { zh: '做表格', en: 'Spreadsheets' },
     body: { zh: '读表、算数、整理数据,交回一张能用的表。点开翻真成品。', en: 'Reads, computes, organizes — a usable sheet. Open to browse the real file.' },
     ext: '.xlsx',
@@ -239,7 +239,7 @@ export const outputCards: {
     sampleKind: 'html',
   },
   {
-    icon: '📄',
+    icon: 'docx',
     title: { zh: '写方案 / 文档', en: 'Proposals & docs' },
     body: { zh: '从素材到排版好的整篇文档,导出就是能交付的 Word。点开翻真成品。', en: 'Material to a fully typeset doc, exported as ready-to-send Word. Open to browse.' },
     ext: '.docx',
@@ -249,7 +249,7 @@ export const outputCards: {
     sampleKind: 'html',
   },
   {
-    icon: '🖼',
+    icon: 'png',
     title: { zh: '生成图片 / 海报', en: 'Images & posters' },
     body: { zh: '从提示词到成图,海报、封面、社交卡片一步到位。点开看真成品。', en: 'Prompt to picture — posters, covers, social cards. Open to see the real one.' },
     ext: '.png',
@@ -259,7 +259,7 @@ export const outputCards: {
     sampleKind: 'html',
   },
   {
-    icon: '🎬',
+    icon: 'mp4',
     title: { zh: '生成视频', en: 'Video' },
     body: { zh: '从想法到成片,模板化的视频创作流程。点开直接播真成品。', en: 'Idea to final cut via a templated pipeline. Open to play the real clip.' },
     ext: '.mp4',
@@ -269,7 +269,7 @@ export const outputCards: {
     sampleKind: 'video',
   },
   {
-    icon: '📉',
+    icon: 'html',
     title: { zh: '数据报告与图表', en: 'Data reports & charts' },
     body: { zh: '数据进去,可交互的可视化报告出来。点开翻真成品。', en: 'Data in, an interactive visual report out. Open to browse the real file.' },
     ext: '.html',
@@ -379,43 +379,54 @@ export const screens = {
   ],
 }
 
-export const developers = {
-  eyebrow: { zh: '给开发者', en: 'For developers' },
-  title: { zh: '打开看，里面没有黑箱。', en: 'Open it up. No black box inside.' },
+/*
+  安全与隐私段：收尾前打消「能碰我文件的工具，安全吗」这个顾虑。
+  四条都对齐真实产品，措辞谨慎——
+  · 文件本地：应用在本机跑，产出落在你机器上；模型推理这一步的请求由第 3 条交代（BYOK 直连提供方）。
+  · 每步先问：卡片墙里真实存在的「请求运行命令 / 等待确认 / 权限」逐次授权。
+  · 自带 Key：照抄「执行模式」页的真实提供方选项（Anthropic / OpenAI / Azure / Gemini / Ollama Cloud）。
+  · 可审计：只说「代码公开」不说「开源」——仓库公开但没有开源协议(见 hero.trust 注释)。
+  icon 字段对应 Privacy.tsx 里的内联 SVG 图标名。
+*/
+export const privacy = {
+  eyebrow: { zh: '安全与隐私', en: 'Safe & private' },
+  title: { zh: '你的东西，不上云。', en: 'Your stuff stays yours.' },
   points: [
     {
-      title: { zh: '基于 Claude Agent SDK', en: 'Built on the Claude Agent SDK' },
+      icon: 'lock',
+      title: { zh: '文件留在本地', en: 'Files stay local' },
       body: {
-        zh: '安装包内置 fusion-code CLI，也可以切换到你系统里已有的 claude。',
-        en: 'The installer bundles the fusion-code CLI, and you can switch it to the claude already on your system.',
+        zh: '它做出来的文件、读到的资料，都在你自己电脑上，不往我们的服务器传。',
+        en: 'The files it makes and the data it reads stay on your own machine — nothing is uploaded to our servers.',
       },
     },
     {
-      title: { zh: '多运行时模型', en: 'Multi-runtime model' },
+      icon: 'shield',
+      title: { zh: '每一步都先问你', en: 'Asks before it acts' },
       body: {
-        zh: '每个标签页一个独立引擎，多个会话可以各跑各的子进程，互不串味。',
-        en: 'One engine per tab, so multiple sessions each run their own subprocess without leaking into each other.',
+        zh: '要动你的文件、跑一条命令，都会先弹出来等你点头；你不批，它就不执行。',
+        en: 'Before touching a file or running a command it pops up and waits — nothing runs until you approve.',
       },
     },
     {
       /* BYOK = Bring Your Own Key,自带 API 账号。提供方列表照抄产品「执行模式」页的真实选项卡。 */
-      title: { zh: '多提供方 BYOK', en: 'Multi-provider BYOK' },
+      icon: 'key',
+      title: { zh: '自带 Key，直连提供方', en: 'Your key, straight to the provider' },
       body: {
-        zh: '不想用本机 CLI，就自带 API key：Anthropic、OpenAI、Azure、Gemini、Ollama Cloud 都接得上。（BYOK = 用你自己的 API 账号。）',
-        en: 'Skip the local CLI and bring your own key: Anthropic, OpenAI, Azure, Gemini, and Ollama Cloud all plug in. (BYOK = bring your own API account.)',
+        zh: '用你自己的 API key，请求直连 Anthropic、OpenAI、Azure、Gemini、Ollama Cloud，不经我们中转。（BYOK = 用你自己的 API 账号。）',
+        en: 'Use your own API key and requests go straight to Anthropic, OpenAI, Azure, Gemini or Ollama Cloud — never routed through us. (BYOK = bring your own API account.)',
       },
     },
     {
       /* 措辞是「代码公开」不是「开源」——仓库公开但没有开源协议(见 hero.trust 的注释)。 */
-      title: { zh: '代码公开可审计', en: 'Source public, auditable' },
+      icon: 'eye',
+      title: { zh: '全程可见、可审计', en: 'Visible and auditable' },
       body: {
-        zh: '完整源码公开在 GitHub 上，权限怎么把关、数据怎么走，你自己翻得到。',
-        en: 'The full source is public on GitHub. How permissions gate actions and where data goes, you can read for yourself.',
+        zh: '每一步操作都摊在你眼前；完整源码也公开在 GitHub 上，数据怎么走，你自己翻得到。',
+        en: 'Every step is shown as it happens, and the full source is public on GitHub — you can trace where data goes yourself.',
       },
     },
   ],
-  cta: { zh: '去 GitHub 看源码', en: 'Read the source on GitHub' },
-  readme: { zh: '看 README', en: 'Read the README' },
 }
 
 export const download = {
