@@ -47,6 +47,17 @@ export default function Home() {
             进入视口时淡入 + 轻微上滑，只播一次）给它一个入场——这就是首屏
             滚到这里时的过渡动画。终端自带的逐字循环/鼠标倾斜互不干扰。 */}
         <section className="relative z-[1] mx-auto max-w-[1180px] px-8 py-24">
+          {/* Hero 底边过渡遮罩：鼠标光斑（Glow，z0，全站最底层）被 Hero 铺满的
+              不透明装饰层整个挡住，只在 Hero 下沿以下露出——光斑一撞上 Hero 底边
+              就被切成一条硬直线（鼠标悬浮时尤其扎眼）。这条全宽渐变从 Hero 底边处
+              的不透明 --canvas 起、向下渐透，把光斑的露出边界从「硬线」化成「渐显」，
+              让首屏与下一屏的底色连成一片。放在 Reveal 之前 + z0：只压背景光、
+              不挡终端；w-screen 铺满视口宽（本节是居中窄容器，光斑会溢出它）。 */}
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute left-1/2 top-0 z-0 h-[280px] w-screen -translate-x-1/2"
+            style={{ background: 'linear-gradient(180deg, var(--canvas) 0%, transparent 100%)' }}
+          />
           <Reveal>
             <Terminal />
           </Reveal>

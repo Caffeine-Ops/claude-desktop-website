@@ -153,14 +153,15 @@ export function Hero() {
         }}
       />
 
-      {/* veil1（z2）：上下压边，保住导航和滚动提示 */}
+      {/* veil1（z2）：只管顶边——把墙压暗托住导航。
+          底边不再由它管：原本那道 `.88 canvas @90%` 的暗带会和下面的「底封边」
+          叠成双重暗带、反而更像一条横线。底部的融合交给专门的 bottomSeal。 */}
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-0 z-[2]"
         style={{
           opacity: 0.766,
-          background:
-            'linear-gradient(180deg, var(--canvas) 0%, transparent 32%, transparent 56%, rgba(7,11,9,.88) 90%, var(--canvas) 100%)',
+          background: 'linear-gradient(180deg, var(--canvas) 0%, transparent 34%)',
         }}
       />
 
@@ -174,6 +175,18 @@ export function Hero() {
           background:
             'radial-gradient(ellipse 46% 42% at 27% 58%, var(--canvas) 30%, rgba(7,11,9,.72) 62%, transparent 84%)',
         }}
+      />
+
+      {/* bottomSeal（z2）：底封边——消除 Hero 与下一节之间的横缝。
+          Hero 的绿墙 + 核心光都被本节 overflow-hidden 在底边一刀切平；若不处理，
+          切口会露出「绿色富面板 → 纯黑空面」的横缝（实测指出）。这层从透明平滑
+          压到不透明的 --canvas，把墙在接近底边处彻底融进页面底色——于是裁切线
+          两侧同为 #070b09，缝消失；下面独立成节的终端因此像浮在同一张连续画布上。
+          顺带给底部的 SCROLL 提示一个干净的托底。 */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 bottom-0 z-[2] h-[42%]"
+        style={{ background: 'linear-gradient(180deg, transparent, var(--canvas) 76%)' }}
       />
 
       <motion.div
