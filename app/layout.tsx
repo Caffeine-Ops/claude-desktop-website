@@ -43,7 +43,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: 'Cowork — 一句话，让 AI 帮你做完 PPT、表格、方案',
   description:
-    '桌面端的 Claude。智能助手加插件，139 项内置创作技能和你自己的知识库——聊天，然后收文件。支持 macOS 与 Windows。',
+    '桌面端的 Claude。智能助手加插件，139 项内置创作技能，还有帮你管好本地文件的文件管理系统——聊天，然后收文件。支持 macOS 与 Windows。',
   icons: { icon: '/icon-256.png', apple: '/app-icon.png' },
   openGraph: {
     title: 'Cowork',

@@ -36,7 +36,7 @@ export const site = {
 
   1. 「产出」和「功能」必须一眼分得开——它们指向两段完全不同的内容：
      产出 = 它交给你什么成品（PPT / 表格 / 方案…），功能 = 支撑这些成品的底座
-     （画布 / 知识库 / Agent / 插件）。曾经叫「能做什么」和「功能」，两个词听起来
+     （画布 / 文件管理 / Agent / 插件）。曾经叫「能做什么」和「功能」，两个词听起来
      是同一件事，用户不知道该点哪个——导航项之间语义重叠，等于没有导航。
 
   2. 一个东西从头到尾只能有一个叫法。这里叫「产出」，落地那段的抬头
@@ -67,8 +67,8 @@ export const hero = {
   accentLine: 1,
   /* 「智能助手」「插件」是产品里两个面的真实叫法(左侧栏原文),别改成别的词。 */
   subline: {
-    zh: '桌面端的 Claude。智能助手加插件，139 项内置创作技能和你自己的知识库——聊天，然后收文件。',
-    en: 'Claude on your desktop. An assistant plus plugins, 139 built-in creation skills, and a knowledge base of your own. Chat, then collect the files.',
+    zh: '桌面端的 Claude。智能助手加插件，139 项内置创作技能，还有帮你管好本地文件的文件管理系统——聊天，然后收文件。',
+    en: 'Claude on your desktop. An assistant plus plugins, 139 built-in creation skills, and a file manager that keeps your local files in order. Chat, then collect the files.',
   },
   // 这个按钮也指向「产出」那一段，所以用同一个词（见 nav 的注释第 2 条）。
   secondaryCta: { zh: '看看能产出什么', en: 'See the output' },
@@ -78,7 +78,7 @@ export const hero = {
 /*
   Hero 背景「内容墙」（Linear intake 式的 3D 倾斜卡片墙）。
   墙上铺的是产品干活时的真实痕迹——指令、技能调用、产出文件、权限确认、
-  知识库检索——全部对应产品真实功能与仓库里真实存在的技能名，不虚构。
+  文件管理——全部对应产品真实功能与仓库里真实存在的技能名，不虚构。
   纯装饰层（aria-hidden），但英文版界面不能漏中文，所以照样双语。
 */
 /*
@@ -108,7 +108,7 @@ export const heroWall: WallCard[][] = [
     { id: { zh: '已完成', en: 'Done' }, title: { zh: 'd3-visualization · 图表已嵌入', en: 'd3-visualization · charts embedded' }, tag: { zh: '技能', en: 'Skill' } },
   ],
   [
-    { id: { zh: '知识库 · 12 条命中', en: 'Knowledge base · 12 hits' }, title: { zh: '检索本地知识库', en: 'Searching local knowledge' }, tag: { zh: 'RAG', en: 'RAG' } },
+    { id: { zh: '文件管理 · 32 个文件', en: 'Files · 32 items' }, title: { zh: '归类本地文件', en: 'Organizing local files' }, tag: { zh: '文件', en: 'Files' } },
     { id: { zh: 'ENG · 会话 #12', en: 'ENG · Session #12' }, title: { zh: '把这份表格算个季度汇总', en: 'Summarize this sheet by quarter' }, tag: { zh: 'spreadsheets', en: 'spreadsheets' }, brand: true, ask: true },
     { id: { zh: '已完成', en: 'Done' }, title: { zh: 'spreadsheets · 公式已写入', en: 'spreadsheets · formulas written' }, tag: { zh: '技能', en: 'Skill' } },
     { id: { zh: '产出 · 890 KB', en: 'Output · 890 KB' }, title: { zh: '年度预算表.xlsx', en: 'annual-budget.xlsx' }, tag: { zh: '.xlsx', en: '.xlsx' } },
@@ -273,8 +273,10 @@ export const platform = {
   // 和导航项「功能」同名（一物一名，见 nav 注释第 2 条）。
   eyebrow: { zh: '功能', en: 'Features' },
   title: { zh: '撑起这些产出的四样东西。', en: 'The four things holding it all up.' },
-  /* 四个块全部对着产品真实界面写:名字用产品里的原文(插件 / 知识库…),
-     列举的子能力(原型/幻灯片/HyperFrames…、文档识别/图片识别/分类管理)都是界面上真实存在的入口。 */
+  /* 四个块全部对着产品真实界面写,列举的子能力(原型/幻灯片/HyperFrames…、
+     文档识别/图片识别/分类管理)都是界面上真实存在的入口。
+     注意:「文件管理系统」是对外选定的叫法——产品里这块原名叫「知识库」(RAG 检索),
+     这里刻意换成更贴近「管本地文件」的说法,改词前先想清楚这层出入。 */
   blocks: [
     {
       name: { zh: '插件', en: 'Plugins' },
@@ -284,10 +286,10 @@ export const platform = {
       },
     },
     {
-      name: { zh: '知识库', en: 'Knowledge base' },
+      name: { zh: '文件管理系统', en: 'File manager' },
       body: {
-        zh: '把你的资料喂进去——文档、图片都能识别并分类管理。它回答和写方案前先去里面查。（这套做法叫 RAG——让 AI 先查资料再开口，答案就不容易是编的。）',
-        en: 'Feed it your material — documents and images get recognized and organized. It searches that before answering or drafting. (The technique is called RAG — look it up first, then speak — which is what keeps answers from being invented.)',
+        zh: '把本地文件都收拢到一处管理——文档、图片自动识别并归类，找文件、按主题归拢都比在文件夹里翻省事得多。写东西、答问题时它也会先到这里翻你的资料。',
+        en: 'Keep your local files in one place — documents and images are recognized and auto-sorted, so finding and grouping them by topic beats digging through folders. It also draws on your material here before answering or drafting.',
       },
     },
     {
@@ -339,7 +341,7 @@ export const screens = {
     },
     {
       /* 录屏:日常办公→「写方案」预设,进入方案写作模式,右侧「方案草稿」面板按 封面→目录→正文 分段生成,
-         实时渲染成 Word 预览(与导出逐像素一致)+ 导出。主题命中知识库时会取真实资料落笔。 */
+         实时渲染成 Word 预览(与导出逐像素一致)+ 导出。主题命中文件管理系统里的资料时会取真实资料落笔。 */
       src: '/screens/doc.webp', video: '/screens/doc.mp4', w: 1920, h: 1050,
       bar: { zh: '写方案', en: 'Write proposal' },
       caption: {
