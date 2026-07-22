@@ -24,16 +24,11 @@ export type Copy = { zh: string; en: string }
 
 export const site = {
   name: 'Cowork',
-  repoUrl: 'https://github.com/Caffeine-Ops/claude-desktop',
-  /* 安装包与发布历史都在专门的发布仓库 claude-desktop-releases（源码仓库不放构建产物）。 */
-  releasesUrl: 'https://github.com/Caffeine-Ops/claude-desktop-releases/releases',
-  /** 「永远是最新版」的兜底地址：GitHub API 挂了/被限流时，按钮退到这里，用户照样下得到。 */
-  latestReleaseUrl: 'https://github.com/Caffeine-Ops/claude-desktop-releases/releases/latest',
-  issuesUrl: 'https://github.com/Caffeine-Ops/claude-desktop/issues',
-  readmeUrl: 'https://github.com/Caffeine-Ops/claude-desktop#readme',
-  /* 仓库根本没有 LICENSE 文件(点过去是 404),许可情况写在 README 的 License 一节里——指到那儿。 */
-  licenseUrl: 'https://github.com/Caffeine-Ops/claude-desktop#license',
-  agentSdkUrl: 'https://docs.claude.com/en/api/agent-sdk/overview',
+  /* 安装包自托管在本服务器 /downloads/（nginx 开了 autoindex，是个可浏览的文件列表）。
+     不对外暴露源码仓库，所以站内不放任何指向 GitHub 的链接。 */
+  releasesUrl: '/downloads/',
+  /** 兜底下载地址：主按钮匹配不到对应安装包时退到这个服务器目录，用户自己挑一个下。 */
+  latestReleaseUrl: '/downloads/',
 } as const
 
 /*
@@ -78,12 +73,6 @@ export const hero = {
   // 这个按钮也指向「产出」那一段，所以用同一个词（见 nav 的注释第 2 条）。
   secondaryCta: { zh: '看看能产出什么', en: 'See the output' },
   otherPlatforms: { zh: '其它平台', en: 'Other platforms' },
-  /* 不写「开源」:仓库虽公开,但没有开源协议(License: None,README 明说私有)。
-     「代码公开」是真话,「开源」不是——开源 = 公开 + 授权你用,这里只有前一半。 */
-  trust: {
-    zh: '基于 Claude Agent SDK · 代码公开在 GitHub',
-    en: 'Built on the Claude Agent SDK · Source public on GitHub',
-  },
 }
 
 /*
@@ -385,7 +374,7 @@ export const screens = {
   · 文件本地：应用在本机跑，产出落在你机器上；模型推理这一步的请求由第 3 条交代（BYOK 直连提供方）。
   · 每步先问：卡片墙里真实存在的「请求运行命令 / 等待确认 / 权限」逐次授权。
   · 自带 Key：照抄「执行模式」页的真实提供方选项（Anthropic / OpenAI / Azure / Gemini / Ollama Cloud）。
-  · 可审计：只说「代码公开」不说「开源」——仓库公开但没有开源协议(见 hero.trust 注释)。
+  · 可审计：只讲「每步操作可见、数据流向自查」，不提源码/仓库(源码不对外)。
   icon 字段对应 Privacy.tsx 里的内联 SVG 图标名。
 */
 export const privacy = {
@@ -418,12 +407,11 @@ export const privacy = {
       },
     },
     {
-      /* 措辞是「代码公开」不是「开源」——仓库公开但没有开源协议(见 hero.trust 的注释)。 */
       icon: 'eye',
       title: { zh: '全程可见、可审计', en: 'Visible and auditable' },
       body: {
-        zh: '每一步操作都摊在你眼前；完整源码也公开在 GitHub 上，数据怎么走，你自己翻得到。',
-        en: 'Every step is shown as it happens, and the full source is public on GitHub — you can trace where data goes yourself.',
+        zh: '每一步操作都摊在你眼前，调用了什么、数据怎么走，你自己看得到。',
+        en: 'Every step is shown as it happens — what gets called and where data goes, you can see it yourself.',
       },
     },
   ],
@@ -477,13 +465,8 @@ export const download = {
 export const footer = {
   tagline: { zh: '桌面端的 Claude，聊天即产出。', en: 'Claude on your desktop. Chat, and it ships.' },
   links: {
-    github: { zh: 'GitHub 仓库', en: 'GitHub repo' },
-    readme: { zh: 'README', en: 'README' },
-    license: { zh: '许可说明', en: 'License' },
-    issues: { zh: '反馈问题', en: 'Report an issue' },
     releases: { zh: '历史版本', en: 'Releases' },
   },
-  credit: { zh: '基于 Claude Agent SDK 构建', en: 'Built on the Claude Agent SDK' },
 }
 
 export const ui = {

@@ -296,17 +296,13 @@ export function Hero() {
             </Magnetic>
           </motion.div>
 
-          {/* 信任条：真实版本号 + 体积（拿不到就只剩定位语，优雅降级） */}
-          <motion.p {...rise(3)} className="mt-[22px] font-mono text-[12px] text-dim">
-            {state.status === 'ready' && (
-              <>
-                <b className="font-medium text-brand">{state.release.version}</b>
-                {' · '}
-                {match?.sizeMB ? `${match.sizeMB} MB · ` : ''}
-              </>
-            )}
-            {t(hero.trust)}
-          </motion.p>
+          {/* 信任条：真实版本号 + 体积（拿不到就整条不显示） */}
+          {state.status === 'ready' && (
+            <motion.p {...rise(3)} className="mt-[22px] font-mono text-[12px] text-dim">
+              <b className="font-medium text-brand">{state.release.version}</b>
+              {match?.sizeMB ? ` · ${match.sizeMB} MB` : ''}
+            </motion.p>
+          )}
         </div>
       </motion.div>
 

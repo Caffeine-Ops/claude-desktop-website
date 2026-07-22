@@ -14,11 +14,7 @@ export function Footer() {
   const state = useRelease()
 
   const links = [
-    { href: site.repoUrl, label: footer.links.github },
-    { href: site.readmeUrl, label: footer.links.readme },
     { href: site.releasesUrl, label: footer.links.releases },
-    { href: site.licenseUrl, label: footer.links.license },
-    { href: site.issuesUrl, label: footer.links.issues },
   ]
 
   return (
@@ -27,7 +23,7 @@ export function Footer() {
         <div className="flex items-center gap-2.5">
           <Logo size={20} id="footer" />
           <span className="font-mono text-[12px] text-dim">
-            Cowork · {t(footer.credit)}
+            Cowork
             {state.status === 'ready' && (
               <>
                 {' · '}
