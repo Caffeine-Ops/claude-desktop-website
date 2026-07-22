@@ -64,8 +64,21 @@ export function Screens() {
   const reduced = useReducedMotion()
   const [active, setActive] = useState(0)
   const [open, setOpen] = useState(false) // 放大弹层开关
+  const [paused, setPaused] = useState(false) // 鼠标悬停本区域时暂停轮播
   const lastTrigger = useRef<HTMLElement | null>(null)
   const main = screens.items[active]
+
+  /* 自动轮播:每 5 秒切到下一段(绕回第一段)。
+     依赖里带上 active——每次切换(不管自动还是手动)都会重挂计时器,
+     等于「用户手动选了就重新数 5 秒」,不会刚选完立刻被抢走。
+     弹窗打开、鼠标悬停、或系统减少动态时不自动播。 */
+  useEffect(() => {
+    if (reduced || open || paused) return
+    const id = setTimeout(() => {
+      setActive((i) => (i + 1) % screens.items.length)
+    }, 5000)
+    return () => clearTimeout(id)
+  }, [active, open, paused, reduced])
 
   const openModal = () => {
     lastTrigger.current = document.activeElement as HTMLElement
@@ -84,7 +97,12 @@ export function Screens() {
         {t(screens.note)}
       </Reveal>
 
-      <Reveal delay={0.12} className="mt-9 flex flex-col gap-5 lg:flex-row">
+      <Reveal
+        delay={0.12}
+        className="mt-9 flex flex-col gap-5 lg:flex-row"
+        onMouseEnter={() => setPaused(true)}
+        onMouseLeave={() => setPaused(false)}
+      >
         {/* ── 主窗口:固定位置,内容交叉淡化;点整扇窗放大观看 ── */}
         <div className="min-w-0 flex-1">
           <button

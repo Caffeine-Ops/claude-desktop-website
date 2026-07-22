@@ -22,21 +22,31 @@ export function Reveal({
   delay = 0,
   className,
   as = 'div',
+  onMouseEnter,
+  onMouseLeave,
 }: {
   children: ReactNode
   delay?: number
   className?: string
   as?: 'div' | 'li' | 'p' | 'h2'
+  onMouseEnter?: () => void
+  onMouseLeave?: () => void
 }) {
   const reduced = useReducedMotion()
   const Tag = motion[as]
   if (reduced) {
     const Plain = as
-    return <Plain className={className}>{children}</Plain>
+    return (
+      <Plain className={className} onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
+        {children}
+      </Plain>
+    )
   }
   return (
     <Tag
       className={className}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
       initial={{ opacity: 0, y: 34 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.2 }}
