@@ -46,6 +46,16 @@ export function Privacy() {
 
   return (
     <section id="privacy" className="relative z-[1] mx-auto max-w-[1180px] px-8 py-[50px] pb-[90px]">
+      {/* 图标描边共用的绿→青双色渐变，定义一次、四张卡共享（藏在 0×0 的 svg 里）。 */}
+      <svg width="0" height="0" aria-hidden="true" className="absolute">
+        <defs>
+          <linearGradient id="privacy-icon-grad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stopColor="#4ade80" />
+            <stop offset="1" stopColor="#22d3ee" />
+          </linearGradient>
+        </defs>
+      </svg>
+
       <SectionHead eyebrow={t(privacy.eyebrow)} title={t(privacy.title)} />
 
       <RevealGrid className="mt-11 grid gap-4 md:grid-cols-2">
@@ -61,11 +71,13 @@ export function Privacy() {
                 height="22"
                 viewBox="0 0 24 24"
                 fill="none"
-                stroke="currentColor"
+                // 描边走绿→青双色渐变，再叠一层绿色发光晕（赛博感）。
+                stroke="url(#privacy-icon-grad)"
                 strokeWidth="1.7"
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 aria-hidden="true"
+                style={{ filter: 'drop-shadow(0 0 5px rgba(74, 222, 128, 0.35))' }}
               >
                 {ICONS[p.icon]}
               </svg>

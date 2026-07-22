@@ -59,7 +59,7 @@ export function Conveyor() {
         <motion.div style={still ? undefined : { x: xA }} className="flex w-max gap-3.5 py-2 font-mono will-change-transform">
           {filesRow.map((f, i) => (
             <span key={i} className={chipCls} style={{ boxShadow: 'var(--shadow-card)' }}>
-              <FileIcon name={f.icon} />
+              <FileIcon name={f.icon} size={17} />
               <b className="font-medium text-ink">{t(f.name)}</b>
               <span className="text-[11.5px] text-dim">{t(f.desc)}</span>
             </span>
