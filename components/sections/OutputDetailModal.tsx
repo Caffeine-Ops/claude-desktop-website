@@ -14,6 +14,7 @@ import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
 import { outputCards } from '@/lib/content'
 import { FileIcon } from '@/components/FileIcon'
 import { usePrefs } from '@/lib/prefs'
+import { asset } from '@/lib/asset'
 
 type OutputCardT = (typeof outputCards)[number]
 
@@ -64,7 +65,7 @@ export function OutputDetailModal({ card, onClose }: { card: OutputCardT | null;
           <div className="pointer-events-none absolute inset-0 bg-black/70" aria-hidden="true" />
           <div
             className="pointer-events-none absolute inset-0 bg-cover bg-center opacity-40"
-            style={{ backgroundImage: 'url(/screens/outputs/desktop-bg.png)' }}
+            style={{ backgroundImage: `url(${asset('/screens/outputs/desktop-bg.png')})` }}
             aria-hidden="true"
           />
 

@@ -16,6 +16,8 @@
 // import type = 只借类型，不借代码。编译后这行会被整个抹掉，所以虽然 github.ts
 // 反过来又引了本文件的 site，运行时也不会绕成死循环。
 import type { PlatformKey } from './github'
+// 下面每条 public/ 资源路径都得过 asset() 补部署前缀，原因见 lib/asset.ts。
+import { asset } from './asset'
 
 export type Lang = 'zh' | 'en'
 
@@ -213,9 +215,9 @@ export const outputCards: {
     title: { zh: '做 PPT / 演示', en: 'Slides & decks' },
     body: { zh: '一句话生成整套演示:套模板、配图表、写讲稿。点开翻真成品。', en: 'One prompt, a whole deck — template, charts, notes. Open to browse the real file.' },
     ext: '.pptx',
-    shot: '/screens/outputs/ppt.webp',
+    shot: asset('/screens/outputs/ppt.webp'),
     shotAlt: { zh: 'HTML Anything 主题的 Keynote 风演示封面', en: 'A Keynote-style deck cover — “HTML Anything”' },
-    sample: '/screens/outputs/samples/ppt.html',
+    sample: asset('/screens/outputs/samples/ppt.html'),
     sampleKind: 'html',
   },
   {
@@ -223,9 +225,9 @@ export const outputCards: {
     title: { zh: '做表格', en: 'Spreadsheets' },
     body: { zh: '读表、算数、整理数据,交回一张能用的表。点开翻真成品。', en: 'Reads, computes, organizes — a usable sheet. Open to browse the real file.' },
     ext: '.xlsx',
-    shot: '/screens/outputs/xlsx.webp',
+    shot: asset('/screens/outputs/xlsx.webp'),
     shotAlt: { zh: '完整数据周报:KPI 卡 + 增长图表 + 明细数据表', en: 'A full weekly data report — KPI cards, charts, raw table' },
-    sample: '/screens/outputs/samples/xlsx.html',
+    sample: asset('/screens/outputs/samples/xlsx.html'),
     sampleKind: 'html',
   },
   {
@@ -233,9 +235,9 @@ export const outputCards: {
     title: { zh: '写方案 / 文档', en: 'Proposals & docs' },
     body: { zh: '从素材到排版好的整篇文档,导出就是能交付的 Word。点开翻真成品。', en: 'Material to a fully typeset doc, exported as ready-to-send Word. Open to browse.' },
     ext: '.docx',
-    shot: '/screens/outputs/docx.webp',
+    shot: asset('/screens/outputs/docx.webp'),
     shotAlt: { zh: '排版精良的现代简历成品', en: 'A cleanly typeset modern résumé' },
-    sample: '/screens/outputs/samples/docx.html',
+    sample: asset('/screens/outputs/samples/docx.html'),
     sampleKind: 'html',
   },
   {
@@ -243,9 +245,9 @@ export const outputCards: {
     title: { zh: '生成图片 / 海报', en: 'Images & posters' },
     body: { zh: '从提示词到成图,海报、封面、社交卡片一步到位。点开看真成品。', en: 'Prompt to picture — posters, covers, social cards. Open to see the real one.' },
     ext: '.png',
-    shot: '/screens/outputs/png.webp',
+    shot: asset('/screens/outputs/png.webp'),
     shotAlt: { zh: '小红书风格的干货卡片轮播封面', en: 'A Xiaohongshu-style tips carousel cover card' },
-    sample: '/screens/outputs/samples/poster.html',
+    sample: asset('/screens/outputs/samples/poster.html'),
     sampleKind: 'html',
   },
   {
@@ -253,9 +255,9 @@ export const outputCards: {
     title: { zh: '生成视频', en: 'Video' },
     body: { zh: '从想法到成片,模板化的视频创作流程。点开直接播真成品。', en: 'Idea to final cut via a templated pipeline. Open to play the real clip.' },
     ext: '.mp4',
-    shot: '/screens/outputs/mp4.webp',
+    shot: asset('/screens/outputs/mp4.webp'),
     shotAlt: { zh: '8-bit 复古风演示视频的标题帧', en: 'The title frame of an 8-bit retro deck video' },
-    sample: '/screens/outputs/samples/video.mp4',
+    sample: asset('/screens/outputs/samples/video.mp4'),
     sampleKind: 'video',
   },
   {
@@ -263,9 +265,9 @@ export const outputCards: {
     title: { zh: '数据报告与图表', en: 'Data reports & charts' },
     body: { zh: '数据进去,可交互的可视化报告出来。点开翻真成品。', en: 'Data in, an interactive visual report out. Open to browse the real file.' },
     ext: '.html',
-    shot: '/screens/outputs/html.webp',
+    shot: asset('/screens/outputs/html.webp'),
     shotAlt: { zh: 'NYT 编辑风格的折线图成品', en: 'A finished NYT-style editorial line chart' },
-    sample: '/screens/outputs/samples/report.html',
+    sample: asset('/screens/outputs/samples/report.html'),
     sampleKind: 'html',
   },
 ]
@@ -333,7 +335,7 @@ export const screens = {
     {
       /* 录屏:日常办公→「制作PPT」预设,助手跑 ppt-master 流水线(定设计规范→逐页手绘 SVG),
          右侧「预览幻灯片」工作区实时渲染出成套幻灯片(录屏驱动它确认设计后真出片)。 */
-      src: '/screens/ppt.webp', video: '/screens/ppt.mp4', w: 1920, h: 1050,
+      src: asset('/screens/ppt.webp'), video: asset('/screens/ppt.mp4'), w: 1920, h: 1050,
       bar: { zh: '做 PPT', en: 'Make PPT' },
       caption: {
         zh: '选「制作 PPT」说清主题，它按流水线逐页手绘幻灯片，右侧「预览幻灯片」实时长出成套页面，做完可导出。',
@@ -343,7 +345,7 @@ export const screens = {
     {
       /* 录屏:日常办公→「写方案」预设,进入方案写作模式,右侧「方案草稿」面板按 封面→目录→正文 分段生成,
          实时渲染成 Word 预览(与导出逐像素一致)+ 导出。主题命中文件管理系统里的资料时会取真实资料落笔。 */
-      src: '/screens/doc.webp', video: '/screens/doc.mp4', w: 1920, h: 1050,
+      src: asset('/screens/doc.webp'), video: asset('/screens/doc.mp4'), w: 1920, h: 1050,
       bar: { zh: '写方案', en: 'Write proposal' },
       caption: {
         zh: '选「写方案」说清题目，进入方案写作模式：按封面 → 目录 → 正文分段生成，右侧实时渲染成 Word 预览，写完一键导出。',
@@ -352,7 +354,7 @@ export const screens = {
     },
     {
       /* 录屏:设计创意→输入话术,助手调本机 draw 技能(node .../draw.js),把需求写成提示词后跑出 PNG 文件卡。 */
-      src: '/screens/img.webp', video: '/screens/img.mp4', w: 1920, h: 1050,
+      src: asset('/screens/img.webp'), video: asset('/screens/img.mp4'), w: 1920, h: 1050,
       bar: { zh: '生成图片', en: 'Generate image' },
       caption: {
         zh: '描述你要的画面，它调用本机画图技能：把需求写成提示词，直接跑出一张 PNG 存到本地。',
@@ -361,7 +363,7 @@ export const screens = {
     },
     {
       /* 录屏:代码开发→输入话术,「全自动」权限下助手直接写入 pomodoro.html,代码块实时铺开。 */
-      src: '/screens/code.webp', video: '/screens/code.mp4', w: 1920, h: 1050,
+      src: asset('/screens/code.webp'), video: asset('/screens/code.mp4'), w: 1920, h: 1050,
       bar: { zh: '代码开发', en: 'Write code' },
       caption: {
         zh: '提个需求，它在「全自动」模式下真的动手写代码：把 HTML 文件直接写到本地，代码实时铺开，双击就能跑。',

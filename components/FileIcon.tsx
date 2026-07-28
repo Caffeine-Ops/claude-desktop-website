@@ -7,6 +7,8 @@
 // 这里每张导出 256px，实际显示 12~19px，绰绰有余。
 // 数据在 lib/content.ts 里用这些 key（pptx / xlsx / …）。
 
+import { asset } from '@/lib/asset'
+
 const KNOWN = new Set(['pptx', 'xlsx', 'docx', 'pdf', 'png', 'mp4', 'html'])
 
 export function FileIcon({
@@ -22,7 +24,7 @@ export function FileIcon({
   const key = KNOWN.has(name) ? name : 'docx'
   return (
     <img
-      src={`/icons/ft-${key}.png`}
+      src={asset(`/icons/ft-${key}.png`)}
       alt=""
       aria-hidden="true"
       draggable={false}

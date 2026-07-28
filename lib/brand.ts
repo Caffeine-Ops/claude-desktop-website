@@ -1,3 +1,5 @@
+import { asset } from './asset'
+
 /*
   品牌资产的「单一出处」（single source of truth）。
 
@@ -5,6 +7,9 @@
   它同时充当：导航栏 logo、浏览器标签页 favicon、苹果书签图标、开场动画、社交分享预览图。
 
   想换图标 —— 直接用新图覆盖 public/app-icon.png 即可，全站一起换掉，不用动任何代码。
-  路径也收在这一处：哪天要改文件名，只改下面这一行，三处引用自动跟着变。
+  路径也收在这一处：哪天要改文件名，只改下面这一行，各处引用自动跟着变。
+
+  注意走 asset()：站点挂在 cowork.cntcn.com/app 子路径下，public/ 资源必须补 /app
+  前缀才加载得到（原因见 lib/asset.ts），所以这里过一道 asset()，而不是写裸路径。
 */
-export const APP_ICON = '/app-icon.png'
+export const APP_ICON = asset('/app-icon.png')
