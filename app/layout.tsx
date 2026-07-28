@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import type { ReactNode } from 'react'
 import { Archivo, IBM_Plex_Mono } from 'next/font/google'
 import { PrefsProvider } from '@/lib/prefs'
+import { APP_ICON } from '@/lib/brand'
 import './globals.css'
 
 /*
@@ -44,11 +45,11 @@ export const metadata: Metadata = {
   title: 'Cowork — 一句话，让 AI 帮你做完 PPT、表格、方案',
   description:
     '桌面端的 Claude。智能助手加插件，139 项内置创作技能，还有帮你管好本地文件的文件管理系统——聊天，然后收文件。支持 macOS 与 Windows。',
-  icons: { icon: '/icon-256.png', apple: '/app-icon.png' },
+  icons: { icon: APP_ICON, apple: APP_ICON },
   openGraph: {
     title: 'Cowork',
     description: '桌面端的 Claude。聊天，然后收文件。',
-    images: ['/app-icon.png'],
+    images: [APP_ICON],
     type: 'website',
   },
 }

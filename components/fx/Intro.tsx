@@ -12,6 +12,7 @@
 
 import { useEffect, useState } from 'react'
 import { useReducedMotion } from 'motion/react'
+import { APP_ICON } from '@/lib/brand'
 
 const SEEN_KEY = 'cd-intro-seen'
 
@@ -52,7 +53,7 @@ export function Intro() {
   return (
     <div className="intro-overlay fixed inset-0 z-[100] grid place-items-center bg-canvas" aria-hidden="true">
       <div className="text-center">
-        <img src="/app-icon.png" alt="Cowork" width={80} height={80} className="intro-mark mx-auto size-[80px]" />
+        <img src={APP_ICON} alt="Cowork" width={80} height={80} className="intro-mark mx-auto size-[80px]" />
         <div className="intro-word mt-[18px] font-mono text-[13px] tracking-[0.35em] text-dim">
           COWORK
         </div>
